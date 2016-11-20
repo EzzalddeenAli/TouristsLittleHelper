@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Tourists Little Helper</string>
+    <string name="title_activity_choose_location">Map</string>
+    <string name="next">Далее</string>
+    <string name="search_place">Введите место</string>
+    <string name="popular_places_activity_description">Выберете места, которые хотели бы посетить</string>
+    <string name="new_route">Построить маршрут</string>
+</resources>

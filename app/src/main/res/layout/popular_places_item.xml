@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/museum_71"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/popular_places_item_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Popular place name"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/popular_places_item_address_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="address"
+                android:textSize="10sp"/>
+        </LinearLayout>
+    </LinearLayout>
+    <CheckBox
+        android:id="@+id/choose_place_check_box"
+        android:layout_marginRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:checked="true"
+        android:buttonTint="@color/colorNextBtn"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>
