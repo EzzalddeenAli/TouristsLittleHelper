@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class ChooseLocationActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private Button nextButtton;
+    private Button nextButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +28,8 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        nextButtton = (Button) findViewById(R.id.next_btn);
-        nextButtton.setOnClickListener(new View.OnClickListener() {
+        nextButton = (Button) findViewById(R.id.next_btn);
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopularPlacesActivity.start(ChooseLocationActivity.this);

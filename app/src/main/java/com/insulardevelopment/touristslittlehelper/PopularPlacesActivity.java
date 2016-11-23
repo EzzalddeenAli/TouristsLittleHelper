@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -12,6 +15,7 @@ public class PopularPlacesActivity extends AppCompatActivity {
 
     private ArrayList<PlaceEntity> places = new ArrayList<>();
     private PlaceAdapter placeAdapter;
+    private Button nextButton;
 
     public static void start(Context context){
         Intent intent = new Intent(context, PopularPlacesActivity.class);
@@ -29,5 +33,20 @@ public class PopularPlacesActivity extends AppCompatActivity {
 
         ListView popularPlacesListView = (ListView) findViewById(R.id.popular_places_list_view);
         popularPlacesListView.setAdapter(placeAdapter);
+        popularPlacesListView.setItemsCanFocus(false);
+        popularPlacesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PlaceActivity.start(PopularPlacesActivity.this);
+            }
+        });
+
+        nextButton = (Button) findViewById(R.id.next_btn);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            //    TestActivity.start(PopularPlacesActivity.this);
+            }
+        });
     }
 }
