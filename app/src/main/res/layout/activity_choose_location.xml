@@ -11,24 +11,26 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    tools:context="com.insulardevelopment.touristslittlehelper.ChooseLocationActivity" />
+        tools:context="com.insulardevelopment.touristslittlehelper.ChooseLocationActivity" />
+
     <LinearLayout
-        android:layout_margin="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="30dp"
         android:background="@color/colorLight"
-        android:layout_centerHorizontal="true">
+        android:orientation="horizontal">
+
         <EditText
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:id="@+id/choose_location_search_place_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/colorNextBtnPressed"
             android:hint="@string/search_place"
             android:inputType="text"
-            android:backgroundTint="@color/colorNextBtnPressed"
-            android:textCursorDrawable="@null"
-            android:id="@+id/choose_location_search_place_edit_text" />
+            android:textCursorDrawable="@null" />
     </LinearLayout>
 
     <include layout="@layout/next_btn_layout"></include>

@@ -11,6 +11,10 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+/*
+*   Активити, содержащее список популярных мест
+*/
+
 public class PopularPlacesActivity extends AppCompatActivity {
 
     private ArrayList<PlaceEntity> places = new ArrayList<>();

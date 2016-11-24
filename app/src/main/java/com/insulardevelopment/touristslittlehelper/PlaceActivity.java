@@ -14,6 +14,10 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
+/*
+*   Активити, содержащее информацию о месте
+ */
+
 public class PlaceActivity extends AppCompatActivity {
 
     private Animator mCurrentAnimator;
