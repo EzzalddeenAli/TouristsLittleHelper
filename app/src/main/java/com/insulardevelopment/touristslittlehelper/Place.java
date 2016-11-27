@@ -4,14 +4,14 @@ package com.insulardevelopment.touristslittlehelper;
  * Created by Маргарита on 20.11.2016.
  */
 
-public class PlaceEntity {
+public class Place {
     private String name;
     private String address;
 
-    public PlaceEntity() {
+    public Place() {
     }
 
-    public PlaceEntity(String name, String address) {
+    public Place(String name, String address) {
         this.name = name;
         this.address = address;
     }
