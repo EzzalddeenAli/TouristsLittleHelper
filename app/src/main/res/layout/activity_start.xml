@@ -29,8 +29,8 @@
         android:gravity="center"
         android:text="@string/start_activity_text" />
 
-    <ListView
-        android:id="@+id/places_types_list_view"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/places_types_recycler_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/start_text_view"
@@ -40,7 +40,8 @@
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
         android:background="#fff"
-        android:padding="15dp"/>
+        android:padding="15dp">
+    </android.support.v7.widget.RecyclerView>
 
     <Button
         android:id="@+id/start_confirm_btn"
