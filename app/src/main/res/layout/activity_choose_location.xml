@@ -21,7 +21,7 @@
         android:background="@color/colorLight"
         android:orientation="horizontal">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/choose_location_search_place_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

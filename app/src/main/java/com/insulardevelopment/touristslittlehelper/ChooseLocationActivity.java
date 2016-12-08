@@ -3,31 +3,52 @@ package com.insulardevelopment.touristslittlehelper;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.AutocompletePredictionBuffer;
+import com.google.android.gms.location.places.GeoDataApi;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /*
 *   Активити для выбора города
@@ -39,21 +60,70 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     private Location mLastLocation;
     private GoogleMap mMap;
     private Button nextButton;
+    private AutoCompleteTextView locationEditText;
+    private ArrayAdapter<String> adapter;
+
+
+    class PredictionsResult extends AsyncTask<String, Void, ArrayList<String>> {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(String... params) {
+            LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0,0), new LatLng(0,0));
+            PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, params[0].toString(), latLngBounds, new AutocompleteFilter.Builder()
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                    .build());
+            AutocompletePredictionBuffer autocompletePredictions = result.await(60, TimeUnit.SECONDS);
+            Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
+            ArrayList resultList = new ArrayList<String>(autocompletePredictions.getCount());
+            while (iterator.hasNext()) {
+                AutocompletePrediction prediction = iterator.next();
+                // Get the details of this prediction and copy it into a new PlaceAutocomplete object.
+                resultList.add(prediction.getFullText(null));
+            }
+            return resultList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> result) {
+            adapter.clear();
+            for (String s : result) adapter.add(s);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_location);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        adapter = new ArrayAdapter<String>(ChooseLocationActivity.this,android.R.layout.select_dialog_item);
         nextButton = (Button) findViewById(R.id.next_btn);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopularPlacesActivity.start(ChooseLocationActivity.this);
+            }
+        });
+        locationEditText = (AutoCompleteTextView) findViewById(R.id.choose_location_search_place_edit_text);
+        locationEditText.setAdapter(adapter);
+        locationEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                PredictionsResult predictionsResult = new PredictionsResult();
+                predictionsResult.execute(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
 
@@ -65,6 +135,8 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
                     .build();
             mGoogleApiClient.connect();
         }
@@ -103,7 +175,8 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                 Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
                 List<Address> addresses = gcd.getFromLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 1);
                 if (addresses.size() > 0)
-                    setTitle(addresses.get(0).getAddressLine(1));
+                    locationEditText.setText(addresses.get(0).getAddressLine(1));
+
             }
             LatLng sydney = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));

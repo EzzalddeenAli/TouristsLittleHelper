@@ -7,6 +7,12 @@ package com.insulardevelopment.touristslittlehelper;
 public class Place {
     private String name;
     private String address;
+    private String phoneNumber;
+    private String iconURL;
+    private String placeId;
+    private double rating;
+    //photo[]
+    //review[]
 
     public Place() {
     }
