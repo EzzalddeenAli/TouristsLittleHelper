@@ -63,4 +63,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     public int getItemCount() {
         return places.size();
     }
+
+
 }

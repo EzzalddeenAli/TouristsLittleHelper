@@ -61,36 +61,38 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     private GoogleMap mMap;
     private Button nextButton;
     private AutoCompleteTextView locationEditText;
-    private ArrayAdapter<String> adapter;
+    private AutoCompletePredictionAdapter adapter;
 
 
-    class PredictionsResult extends AsyncTask<String, Void, ArrayList<String>> {
+    class PredictionsResult extends AsyncTask<String, Void, ArrayList<AutocompletePrediction>> {
 
         @Override
         protected void onPreExecute() {
         }
 
         @Override
-        protected ArrayList<String> doInBackground(String... params) {
+        protected ArrayList<AutocompletePrediction> doInBackground(String... params) {
             LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0,0), new LatLng(0,0));
             PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, params[0].toString(), latLngBounds, new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                     .build());
             AutocompletePredictionBuffer autocompletePredictions = result.await(60, TimeUnit.SECONDS);
             Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
-            ArrayList resultList = new ArrayList<String>(autocompletePredictions.getCount());
+            ArrayList resultList = new ArrayList<AutocompletePrediction>(autocompletePredictions.getCount());
             while (iterator.hasNext()) {
                 AutocompletePrediction prediction = iterator.next();
                 // Get the details of this prediction and copy it into a new PlaceAutocomplete object.
-                resultList.add(prediction.getFullText(null));
+                resultList.add(prediction);
             }
             return resultList;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<String> result) {
+        protected void onPostExecute(ArrayList<AutocompletePrediction> result) {
             adapter.clear();
-            for (String s : result) adapter.add(s);
+            for (AutocompletePrediction prediction : result) {
+                adapter.add(prediction);
+            }
         }
     }
 
@@ -100,7 +102,7 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         setContentView(R.layout.activity_choose_location);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        adapter = new ArrayAdapter<String>(ChooseLocationActivity.this,android.R.layout.select_dialog_item);
+        adapter = new AutoCompletePredictionAdapter(this, R.layout.autocomplete_prediction_layout);
         nextButton = (Button) findViewById(R.id.next_btn);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
