@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -27,11 +28,14 @@ import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.GeoDataApi;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
@@ -63,7 +67,9 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     private AutoCompleteTextView locationEditText;
     private AutoCompletePredictionAdapter adapter;
     private String location;
-
+    private List<AutocompletePrediction> predictions;
+    private AutocompletePrediction selected;
+    private Place city;
 
     class PredictionsResult extends AsyncTask<String, Void, ArrayList<AutocompletePrediction>> {
 
@@ -91,8 +97,10 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         @Override
         protected void onPostExecute(ArrayList<AutocompletePrediction> result) {
             adapter.clear();
+            predictions.clear();
             for (AutocompletePrediction prediction : result) {
                 adapter.add(prediction);
+                predictions.add(prediction);
             }
         }
     }
@@ -103,6 +111,7 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         setContentView(R.layout.activity_choose_location);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        predictions = new ArrayList<>();
         adapter = new AutoCompletePredictionAdapter(this, R.layout.autocomplete_prediction_layout);
         adapter.setNotifyOnChange(true);
         nextButton = (Button) findViewById(R.id.next_btn);
@@ -128,6 +137,25 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+        locationEditText.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selected = predictions.get(position);
+                Places.GeoDataApi.getPlaceById(mGoogleApiClient, selected.getPlaceId())
+                        .setResultCallback(new ResultCallback<PlaceBuffer>() {
+                            @Override
+                            public void onResult(PlaceBuffer places) {
+                                if (places.getStatus().isSuccess()) {
+                                    city = places.get(0);
+                                    LatLng loc = city.getLatLng();
+                                    mMap.addMarker(new MarkerOptions().position(loc));
+                                }
+                                places.release();
+                            }
+                        });
             }
         });
 

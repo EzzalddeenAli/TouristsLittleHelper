@@ -37,6 +37,7 @@ public class AutoCompletePredictionAdapter extends ArrayAdapter<AutocompletePred
     public AutoCompletePredictionAdapter(Context context, int resource) {
         super(context, resource);
         predictions = new ArrayList<AutocompletePrediction>();
+        layout = resource;
     }
 
     public AutoCompletePredictionAdapter(Context context, int resource, List<AutocompletePrediction> objects) {
@@ -50,14 +51,52 @@ public class AutoCompletePredictionAdapter extends ArrayAdapter<AutocompletePred
         ViewHolder holder;
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = vi.inflate(layout, parent, false);
+            convertView = vi.inflate(layout, parent, false);
             holder = new ViewHolder(convertView);
-            row.setTag(holder);
+            convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.populateView(getItem(position));
         return convertView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            public String convertResultToString(Object resultValue) {
+                String s = ((AutocompletePrediction) resultValue).getFullText(null).toString();
+                return ((AutocompletePrediction) resultValue).getFullText(null).toString();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                if (constraint != null) {
+                    suggestions.clear();
+                    for (AutocompletePrediction prediction : predictions) {
+                        if (prediction.getFullText(null).toString().startsWith(constraint.toString().toLowerCase())) {
+                            suggestions.add(prediction);
+                        }
+                    }
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.values = suggestions;
+                    filterResults.count = suggestions.size();
+                    return filterResults;
+                } else {
+                    return new FilterResults();
+                }
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                if (results.count > 0) {
+                    notifyDataSetChanged();
+                } else {
+                    notifyDataSetInvalidated();
+                }
+            }
+        };
     }
 //    @Override
 //    public int getCount() {
