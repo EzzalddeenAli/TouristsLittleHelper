@@ -1,4 +1,4 @@
-package com.insulardevelopment.touristslittlehelper;
+package com.insulardevelopment.touristslittlehelper.place;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import com.insulardevelopment.touristslittlehelper.R;
 
 import java.util.List;
 
@@ -49,7 +51,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     @Override
     public void onBindViewHolder(PlaceAdapter.PlaceViewHolder holder, final int position) {
         Place place = places.get(position);
-        holder.addressTextView.setText(place.getAddress());
+        holder.addressTextView.setText(place.getFormattedAddress());
         holder.nameTextView.setText(place.getName());
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override

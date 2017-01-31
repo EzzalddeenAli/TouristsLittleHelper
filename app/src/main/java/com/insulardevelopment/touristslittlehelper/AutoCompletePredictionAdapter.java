@@ -21,6 +21,7 @@ import java.util.List;
 public class AutoCompletePredictionAdapter extends ArrayAdapter<AutocompletePrediction> {
 
     List<AutocompletePrediction> predictions, suggestions;
+    int layout;
 
     public class ViewHolder {
         public TextView autoCompletePredictionTextView;
@@ -41,6 +42,7 @@ public class AutoCompletePredictionAdapter extends ArrayAdapter<AutocompletePred
     public AutoCompletePredictionAdapter(Context context, int resource, List<AutocompletePrediction> objects) {
         super(context, resource, objects);
         predictions = objects;
+        layout = resource;
     }
     @NonNull
     @Override
@@ -48,7 +50,7 @@ public class AutoCompletePredictionAdapter extends ArrayAdapter<AutocompletePred
         ViewHolder holder;
         if (convertView == null) {
             LayoutInflater vi = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = vi.inflate(R.layout.autocomplete_prediction_layout, parent, false);
+            View row = vi.inflate(layout, parent, false);
             holder = new ViewHolder(convertView);
             row.setTag(holder);
         } else {
@@ -57,21 +59,21 @@ public class AutoCompletePredictionAdapter extends ArrayAdapter<AutocompletePred
         holder.populateView(getItem(position));
         return convertView;
     }
-    @Override
-    public int getCount() {
-        return predictions.size();
-    }
-
-    @Override
-    public AutocompletePrediction getItem(int position) {
-        return predictions.get(position);
-    }
-
-    @Override
-    public void add(AutocompletePrediction object) {
-        predictions.add(object);
-        super.add(object);
-    }
+//    @Override
+//    public int getCount() {
+//        return predictions.size();
+//    }
+//
+//    @Override
+//    public AutocompletePrediction getItem(int position) {
+//        return predictions.get(position);
+//    }
+//
+//    @Override
+//    public void add(AutocompletePrediction object) {
+//        predictions.add(object);
+//        super.add(object);
+//    }
 
 }
 

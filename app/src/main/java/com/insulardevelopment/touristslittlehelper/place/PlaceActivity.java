@@ -1,4 +1,4 @@
-package com.insulardevelopment.touristslittlehelper;
+package com.insulardevelopment.touristslittlehelper.place;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+
+import com.insulardevelopment.touristslittlehelper.R;
 
 /*
 *   Активити, содержащее информацию о месте

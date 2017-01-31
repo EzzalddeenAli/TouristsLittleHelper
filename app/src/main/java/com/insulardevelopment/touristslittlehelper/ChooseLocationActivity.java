@@ -62,6 +62,7 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     private Button nextButton;
     private AutoCompleteTextView locationEditText;
     private AutoCompletePredictionAdapter adapter;
+    private String location;
 
 
     class PredictionsResult extends AsyncTask<String, Void, ArrayList<AutocompletePrediction>> {
@@ -103,11 +104,12 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         adapter = new AutoCompletePredictionAdapter(this, R.layout.autocomplete_prediction_layout);
+        adapter.setNotifyOnChange(true);
         nextButton = (Button) findViewById(R.id.next_btn);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopularPlacesActivity.start(ChooseLocationActivity.this);
+                PopularPlacesActivity.start(ChooseLocationActivity.this, location);
             }
         });
         locationEditText = (AutoCompleteTextView) findViewById(R.id.choose_location_search_place_edit_text);
@@ -178,11 +180,11 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                 List<Address> addresses = gcd.getFromLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 1);
                 if (addresses.size() > 0)
                     locationEditText.setText(addresses.get(0).getAddressLine(1));
-
+                    location = addresses.get(0).getAddressLine(1);
             }
-            LatLng sydney = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            LatLng loc = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(loc));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
         } catch (SecurityException e) {
         }catch (Exception e) {
             String s = e.getMessage();

@@ -34,7 +34,7 @@
             android:name=".ChooseLocationActivity"
             android:label="@string/title_activity_choose_location" />
         <activity android:name=".PopularPlacesActivity" />
-        <activity android:name=".PlaceActivity" />
+        <activity android:name=".place.PlaceActivity" />
         <activity
             android:name=".StartActivity"
             android:label="@string/app_name"
