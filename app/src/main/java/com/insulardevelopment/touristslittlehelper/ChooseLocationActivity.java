@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -70,6 +71,7 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     private List<AutocompletePrediction> predictions;
     private AutocompletePrediction selected;
     private Place city;
+    private LatLng selectedLatLng;
 
     class PredictionsResult extends AsyncTask<String, Void, ArrayList<AutocompletePrediction>> {
 
@@ -105,6 +107,12 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         }
     }
 
+    public static void start(Context context){
+        Intent intent = new Intent(context, ChooseLocationActivity.class);
+        context.startActivity(intent);
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +126,8 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopularPlacesActivity.start(ChooseLocationActivity.this, location);
+                //PopularPlacesActivity.start(ChooseLocationActivity.this, location);
+                ChoosePlacesActivity.start(ChooseLocationActivity.this);
             }
         });
         locationEditText = (AutoCompleteTextView) findViewById(R.id.choose_location_search_place_edit_text);
@@ -151,7 +160,10 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                                 if (places.getStatus().isSuccess()) {
                                     city = places.get(0);
                                     LatLng loc = city.getLatLng();
+                                    mMap.clear();
                                     mMap.addMarker(new MarkerOptions().position(loc));
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+                                    selectedLatLng = loc;
                                 }
                                 places.release();
                             }
@@ -172,13 +184,11 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                     .build();
             mGoogleApiClient.connect();
         }
-    }
 
-    public static void start(Context context){
-        Intent intent = new Intent(context, ChooseLocationActivity.class);
-        context.startActivity(intent);
 
     }
+
+
 
 
 
@@ -194,9 +204,23 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                try {
+                    Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
+                    List<Address> addresses = gcd.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                    if (addresses.size() > 0)
+                        locationEditText.setText(addresses.get(0).getAddressLine(1));
+                    location = addresses.get(0).getAddressLine(1);
+                    locationEditText.setText(location);
+                    selectedLatLng = latLng;
+                    mMap.addMarker(new MarkerOptions().position(latLng));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -213,6 +237,7 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
             LatLng loc = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             mMap.addMarker(new MarkerOptions().position(loc));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+            selectedLatLng = loc;
         } catch (SecurityException e) {
         }catch (Exception e) {
             String s = e.getMessage();
