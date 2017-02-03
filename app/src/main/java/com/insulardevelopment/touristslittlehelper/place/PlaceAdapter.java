@@ -69,7 +69,6 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
                     InputStream is = (InputStream) new URL(place.getIcon()).getContent();
                     drawable = Drawable.createFromStream(is, "src name");
                 } catch (Exception e) {
-                    // log error
                 }
                 return null;
             }

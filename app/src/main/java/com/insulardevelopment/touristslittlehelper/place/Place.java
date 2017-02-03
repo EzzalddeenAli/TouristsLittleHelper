@@ -1,5 +1,7 @@
 package com.insulardevelopment.touristslittlehelper.place;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 /**
@@ -14,6 +16,7 @@ public class Place {
     private String placeId;
     private double rating;
     private String weekdayText;
+    private LatLng latLng;
     private List<Photo> photos;
     private List<Review> reviews;
 
@@ -55,6 +58,14 @@ public class Place {
 
     public void setFormattedPhoneNumber(String formattedPhoneNumber) {
         this.formattedPhoneNumber = formattedPhoneNumber;
+    }
+
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
     }
 
     public String getIcon() {

@@ -127,7 +127,7 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
             @Override
             public void onClick(View v) {
                 //PopularPlacesActivity.start(ChooseLocationActivity.this, location);
-                ChoosePlacesActivity.start(ChooseLocationActivity.this);
+                ChoosePlacesActivity.start(ChooseLocationActivity.this, selectedLatLng);
             }
         });
         locationEditText = (AutoCompleteTextView) findViewById(R.id.choose_location_search_place_edit_text);
@@ -215,6 +215,7 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
                     location = addresses.get(0).getAddressLine(1);
                     locationEditText.setText(location);
                     selectedLatLng = latLng;
+                    mMap.clear();
                     mMap.addMarker(new MarkerOptions().position(latLng));
                 } catch (IOException e) {
                     e.printStackTrace();

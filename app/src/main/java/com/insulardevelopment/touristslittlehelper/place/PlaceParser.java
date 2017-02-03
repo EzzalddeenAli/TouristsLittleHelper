@@ -1,5 +1,7 @@
 package com.insulardevelopment.touristslittlehelper.place;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +46,9 @@ public class PlaceParser {
             place.setIcon(googlePlaceJson.getString("icon"));
             place.setRating(googlePlaceJson.getDouble("rating"));
             place.setPlaceId(googlePlaceJson.getString("place_id"));
+            JSONObject latLng = googlePlaceJson.getJSONObject("geometry").getJSONObject("location");
+            place.setLatLng(new LatLng(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
+                    googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
         } catch (JSONException e) {
             e.printStackTrace();
         }
