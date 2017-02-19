@@ -18,7 +18,7 @@ import com.insulardevelopment.touristslittlehelper.R;
 
 /*
 *   Активити, содержащее информацию о месте
- */
+*/
 
 public class PlaceActivity extends AppCompatActivity {
 

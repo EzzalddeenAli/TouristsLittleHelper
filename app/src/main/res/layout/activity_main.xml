@@ -8,12 +8,10 @@
 
     tools:context="com.insulardevelopment.touristslittlehelper.MainActivity">
 
-    <ImageView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/routes_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="center"
-        app:srcCompat="@drawable/new_york_main_activity"
-        android:id="@+id/imageView" />
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -22,34 +20,28 @@
         android:layout_centerHorizontal="true">
 
         <Button
-            android:text="@string/new_route"
-            android:gravity="bottom"
-            android:paddingBottom="20dp"
-            android:textAlignment="center"
+            android:id="@+id/main_trace_btn"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_marginBottom="60dp"
             android:background="@drawable/round_button"
-            android:id="@+id/main_trace_btn"
-            android:layout_marginBottom="112dp"
             android:elevation="2dp"
-            android:textColor="#fff"/>
+            android:gravity="bottom"
+            android:paddingBottom="20dp"
+            android:text="@string/new_route"
+            android:textAlignment="center"
+            android:textColor="#fff" />
 
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/map"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:translationZ="@dimen/activity_horizontal_margin"/>
+            android:src="@drawable/map"
+            android:translationZ="@dimen/activity_horizontal_margin" />
 
     </RelativeLayout>
-    <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/loowhite"
-        android:layout_marginTop="10dp"/>
 
 </RelativeLayout>
 
