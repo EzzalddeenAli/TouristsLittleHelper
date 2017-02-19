@@ -67,7 +67,7 @@ public class PopularPlacesActivity extends AppCompatActivity implements Location
                 placeAdapter = new PlaceAdapter(googlePlacesList, new PlaceAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        PlaceActivity.start(PopularPlacesActivity.this);
+                        PlaceActivity.start(PopularPlacesActivity.this, places.get(position));
                     }
                 });
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());

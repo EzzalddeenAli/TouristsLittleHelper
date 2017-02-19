@@ -1,14 +1,19 @@
 package com.insulardevelopment.touristslittlehelper.place;
 
+import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Маргарита on 20.11.2016.
  */
 
-public class Place {
+public class Place{
     private String name;
     private String formattedAddress;
     private String formattedPhoneNumber;
@@ -17,14 +22,15 @@ public class Place {
     private double rating;
     private String weekdayText;
     private LatLng latLng;
-    private List<Photo> photos;
+    private String webSite;
+    private List<Drawable> photos;
     private List<Review> reviews;
 
 
     public Place() {
     }
 
-    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, List<Photo> photos, List<Review> reviews) {
+    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, LatLng latLng, String webSite, List<Drawable> photos, List<Review> reviews) {
         this.name = name;
         this.formattedAddress = formattedAddress;
         this.formattedPhoneNumber = formattedPhoneNumber;
@@ -32,6 +38,8 @@ public class Place {
         this.placeId = placeId;
         this.rating = rating;
         this.weekdayText = weekdayText;
+        this.latLng = latLng;
+        this.webSite = webSite;
         this.photos = photos;
         this.reviews = reviews;
     }
@@ -100,11 +108,11 @@ public class Place {
         this.weekdayText = weekdayText;
     }
 
-    public List<Photo> getPhotos() {
+    public List<Drawable> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<Photo> photos) {
+    public void setPhotos(List<Drawable> photos) {
         this.photos = photos;
     }
 
@@ -116,4 +124,11 @@ public class Place {
         this.reviews = reviews;
     }
 
+    public String getWebSite() {
+        return webSite;
+    }
+
+    public void setWebSite(String webSite) {
+        this.webSite = webSite;
+    }
 }

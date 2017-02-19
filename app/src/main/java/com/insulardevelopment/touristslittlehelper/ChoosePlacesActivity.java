@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class ChoosePlacesActivity extends AppCompatActivity implements LocationListener{
+public class ChoosePlacesActivity extends AppCompatActivity {
 
     private static final String SELECTED_LATLNG = "latlng";
     private LatLng selectedLatLng;
@@ -73,11 +73,7 @@ public class ChoosePlacesActivity extends AppCompatActivity implements LocationL
         ViewPager placesViewPager = (ViewPager) findViewById(R.id.places_view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, true);
         try{
-            locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
-
             String type = "museum|art_gallery";
             StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
             googlePlacesUrl.append("location=" + selectedLatLng.latitude + "," + selectedLatLng.longitude);
@@ -100,23 +96,4 @@ public class ChoosePlacesActivity extends AppCompatActivity implements LocationL
         tabLayout.setupWithViewPager(placesViewPager);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
 }

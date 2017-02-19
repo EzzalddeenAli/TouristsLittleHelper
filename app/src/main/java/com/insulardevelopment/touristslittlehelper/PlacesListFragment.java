@@ -62,7 +62,7 @@ public class PlacesListFragment extends Fragment  implements LocationListener {
         placeAdapter = new PlaceAdapter(places, new PlaceAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                PlaceActivity.start(getActivity());
+                PlaceActivity.start(getActivity(), places.get(position));
             }
         });
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());

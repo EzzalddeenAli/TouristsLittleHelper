@@ -62,6 +62,7 @@
 
             </LinearLayout>
             <TextView
+                android:id="@+id/place_name_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Колизей"
@@ -81,14 +82,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
+                    android:id="@+id/place_address_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Piazza del Colosseo, 1, 00184 Roma, Италия"/>
                 <TextView
+                    android:id="@+id/place_phone_number_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="+39 06 3996 7700"/>
                 <TextView
+                    android:id="@+id/place_website_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="http://www.the-colosseum.net/"/>
@@ -102,6 +106,7 @@
                     android:layout_height="50dp"
                     android:src="@drawable/star"/>
                 <TextView
+                    android:id="@+id/place_rating_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4.7"
