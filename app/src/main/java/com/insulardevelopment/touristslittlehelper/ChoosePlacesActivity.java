@@ -74,12 +74,13 @@ public class ChoosePlacesActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         try{
-            String type = "museum|art_gallery";
+            String type = "cafe|art_gallery";
             StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
             googlePlacesUrl.append("location=" + selectedLatLng.latitude + "," + selectedLatLng.longitude);
             googlePlacesUrl.append("&radius=" + radius);
             googlePlacesUrl.append("&types=" + type);
             googlePlacesUrl.append("&sensor=true");
+            googlePlacesUrl.append("&language=ru");
             googlePlacesUrl.append("&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
 
             ChoosePlacesActivity.GooglePlacesReadTask googlePlacesReadTask = new ChoosePlacesActivity.GooglePlacesReadTask();

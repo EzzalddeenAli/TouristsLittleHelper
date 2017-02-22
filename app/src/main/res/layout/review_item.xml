@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/lightYellow"
+    android:padding="25dp"
+    android:layout_marginTop="5dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/user"/>
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/review_author_text_view"
+                android:textColor="@color/darkBlue"
+                android:text="Dean Hansen"
+                android:textSize="16dp"/>
+            <ImageView
+                android:visibility="invisible"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="-3dp"
+                android:id="@+id/review_image_view_star1"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/star"/>
+            <ImageView
+                android:visibility="invisible"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="-3dp"
+                android:id="@+id/review_image_view_star2"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/star"/>
+            <ImageView
+                android:visibility="invisible"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="-3dp"
+                android:id="@+id/review_image_view_star3"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/star"/>
+            <ImageView
+                android:visibility="invisible"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="-3dp"
+                android:id="@+id/review_image_view_star4"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/star"/>
+            <ImageView
+                android:visibility="invisible"
+                android:layout_marginTop="7dp"
+                android:id="@+id/review_image_view_star5"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/star"/>
+        </LinearLayout>
+        <TextView
+            android:layout_marginTop="9dp"
+            android:id="@+id/review_time_text_view"
+            android:text="2 недели назад"
+            android:textSize="9dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <TextView
+        android:textColor="@color/darkBlue"
+        android:id="@+id/review_text_view"
+        android:text="Well i am just trying to get on to google my business, and wow do you think its easy, Oh no google want me to video verify my business and do you think they will call, not on your life. So i call up google Sydney and the receptionist is trained to say oh no we don't handle anything like that sir and no we don't know of any numbers you can call so you can get it sorted out, there is only the online service that is all. So they come to our country want a presence, won't take responsibility for their works, want us to treat them fairly etc, off hand taking care of our businesses to some English as a second language speaking people, and thinks that will be enough. Quiet willing to take your money but give you nothing in return. and i only put a star in cause im forced to so i can post this complaint, You suck GOOGLE."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -12,13 +12,8 @@ import java.util.List;
  */
 
 public class ReviewParser {
-    public static List<Review> parse(JSONObject jsonObject) {
-        JSONArray jsonArray = null;
-        try {
-            jsonArray = jsonObject.getJSONArray("results");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public static List<Review> parse(JSONArray jsonObject) {
+        JSONArray jsonArray = jsonObject;
         return getReviews(jsonArray);
     }
 
@@ -39,12 +34,12 @@ public class ReviewParser {
     private static Review getReview(JSONObject googleReviewJson) {
         Review review = new Review();
         try {
-            review.setAuthorName(googleReviewJson.getString("author_name"));
-            review.setAuthorURL(googleReviewJson.getString("author_url"));
-            review.setProfilePhotoURL(googleReviewJson.getString("profile_photo_url"));
-            review.setRating(googleReviewJson.getInt("rating"));
-            review.setText(googleReviewJson.getString("text"));
-            review.setTime(googleReviewJson.getInt("time"));
+            if(googleReviewJson.has("author_name")) review.setAuthorName(googleReviewJson.getString("author_name"));
+            if(googleReviewJson.has("author_url")) review.setAuthorURL(googleReviewJson.getString("author_url"));
+            if(googleReviewJson.has("profile_photo_url")) review.setProfilePhotoURL(googleReviewJson.getString("profile_photo_url"));
+            if(googleReviewJson.has("author_name")) review.setRating(googleReviewJson.getInt("rating"));
+            if(googleReviewJson.has("text")) review.setText(googleReviewJson.getString("text"));
+            if(googleReviewJson.has("relative_time_description")) review.setTime(googleReviewJson.getString("relative_time_description"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -1,106 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_place"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.insulardevelopment.touristslittlehelper.place.PlaceActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <HorizontalScrollView
+        android:id="@+id/horizontal_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="250dp" >
+
+        <LinearLayout
+            android:id="@+id/photo_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="350dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="350dp"
-                android:orientation="horizontal">
-
-
-                <ImageButton
-                    android:id="@+id/thumb_button_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:src="@drawable/col1"
-                    android:scaleType="centerCrop"
-                    android:background="@null"/>
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="4">
-                    <ImageButton
-                        android:id="@+id/thumb_button_2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:src="@drawable/col2"
-                        android:scaleType="centerCrop"
-                        android:background="@null"/>
-                    <ImageButton
-                        android:id="@+id/thumb_button_3"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:src="@drawable/col3"
-                        android:scaleType="centerCrop"
-                        android:background="@null"/>
-                    <ImageButton
-                        android:id="@+id/thumb_button_4"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:src="@drawable/col4"
-                        android:scaleType="centerCrop"
-                        android:background="@null"/>
-                </LinearLayout>
-
-            </LinearLayout>
-            <TextView
-                android:id="@+id/place_name_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Колизей"
-                android:textColor="#fff"
-                android:shadowDx="2"
-                android:layout_alignParentBottom="true"
-                android:layout_margin="10dp"
-                android:textSize="30sp"
-                />
-        </RelativeLayout>
-        <RelativeLayout
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp">
+        <TextView
+            android:id="@+id/place_name_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:textAlignment="center"
+            android:text="Колизей"
+            android:textColor="@color/darkBlue"
+            android:textSize="23sp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/darkBlue"
+            />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/place_address_text_view"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Piazza del Colosseo, 1, 00184 Roma, Италия"/>
-                <TextView
-                    android:id="@+id/place_phone_number_text_view"
-                    android:layout_width="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="6dp"
+                        android:src="@drawable/address_icon" />
+
+                    <TextView
+                        android:id="@+id/place_address_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Piazza del Colosseo, 1, 00184 Roma, Италия"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/darkBlue"
+                        android:textSize="15dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="+39 06 3996 7700"/>
-                <TextView
-                    android:id="@+id/place_website_text_view"
-                    android:layout_width="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="6dp"
+                        android:src="@drawable/phone_icon" />
+
+                    <TextView
+                        android:id="@+id/place_phone_number_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+39 06 3996 7700"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/darkBlue"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="http://www.the-colosseum.net/"/>
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="6dp"
+                        android:src="@drawable/website_icon" />
+
+                    <TextView
+                        android:id="@+id/place_website_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="http://www.the-colosseum.net/"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/darkBlue"
+                        android:textSize="15dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="6dp"
+                        android:src="@drawable/time" />
+
+                    <TextView
+                        android:id="@+id/place_work_hours_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="понедельник: 8:00–18:00, \n вторник: 8:00–18:00, \n среда: 8:00–18:00, \n четверг: 8:00–18:00, \n пятница: 8:00–18:00, \n суббота: Закрыто, \n воскресенье: Закрыто"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/darkBlue"
+                        android:textSize="15dp" />
+                </LinearLayout>
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true">
+                <!--android:layout_alignParentBottom="true">-->
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
@@ -114,11 +142,23 @@
                     android:layout_centerInParent="true"/>
             </RelativeLayout>
         </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/darkBlue"
+            android:layout_marginTop="7dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/reviews"
+            android:textColor="@color/darkBlue"
+            android:textSize="18sp"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/reviews_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
-    <ImageView
-        android:layout_margin="10dp"
-        android:id="@+id/expanded_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible" />
-</RelativeLayout>
+
+
+</LinearLayout>

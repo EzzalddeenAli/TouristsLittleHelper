@@ -8,14 +8,14 @@ public class Review {
     private String authorName;
     private String authorURL;
     private String profilePhotoURL;
-    private int time;
+    private String time;
     private String text;
     private int rating;
 
     public Review() {
     }
 
-    public Review(String authorName, String authorURL, String profilePhotoURL, int time, String text, int rating) {
+    public Review(String authorName, String authorURL, String profilePhotoURL, String time, String text, int rating) {
         this.authorName = authorName;
         this.authorURL = authorURL;
         this.profilePhotoURL = profilePhotoURL;
@@ -48,11 +48,11 @@ public class Review {
         this.profilePhotoURL = profilePhotoURL;
     }
 
-    public int getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

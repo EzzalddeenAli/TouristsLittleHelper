@@ -96,7 +96,8 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(selectedLatLng));
+ //       mMap.moveCamera(CameraUpdateFactory.newLatLng(selectedLatLng));
+        mMap.animateCamera( CameraUpdateFactory.newLatLngZoom(selectedLatLng, 13.0f ) );
         for(PlaceInfo place:placeInfos){
             if(place.getPlace().getLatLng()!=null) {
                 place.setMarker(mMap.addMarker(new MarkerOptions().position(place.getPlace().getLatLng()).title(place.getPlace().getName())));

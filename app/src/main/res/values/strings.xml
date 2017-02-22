@@ -7,4 +7,5 @@
     <string name="new_route">Построить маршрут</string>
     <string name="start_activity_text">Выберите места, которые вас интересуют</string>
     <string name="confirm">Подтвердить</string>
+    <string name="reviews">Отзывы</string>
 </resources>
