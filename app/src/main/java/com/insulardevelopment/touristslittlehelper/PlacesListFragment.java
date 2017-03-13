@@ -38,7 +38,6 @@ import static android.content.Context.LOCATION_SERVICE;
 public class PlacesListFragment extends Fragment  implements LocationListener {
 
     private View view;
-    private GoogleApiClient googleApiClient;
     private List<Place> places;
     private PlaceAdapter placeAdapter;
     private Button nextButton;
@@ -70,14 +69,6 @@ public class PlacesListFragment extends Fragment  implements LocationListener {
 
         popularPlacesRecyclerView.setLayoutManager(layoutManager);
         popularPlacesRecyclerView.setAdapter(placeAdapter);
-        nextButton = (Button) view.findViewById(R.id.next_btn);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //    TestActivity.start(PopularPlacesActivity.this);
-            }
-        });
-
         return view;
     }
 

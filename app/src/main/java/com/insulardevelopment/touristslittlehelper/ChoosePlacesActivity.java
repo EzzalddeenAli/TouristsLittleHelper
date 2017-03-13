@@ -14,7 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.place.Http;
@@ -35,7 +37,8 @@ public class ChoosePlacesActivity extends AppCompatActivity {
     private static final String SELECTED_LATLNG = "latlng";
     private LatLng selectedLatLng;
     private int radius = 5000;
-    List<Place> places;
+    private List<Place> places;
+    private Button nextBtn;
 
 
     public class GooglePlacesReadTask extends AsyncTask<Object, Integer, List<Place>> {
@@ -95,6 +98,13 @@ public class ChoosePlacesActivity extends AppCompatActivity {
         placesViewPager.setAdapter(adapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(placesViewPager);
+        nextBtn = (Button) findViewById(R.id.to_route_btn);
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("tag", places.toString());
+            }
+        });
     }
 
 }

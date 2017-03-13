@@ -26,6 +26,8 @@ public class Place{
     private List<Drawable> photos;
     private List<Review> reviews;
 
+    private boolean chosen = true;
+
 
     public Place() {
     }
@@ -130,5 +132,13 @@ public class Place{
 
     public void setWebSite(String webSite) {
         this.webSite = webSite;
+    }
+
+    public boolean isChosen() {
+        return chosen;
+    }
+
+    public void setChosen(boolean chosen) {
+        this.chosen = chosen;
     }
 }

@@ -165,7 +165,7 @@ public class PlaceActivity extends AppCompatActivity {
         for(Drawable drawable: place.getPhotos()){
             ImageView imageView = new ImageView(this);
             imageView.setImageDrawable(drawable);
-            imageView.setScaleType(ImageView.ScaleType.FIT_END);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             layout.addView(imageView);
         }
 

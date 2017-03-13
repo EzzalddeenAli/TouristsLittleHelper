@@ -24,5 +24,4 @@
             android:paddingBottom="60dp"
             android:clipToPadding="false"/>
     </LinearLayout>
-    <include layout="@layout/next_btn_layout"/>
 </RelativeLayout>

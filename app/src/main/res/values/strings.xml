@@ -8,4 +8,6 @@
     <string name="start_activity_text">Выберите места, которые вас интересуют</string>
     <string name="confirm">Подтвердить</string>
     <string name="reviews">Отзывы</string>
+    <string name="moreinfo">Посмотреть полную информацию о месте</string>
+    <string name="question_place">Хотите ли вы посетить данное место?</string>
 </resources>
