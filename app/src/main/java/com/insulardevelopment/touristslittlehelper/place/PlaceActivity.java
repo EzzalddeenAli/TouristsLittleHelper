@@ -6,9 +6,11 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.LocationManager;
@@ -24,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.ChoosePlacesActivity;
 import com.insulardevelopment.touristslittlehelper.R;
@@ -96,7 +99,7 @@ public class PlaceActivity extends AppCompatActivity {
                     if (googlePlaceJson.has("photos")){
                         JSONArray jsonArray = googlePlaceJson.getJSONArray("photos");
                         int placesCount = jsonArray.length();
-                        place.setPhotos(new ArrayList<Drawable>());
+                        place.setPhotos(new ArrayList<String>());
                         for (int i = 0; i < placesCount; i++)  place.getPhotos().add(getPhoto((JSONObject) jsonArray.get(i)));
                     }
                     if (googlePlaceJson.has("reviews")) place.setReviews(ReviewParser.parse(googlePlaceJson.getJSONArray("reviews")));
@@ -107,16 +110,15 @@ public class PlaceActivity extends AppCompatActivity {
             return place;
         }
 
-        private Drawable getPhoto(JSONObject json) throws JSONException {
+        private String getPhoto(JSONObject json) throws JSONException {
 
             try {
                 StringBuilder googlePhotoUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
                 googlePhotoUrl.append("photoreference=" + json.getString("photo_reference"));
                 googlePhotoUrl.append("&maxheight=1000&maxwidth=1000&key=AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
                 String url = googlePhotoUrl.toString();
-                InputStream is = (InputStream) new URL(url).getContent();
-                return Drawable.createFromStream(is, "src name");
-            } catch (IOException e) {
+                return  url;
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
@@ -154,19 +156,42 @@ public class PlaceActivity extends AppCompatActivity {
         workHoursTextView = (TextView) findViewById(R.id.place_work_hours_text_view);
 
         placeNameTextView.setText(place.getName());
-        addressTextView.setText(place.getFormattedAddress());
-        phoneNumberTextView.setText(place.getFormattedPhoneNumber());
+        if (place.getFormattedAddress() != null ) {
+            addressTextView.setText(place.getFormattedAddress());
+        } else {
+            findViewById(R.id.address_icon_iv).setVisibility(View.INVISIBLE);
+        }
+        if (place.getFormattedPhoneNumber() != null ) {
+            phoneNumberTextView.setText(place.getFormattedPhoneNumber());
+        } else {
+            findViewById(R.id.phone_icon_iv).setVisibility(View.INVISIBLE);
+        }
+        if (place.getWebSite() != null ) {
+            webSiteTextView.setText(place.getWebSite());
+        } else {
+            findViewById(R.id.website_icon_iv).setVisibility(View.INVISIBLE);
+        }
+        if (place.getWeekdayText() != null ) {
+            workHoursTextView.setText(place.getWeekdayText());
+        } else {
+            findViewById(R.id.time_icon_iv).setVisibility(View.INVISIBLE);
+        }
         ratingTextView.setText(String.valueOf(place.getRating()));
-        webSiteTextView.setText(place.getWebSite());
-        workHoursTextView.setText(place.getWeekdayText());
-
         LinearLayout layout = (LinearLayout) findViewById(R.id.photo_layout);
-
-        for(Drawable drawable: place.getPhotos()){
-            ImageView imageView = new ImageView(this);
-            imageView.setImageDrawable(drawable);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            layout.addView(imageView);
+        if(place.getPhotos() == null || place.getPhotos().size() != 0) {
+            int i = 0;
+            for (String photoUrl : place.getPhotos()) {
+                ImageView imageView = new ImageView(this);
+                Glide.with(this)
+                        .load(photoUrl)
+                        .into(imageView);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                layout.addView(imageView);
+                i++;
+                if (i == 4) break;
+            }
+        } else {
+            layout.setVisibility(View.INVISIBLE);
         }
 
         if (place.getReviews() != null){

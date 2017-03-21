@@ -6,12 +6,16 @@ package com.insulardevelopment.touristslittlehelper.placetype;
 
 public class PlacesTypes {
     private String typesName;
+    private String rusName;
+    private boolean chosen;
 
     public PlacesTypes() {
     }
 
-    public PlacesTypes(String typesName) {
+    public PlacesTypes(String typesName, String rusName, boolean chosen) {
         this.typesName = typesName;
+        this.rusName = rusName;
+        this.chosen = chosen;
     }
 
     public String getTypesName() {
@@ -20,5 +24,21 @@ public class PlacesTypes {
 
     public void setTypesName(String typesName) {
         this.typesName = typesName;
+    }
+
+    public String getRusName() {
+        return rusName;
+    }
+
+    public void setRusName(String rusName) {
+        this.rusName = rusName;
+    }
+
+    public boolean isChosen() {
+        return chosen;
+    }
+
+    public void setChosen(boolean chosen) {
+        this.chosen = chosen;
     }
 }

@@ -2,6 +2,7 @@ package com.insulardevelopment.touristslittlehelper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,8 +30,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import static com.insulardevelopment.touristslittlehelper.StartActivity.APP_PREFERENCES;
 
 public class ChoosePlacesActivity extends AppCompatActivity {
 
@@ -39,6 +44,7 @@ public class ChoosePlacesActivity extends AppCompatActivity {
     private int radius = 5000;
     private List<Place> places;
     private Button nextBtn;
+    private SharedPreferences sp;
 
 
     public class GooglePlacesReadTask extends AsyncTask<Object, Integer, List<Place>> {
@@ -72,16 +78,23 @@ public class ChoosePlacesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_places);
         Intent intent = getIntent();
+        setTitle(R.string.popular_places_activity_description);
         selectedLatLng = intent.getParcelableExtra(SELECTED_LATLNG);
+        sp = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        Set<String> types = sp.getStringSet(StartActivity.CHOSEN_TYPES, new HashSet<String>());
+        String strTypes = "";
+        for(String type : types) {
+            strTypes += (type + "|");
+        }
+        strTypes = strTypes.substring(0, strTypes.length()-1);
         ViewPager placesViewPager = (ViewPager) findViewById(R.id.places_view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         try{
-            String type = "cafe|art_gallery";
             StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
             googlePlacesUrl.append("location=" + selectedLatLng.latitude + "," + selectedLatLng.longitude);
             googlePlacesUrl.append("&radius=" + radius);
-            googlePlacesUrl.append("&types=" + type);
+            googlePlacesUrl.append("&types=" + strTypes);
             googlePlacesUrl.append("&sensor=true");
             googlePlacesUrl.append("&language=ru");
             googlePlacesUrl.append("&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");

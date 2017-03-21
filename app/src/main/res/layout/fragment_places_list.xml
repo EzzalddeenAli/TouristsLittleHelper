@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="@string/popular_places_activity_description"
-            android:textSize="18sp"
-            android:layout_margin="5dp"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAlignment="center"-->
+            <!--android:text="@string/popular_places_activity_description"-->
+            <!--android:textSize="18sp"-->
+            <!--android:layout_margin="5dp"/>-->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/popular_places_recycler_view"

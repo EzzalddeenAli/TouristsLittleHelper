@@ -1,15 +1,22 @@
 package com.insulardevelopment.touristslittlehelper.placetype;
 
+import android.content.Context;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.insulardevelopment.touristslittlehelper.R;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by админ on 28.11.2016.
@@ -19,22 +26,24 @@ import java.util.List;
 public class PlacesTypesAdapter extends RecyclerView.Adapter<PlacesTypesAdapter.MyViewHolder> {
 
     private List<PlacesTypes> placesTypesList;
-    private boolean[] checked;
+    private Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         public TextView placeTypeTextView;
         public CheckBox choosePlaceTypeCheckBox;
+        public ImageView iconIv;
 
         public MyViewHolder(View view) {
             super(view);
             placeTypeTextView = (TextView) view.findViewById(R.id.place_type_text_view);
             choosePlaceTypeCheckBox = (CheckBox) view.findViewById(R.id.choose_place_type_check_box);
+            iconIv = (ImageView) view.findViewById(R.id.start_icon_iv);
         }
     }
 
-    public PlacesTypesAdapter(List<PlacesTypes> placesTypesList){
+    public PlacesTypesAdapter(Context context, List<PlacesTypes> placesTypesList){
         this.placesTypesList = placesTypesList;
-        checked = new boolean[placesTypesList.size()];
+        this.context = context;
     }
 
     @Override
@@ -46,18 +55,25 @@ public class PlacesTypesAdapter extends RecyclerView.Adapter<PlacesTypesAdapter.
     @Override
     public void onBindViewHolder(PlacesTypesAdapter.MyViewHolder holder, final int position) {
         PlacesTypes placesTypes = placesTypesList.get(position);
-        holder.placeTypeTextView.setText(placesTypes.getTypesName());
-        holder.choosePlaceTypeCheckBox.setChecked(checked[position]);
+        holder.placeTypeTextView.setText(placesTypes.getRusName());
+        holder.choosePlaceTypeCheckBox.setChecked(placesTypesList.get(position).isChosen());
         holder.choosePlaceTypeCheckBox.setOnClickListener(new  View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                checked[position] = !checked[position];
+                placesTypesList.get(position).setChosen(!placesTypesList.get(position).isChosen());
             }
         });
+        Glide.with(context)
+                .load("http://maps.gstatic.com/mapfiles/place_api/icons/" + placesTypes.getTypesName() + "-71.png")
+                .into(holder.iconIv);
     }
 
-    public boolean[] getChecked() {
-        return checked;
+    public Set<String> getChecked() {
+        Set<String> types = new HashSet<>();
+        for(PlacesTypes type: placesTypesList){
+            if (type.isChosen()) types.add(type.getTypesName());
+        }
+        return types;
     }
 
     @Override

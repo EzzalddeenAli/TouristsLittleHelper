@@ -23,7 +23,7 @@ public class Place{
     private String weekdayText;
     private LatLng latLng;
     private String webSite;
-    private List<Drawable> photos;
+    private List<String> photos;
     private List<Review> reviews;
 
     private boolean chosen = true;
@@ -32,7 +32,7 @@ public class Place{
     public Place() {
     }
 
-    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, LatLng latLng, String webSite, List<Drawable> photos, List<Review> reviews) {
+    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, LatLng latLng, String webSite, List<String> photos, List<Review> reviews) {
         this.name = name;
         this.formattedAddress = formattedAddress;
         this.formattedPhoneNumber = formattedPhoneNumber;
@@ -110,11 +110,11 @@ public class Place{
         this.weekdayText = weekdayText;
     }
 
-    public List<Drawable> getPhotos() {
+    public List<String> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<Drawable> photos) {
+    public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
 
