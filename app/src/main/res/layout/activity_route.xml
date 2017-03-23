@@ -18,7 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true"
         android:background="@color/lightYellow"
         android:padding="20dp">
         <LinearLayout
@@ -104,9 +103,9 @@
         android:layout_height="90dp"
         android:background="@drawable/round_button"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="-45dp"
+        android:layout_marginTop="-45dp"
         android:layout_marginRight="15dp"
         android:text="@string/save"
         android:textColor="@color/colorLight"
-        android:layout_above="@id/route_layout"/>
+        android:layout_below="@id/route_layout"/>
 </RelativeLayout>

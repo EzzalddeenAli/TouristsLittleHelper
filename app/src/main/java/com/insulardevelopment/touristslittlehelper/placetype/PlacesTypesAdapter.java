@@ -54,13 +54,13 @@ public class PlacesTypesAdapter extends RecyclerView.Adapter<PlacesTypesAdapter.
 
     @Override
     public void onBindViewHolder(PlacesTypesAdapter.MyViewHolder holder, final int position) {
-        PlacesTypes placesTypes = placesTypesList.get(position);
+        final PlacesTypes placesTypes = placesTypesList.get(position);
         holder.placeTypeTextView.setText(placesTypes.getRusName());
         holder.choosePlaceTypeCheckBox.setChecked(placesTypesList.get(position).isChosen());
         holder.choosePlaceTypeCheckBox.setOnClickListener(new  View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                placesTypesList.get(position).setChosen(!placesTypesList.get(position).isChosen());
+                placesTypes.setChosen(!placesTypes.isChosen());
             }
         });
         Glide.with(context)

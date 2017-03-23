@@ -58,7 +58,7 @@ public class PlacesListFragment extends Fragment  implements LocationListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_places_list, container, false);
         setRetainInstance(true);
-        placeAdapter = new PlaceAdapter(places, new PlaceAdapter.OnItemClickListener() {
+        placeAdapter = new PlaceAdapter(getActivity(), places, new PlaceAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 PlaceActivity.start(getActivity(), places.get(position));

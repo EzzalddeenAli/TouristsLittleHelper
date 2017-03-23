@@ -3,6 +3,8 @@ package com.insulardevelopment.touristslittlehelper;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -40,13 +42,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private List<Place> places;
     private GoogleMap map;
     private Route route;
-    private TextView timeTv, distanceTv;
+    private TextView timeTv, distanceTv, cityTv;
 
     private class DownloadTask extends AsyncTask<String, Void, String> {
         @Override
@@ -77,8 +80,18 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_route);
         timeTv = (TextView) findViewById(R.id.new_route_time_text_view);
         distanceTv = (TextView) findViewById(R.id.new_route_distance_text_view);
+        cityTv = (TextView) findViewById(R.id.city_name_new_route_text_view);
         places = ChosenPlaces.getInstance().getPlaces();
         route = new Route();
+        Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(places.get(0).getLatLng().latitude, places.get(0).getLatLng().longitude, 1);
+            route.setCity(addresses.get(0).getLocality());
+            cityTv.setText(route.getCity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.route_map);
         mapFragment.getMapAsync(this);
         new DownloadTask().execute(getMapsApiDirectionsUrl());

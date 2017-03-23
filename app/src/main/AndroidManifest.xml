@@ -34,7 +34,8 @@
             android:name=".ChooseLocationActivity"
             android:label="@string/title_activity_choose_location" />
         <activity android:name=".PopularPlacesActivity" />
-        <activity android:name=".place.PlaceActivity" />
+        <activity android:name=".place.PlaceActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".StartActivity"
             android:label="@string/app_name"
@@ -47,7 +48,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChoosePlacesActivity" />
-        <activity android:name=".RouteActivity"></activity>
+        <activity
+            android:name=".RouteActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

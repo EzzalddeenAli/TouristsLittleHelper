@@ -1,5 +1,6 @@
 package com.insulardevelopment.touristslittlehelper.place;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.insulardevelopment.touristslittlehelper.R;
 
 import java.io.InputStream;
@@ -25,6 +27,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     private List<Place> places;
     private OnItemClickListener onItemClickListener;
     private Drawable drawable;
+    private Context context;
 
     public interface OnItemClickListener {
         public void onItemClick(View view, int position);
@@ -47,9 +50,10 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     }
 
 
-    public PlaceAdapter(List<Place> places,  OnItemClickListener onItemClickListener) {
+    public PlaceAdapter(Context context, List<Place> places, OnItemClickListener onItemClickListener) {
         this.places = places;
         this.onItemClickListener = onItemClickListener;
+        this.context = context;
     }
 
     @Override
@@ -61,33 +65,25 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
     @Override
     public void onBindViewHolder(final PlaceAdapter.PlaceViewHolder holder, final int position) {
         final Place place = places.get(position);
+        holder.checkBox.setOnCheckedChangeListener(null);
         holder.addressTextView.setText(place.getFormattedAddress());
         holder.nameTextView.setText(place.getName());
         holder.checkBox.setChecked(place.isChosen());
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                place.setChosen(isChecked);
+            }
+        });
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 place.setChosen(b);
             }
         });
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-                    InputStream is = (InputStream) new URL(place.getIcon()).getContent();
-                    drawable = Drawable.createFromStream(is, "src name");
-                } catch (Exception e) {
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void result) {
-                if (drawable != null)
-                    holder.iconImageView.setImageDrawable(drawable);
-            }
-
-        }.execute();
+        Glide.with(context)
+                .load(place.getIcon())
+                .into(holder.iconImageView);
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

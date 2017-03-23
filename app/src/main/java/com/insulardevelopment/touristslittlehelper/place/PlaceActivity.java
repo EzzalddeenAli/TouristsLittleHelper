@@ -178,7 +178,7 @@ public class PlaceActivity extends AppCompatActivity {
         }
         ratingTextView.setText(String.valueOf(place.getRating()));
         LinearLayout layout = (LinearLayout) findViewById(R.id.photo_layout);
-        if(place.getPhotos() == null || place.getPhotos().size() != 0) {
+        if(place.getPhotos() != null && place.getPhotos().size() != 0) {
             int i = 0;
             for (String photoUrl : place.getPhotos()) {
                 ImageView imageView = new ImageView(this);

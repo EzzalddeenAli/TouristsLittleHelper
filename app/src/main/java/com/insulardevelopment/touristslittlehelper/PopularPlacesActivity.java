@@ -64,7 +64,7 @@ public class PopularPlacesActivity extends AppCompatActivity implements Location
             try {
                 googlePlacesJson = new JSONObject(result);
                 List<Place> googlePlacesList = (new PlaceParser()).parse(googlePlacesJson);
-                placeAdapter = new PlaceAdapter(googlePlacesList, new PlaceAdapter.OnItemClickListener() {
+                placeAdapter = new PlaceAdapter(PopularPlacesActivity.this, googlePlacesList, new PlaceAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         PlaceActivity.start(PopularPlacesActivity.this, places.get(position));
