@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         });
         RecyclerView routeRecycler = (RecyclerView) findViewById(R.id.routes_recycler_view);
         routes = new ArrayList<>();
-        routes.add(new Route("Воронеж, Воронежская область, Россия", "Музеи Воронежа", new ArrayList<Place>(), 10, 4));
-        routes.add(new Route("Москва, Московская область, Россия", "Галереи Москвы", new ArrayList<Place>(), 7.4, 5));
+        routes.add(new Route("Воронеж, Воронежская область, Россия", "Музеи Воронежа", new ArrayList<Place>(), 10, 4, ""));
+        routes.add(new Route("Москва, Московская область, Россия", "Галереи Москвы", new ArrayList<Place>(), 7.4, 5, ""));
         RouteAdapter adapter = new RouteAdapter(routes);
         routeRecycler.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());

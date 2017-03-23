@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.insulardevelopment.touristslittlehelper.place.Http;
 import com.insulardevelopment.touristslittlehelper.place.Place;
+import com.insulardevelopment.touristslittlehelper.route.Route;
 
 import org.json.JSONArray;
 import org.json.JSONException;
