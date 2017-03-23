@@ -28,7 +28,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB9nIZmMXXpnE-k_WHahmKChkT39hsM2Io" />
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".ChooseLocationActivity"
@@ -46,7 +46,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChoosePlacesActivity"></activity>
+        <activity android:name=".ChoosePlacesActivity" />
+        <activity android:name=".RouteActivity"></activity>
     </application>
 
 </manifest>

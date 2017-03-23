@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -47,16 +48,14 @@ public class ChoosePlacesActivity extends AppCompatActivity {
     private SharedPreferences sp;
 
 
-    public class GooglePlacesReadTask extends AsyncTask<Object, Integer, List<Place>> {
+    public class GooglePlacesReadTask extends AsyncTask<String, Integer, List<Place>> {
         String googlePlacesData = null;
         JSONObject googlePlacesJson;
 
         @Override
-        protected List<Place> doInBackground(Object... inputObj) {
+        protected List<Place> doInBackground(String ... inputObj) {
             try {
-                String googlePlacesUrl = (String) inputObj[0];
-                Http http = new Http();
-                googlePlacesData = http.read(googlePlacesUrl);
+                googlePlacesData = Http.read(inputObj[0]);
                 googlePlacesJson = new JSONObject(googlePlacesData);
                 List<Place> googlePlacesList = (new PlaceParser()).parse(googlePlacesJson);
                 return googlePlacesList;
@@ -87,7 +86,7 @@ public class ChoosePlacesActivity extends AppCompatActivity {
             strTypes += (type + "|");
         }
         strTypes = strTypes.substring(0, strTypes.length()-1);
-        ViewPager placesViewPager = (ViewPager) findViewById(R.id.places_view_pager);
+        final ViewPager placesViewPager = (ViewPager) findViewById(R.id.places_view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         try{
@@ -100,7 +99,7 @@ public class ChoosePlacesActivity extends AppCompatActivity {
             googlePlacesUrl.append("&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
 
             ChoosePlacesActivity.GooglePlacesReadTask googlePlacesReadTask = new ChoosePlacesActivity.GooglePlacesReadTask();
-            Object toPass = googlePlacesUrl.toString();
+            String toPass = googlePlacesUrl.toString();
             places = googlePlacesReadTask.execute(toPass).get();
         }catch (SecurityException e){} catch (InterruptedException e) {
             e.printStackTrace();
@@ -115,7 +114,12 @@ public class ChoosePlacesActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("tag", places.toString());
+                List<Place> chosenPlaces = new LinkedList<Place>();
+                for(Place p:places){
+                    if (p.isChosen()) chosenPlaces.add(p);
+                }
+                ChosenPlaces.getInstance().setPlaces(chosenPlaces);
+                RouteActivity.start(ChoosePlacesActivity.this);
             }
         });
     }

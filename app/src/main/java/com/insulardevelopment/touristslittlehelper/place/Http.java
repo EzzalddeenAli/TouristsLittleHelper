@@ -14,7 +14,7 @@ import java.net.URL;
  */
 
 public class Http {
-    public String read(String httpUrl) throws IOException {
+    public static String read(String httpUrl) throws IOException {
         String httpData = "";
         InputStream inputStream = null;
         HttpURLConnection httpURLConnection = null;

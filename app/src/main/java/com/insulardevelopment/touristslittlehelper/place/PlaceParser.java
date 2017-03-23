@@ -41,12 +41,12 @@ public class PlaceParser {
     private Place getPlace(JSONObject googlePlaceJson) {
         Place place = new Place();
         try {
-            place.setName(googlePlaceJson.getString("name"));
-            place.setFormattedAddress(googlePlaceJson.getString("vicinity"));
-            place.setIcon(googlePlaceJson.getString("icon"));
-            place.setRating(googlePlaceJson.getDouble("rating"));
-            place.setPlaceId(googlePlaceJson.getString("place_id"));
-            place.setLatLng(new LatLng(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
+            if(googlePlaceJson.has("name")) place.setName(googlePlaceJson.getString("name"));
+            if(googlePlaceJson.has("vicinity")) place.setFormattedAddress(googlePlaceJson.getString("vicinity"));
+            if(googlePlaceJson.has("icon")) place.setIcon(googlePlaceJson.getString("icon"));
+            if(googlePlaceJson.has("rating")) place.setRating(googlePlaceJson.getDouble("rating"));
+            if(googlePlaceJson.has("place_id")) place.setPlaceId(googlePlaceJson.getString("place_id"));
+            if(googlePlaceJson.has("geometry")) place.setLatLng(new LatLng(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
                     googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
         } catch (JSONException e) {
             e.printStackTrace();
