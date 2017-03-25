@@ -12,4 +12,5 @@
     <string name="question_place">Хотите ли вы посетить данное место?</string>
     <string name="route_name_hint">Введите название маршрута</string>
     <string name="save">Сохранить</string>
+    <string name="change_types">Изменить типы мест</string>
 </resources>
