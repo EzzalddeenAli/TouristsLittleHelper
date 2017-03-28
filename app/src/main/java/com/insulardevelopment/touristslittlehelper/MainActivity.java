@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.type_action_menu:
-                //start activity
+                PlaceTypesActivity.start(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

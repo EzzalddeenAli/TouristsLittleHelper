@@ -9,9 +9,10 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.insulardevelopment.touristslittlehelper.placetype.PlacesTypes;
-import com.insulardevelopment.touristslittlehelper.placetype.PlacesTypesAdapter;
+import com.insulardevelopment.touristslittlehelper.placetype.PlaceType;
+import com.insulardevelopment.touristslittlehelper.placetype.PlaceTypeAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,24 +36,18 @@ public class PlaceTypesActivity extends AppCompatActivity {
         sp = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.type_menu_recycler);
         Set types = sp.getStringSet(StartActivity.CHOSEN_TYPES, new HashSet<String>());
-        final List<PlacesTypes> placesTypes = new ArrayList<>();
+        final DataBaseHelper databaseHelper = new DataBaseHelper(this);
+        List<PlaceType> placesTypes = null;
+        try {
+            placesTypes = databaseHelper.getTestDao().queryForAll();
+            final PlaceTypeAdapter placeTypeAdapter = new PlaceTypeAdapter(this, placesTypes);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(placeTypeAdapter);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        placesTypes.add(new PlacesTypes("museum", "Музей", false));
-        placesTypes.add(new PlacesTypes("art_gallery", "Галерея", false));
-        placesTypes.add(new PlacesTypes("park", "Парк", false));
-        placesTypes.add(new PlacesTypes("casino", "Казино", false));
-        placesTypes.add(new PlacesTypes("church", "Собор", false));
-        placesTypes.add(new PlacesTypes("amusement_park", "Парк развлечений", false));
-        placesTypes.add(new PlacesTypes("zoo", "Зоопарк", false));
-        placesTypes.add(new PlacesTypes("stadium", "Стадион", false));
-        placesTypes.add(new PlacesTypes("aquarium", "Океанариум", false));
-
-
-
-        final PlacesTypesAdapter placesTypesAdapter = new PlacesTypesAdapter(this, placesTypes);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(placesTypesAdapter);
     }
 }

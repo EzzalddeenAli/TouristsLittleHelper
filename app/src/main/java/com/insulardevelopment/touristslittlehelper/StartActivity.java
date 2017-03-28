@@ -8,17 +8,15 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 
-import com.insulardevelopment.touristslittlehelper.placetype.PlacesTypes;
-import com.insulardevelopment.touristslittlehelper.placetype.PlacesTypesAdapter;
+import com.insulardevelopment.touristslittlehelper.placetype.PlaceType;
+import com.insulardevelopment.touristslittlehelper.placetype.PlaceTypeAdapter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 /*
 *   Активити для выбора необходимых типов мест при первом запуске приложения
@@ -38,36 +36,39 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
         sp = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.places_types_recycler_view);
-        final List<PlacesTypes> placesTypes = new ArrayList<>();
+        final DataBaseHelper databaseHelper = new DataBaseHelper(this);
+        final List<PlaceType> placesTypes = new ArrayList<>();
+        String path = "http://maps.gstatic.com/mapfiles/place_api/icons/", size = "-71.png";
 
-        placesTypes.add(new PlacesTypes("museum", "Музей", false));
-        placesTypes.add(new PlacesTypes("art_gallery", "Галерея", false));
-        placesTypes.add(new PlacesTypes("park", "Парк", false));
-        placesTypes.add(new PlacesTypes("casino", "Казино", false));
-        placesTypes.add(new PlacesTypes("church", "Собор", false));
-        placesTypes.add(new PlacesTypes("amusement_park", "Парк развлечений", false));
-        placesTypes.add(new PlacesTypes("zoo", "Зоопарк", false));
-        placesTypes.add(new PlacesTypes("stadium", "Стадион", false));
-        placesTypes.add(new PlacesTypes("aquarium", "Океанариум", false));
+        placesTypes.add(new PlaceType(1, "museum", "Музей", false, path + "museum" + size, 0));
+        placesTypes.add(new PlaceType(2, "art_gallery", "Галерея", false, path + "art_gallery" + size, 0));
+        placesTypes.add(new PlaceType(3, "park", "Парк", false, null, R.drawable.park_icon));
+        placesTypes.add(new PlaceType(4, "casino", "Казино", false, path + "casino" + size, 0));
+        placesTypes.add(new PlaceType(5, "church", "Собор", false, null, R.drawable.curch_icon));
+        placesTypes.add(new PlaceType(6, "amusement_park", "Парк развлечений", false, null, R.drawable.amusement_park_icon));
+        placesTypes.add(new PlaceType(7, "zoo", "Зоопарк", false, path + "zoo" + size, 0));
+        placesTypes.add(new PlaceType(8, "stadium", "Стадион", false, path + "stadium" + size, 0));
+        placesTypes.add(new PlaceType(9, "aquarium", "Океанариум", false, path + "aquarium" + size, 0));
 
 
 
-        final PlacesTypesAdapter placesTypesAdapter = new PlacesTypesAdapter(this, placesTypes);
+        final PlaceTypeAdapter placeTypeAdapter = new PlaceTypeAdapter(this, placesTypes);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(placesTypesAdapter);
+        recyclerView.setAdapter(placeTypeAdapter);
 
         confirmBtn = (Button) findViewById(R.id.start_confirm_btn);
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Set<String> types = placesTypesAdapter.getChecked();
-                SharedPreferences.Editor edit = sp.edit();
-                edit.clear();
-                edit.putStringSet(CHOSEN_TYPES, types);
-                edit.commit();
+                    for(PlaceType placeType: placesTypes) {
+                        try {
+                            databaseHelper.getTestDao().create(placeType);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 MainActivity.start(StartActivity.this);
             }
         });

@@ -2,6 +2,7 @@ package com.insulardevelopment.touristslittlehelper.route;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.place.Place;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
 import java.util.List;

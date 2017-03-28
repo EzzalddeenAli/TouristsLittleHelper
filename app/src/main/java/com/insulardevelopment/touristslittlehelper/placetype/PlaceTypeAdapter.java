@@ -1,7 +1,6 @@
 package com.insulardevelopment.touristslittlehelper.placetype;
 
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import com.bumptech.glide.Glide;
 import com.insulardevelopment.touristslittlehelper.R;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,9 +21,9 @@ import java.util.Set;
  * адаптер для типов мест
  */
 
-public class PlacesTypesAdapter extends RecyclerView.Adapter<PlacesTypesAdapter.MyViewHolder> {
+public class PlaceTypeAdapter extends RecyclerView.Adapter<PlaceTypeAdapter.MyViewHolder> {
 
-    private List<PlacesTypes> placesTypesList;
+    private List<PlaceType> placeTypeList;
     private Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -41,36 +39,40 @@ public class PlacesTypesAdapter extends RecyclerView.Adapter<PlacesTypesAdapter.
         }
     }
 
-    public PlacesTypesAdapter(Context context, List<PlacesTypes> placesTypesList){
-        this.placesTypesList = placesTypesList;
+    public PlaceTypeAdapter(Context context, List<PlaceType> placeTypeList){
+        this.placeTypeList = placeTypeList;
         this.context = context;
     }
 
     @Override
-    public PlacesTypesAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PlaceTypeAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.place_type_item, parent, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(PlacesTypesAdapter.MyViewHolder holder, final int position) {
-        final PlacesTypes placesTypes = placesTypesList.get(position);
-        holder.placeTypeTextView.setText(placesTypes.getRusName());
-        holder.choosePlaceTypeCheckBox.setChecked(placesTypesList.get(position).isChosen());
+    public void onBindViewHolder(PlaceTypeAdapter.MyViewHolder holder, final int position) {
+        final PlaceType placeType = placeTypeList.get(position);
+        holder.placeTypeTextView.setText(placeType.getRusName());
+        holder.choosePlaceTypeCheckBox.setChecked(placeTypeList.get(position).isChosen());
         holder.choosePlaceTypeCheckBox.setOnClickListener(new  View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                placesTypes.setChosen(!placesTypes.isChosen());
+                placeType.setChosen(!placeType.isChosen());
             }
         });
-        Glide.with(context)
-                .load("http://maps.gstatic.com/mapfiles/place_api/icons/" + placesTypes.getTypesName() + "-71.png")
-                .into(holder.iconIv);
+        if (placeType.getIconId() == 0) {
+            Glide.with(context)
+                    .load("http://maps.gstatic.com/mapfiles/place_api/icons/" + placeType.getTypesName() + "-71.png")
+                    .into(holder.iconIv);
+        } else {
+            holder.iconIv.setImageDrawable(context.getResources().getDrawable(placeType.getIconId()));
+        }
     }
 
     public Set<String> getChecked() {
         Set<String> types = new HashSet<>();
-        for(PlacesTypes type: placesTypesList){
+        for(PlaceType type: placeTypeList){
             if (type.isChosen()) types.add(type.getTypesName());
         }
         return types;
@@ -78,6 +80,6 @@ public class PlacesTypesAdapter extends RecyclerView.Adapter<PlacesTypesAdapter.
 
     @Override
     public int getItemCount() {
-        return placesTypesList.size();
+        return placeTypeList.size();
     }
 }
