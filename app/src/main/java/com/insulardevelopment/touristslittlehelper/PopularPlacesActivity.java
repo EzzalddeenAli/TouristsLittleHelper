@@ -2,23 +2,20 @@ package com.insulardevelopment.touristslittlehelper;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.insulardevelopment.touristslittlehelper.place.Http;
+import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.place.Place;
 import com.insulardevelopment.touristslittlehelper.place.PlaceActivity;
 import com.insulardevelopment.touristslittlehelper.place.PlaceAdapter;

@@ -3,9 +3,6 @@ package com.insulardevelopment.touristslittlehelper;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
@@ -13,30 +10,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.insulardevelopment.touristslittlehelper.place.Http;
+import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.place.Place;
-import com.insulardevelopment.touristslittlehelper.place.PlaceActivity;
-import com.insulardevelopment.touristslittlehelper.place.PlaceAdapter;
 import com.insulardevelopment.touristslittlehelper.place.PlaceParser;
+import com.insulardevelopment.touristslittlehelper.placetype.PlaceType;
+import com.insulardevelopment.touristslittlehelper.route.RouteActivity;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
-
-import static com.insulardevelopment.touristslittlehelper.StartActivity.APP_PREFERENCES;
 
 public class ChoosePlacesActivity extends AppCompatActivity {
 
@@ -79,13 +68,23 @@ public class ChoosePlacesActivity extends AppCompatActivity {
         Intent intent = getIntent();
         setTitle(R.string.popular_places_activity_description);
         selectedLatLng = intent.getParcelableExtra(SELECTED_LATLNG);
-        sp = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        Set<String> types = sp.getStringSet(StartActivity.CHOSEN_TYPES, new HashSet<String>());
+//        sp = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+//        Set<String> types = sp.getStringSet(StartActivity.CHOSEN_TYPES, new HashSet<String>());
+//        String strTypes = "";
+//        for(String type : types) {
+//            strTypes += (type + "|");
+//        }
         String strTypes = "";
-        for(String type : types) {
-            strTypes += (type + "|");
+        DataBaseHelper helper = new DataBaseHelper(this);
+        try {
+            List<PlaceType> types = helper.getTypeDao().queryForAll();
+            for (PlaceType type : types) {
+                strTypes += (type.getTypesName() + "|");
+            }
+            strTypes = strTypes.substring(0, strTypes.length() - 1);
         }
-        strTypes = strTypes.substring(0, strTypes.length()-1);
+        catch (Exception e) {}
+
         final ViewPager placesViewPager = (ViewPager) findViewById(R.id.places_view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);

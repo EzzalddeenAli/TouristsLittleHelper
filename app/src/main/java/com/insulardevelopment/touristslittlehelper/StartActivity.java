@@ -27,6 +27,7 @@ public class StartActivity extends AppCompatActivity {
     private Button confirmBtn;
     private SharedPreferences sp;
     public static final String CHOSEN_TYPES = "types";
+    public static final String FIRST_LAUNCHING = "first";
     public static final String APP_PREFERENCES = "preferences";
 
 
@@ -35,6 +36,10 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         sp = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        boolean first = sp.getBoolean(FIRST_LAUNCHING, true);
+        if (!first){
+            MainActivity.start(this);
+        }
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.places_types_recycler_view);
         final DataBaseHelper databaseHelper = new DataBaseHelper(this);
         final List<PlaceType> placesTypes = new ArrayList<>();
@@ -62,9 +67,12 @@ public class StartActivity extends AppCompatActivity {
         confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putBoolean(FIRST_LAUNCHING, false);
+                editor.commit();
                     for(PlaceType placeType: placesTypes) {
                         try {
-                            databaseHelper.getTestDao().create(placeType);
+                            databaseHelper.getTypeDao().create(placeType);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }

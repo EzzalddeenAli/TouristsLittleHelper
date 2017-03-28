@@ -1,12 +1,8 @@
 package com.insulardevelopment.touristslittlehelper.place;
 
-import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.android.gms.maps.model.LatLng;
+import com.insulardevelopment.touristslittlehelper.place.review.Review;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**

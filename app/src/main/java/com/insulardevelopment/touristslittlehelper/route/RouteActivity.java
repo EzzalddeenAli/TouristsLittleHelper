@@ -1,22 +1,17 @@
-package com.insulardevelopment.touristslittlehelper;
+package com.insulardevelopment.touristslittlehelper.route;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.events.ChangeEvent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,22 +20,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.insulardevelopment.touristslittlehelper.place.Http;
+import com.insulardevelopment.touristslittlehelper.ChosenPlaces;
+import com.insulardevelopment.touristslittlehelper.DataBaseHelper;
+import com.insulardevelopment.touristslittlehelper.R;
+import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.place.Place;
-import com.insulardevelopment.touristslittlehelper.route.Route;
+import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,6 +42,9 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private GoogleMap map;
     private Route route;
     private TextView timeTv, distanceTv, cityTv;
+    private EditText nameEt;
+    private Button saveRouteBtn;
+    private DataBaseHelper helper;
 
     private class DownloadTask extends AsyncTask<String, Void, String> {
         @Override
@@ -78,6 +73,9 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
+        nameEt = (EditText) findViewById(R.id.new_route_name_text_view);
+        helper = new DataBaseHelper(this);
+        saveRouteBtn = (Button) findViewById(R.id.save_route_btn);
         timeTv = (TextView) findViewById(R.id.new_route_time_text_view);
         distanceTv = (TextView) findViewById(R.id.new_route_distance_text_view);
         cityTv = (TextView) findViewById(R.id.city_name_new_route_text_view);
@@ -95,6 +93,17 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.route_map);
         mapFragment.getMapAsync(this);
         new DownloadTask().execute(getMapsApiDirectionsUrl());
+        saveRouteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    route.setName(nameEt.getText().toString());
+                    helper.getRouteDao().create(route);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override

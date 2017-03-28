@@ -44,8 +44,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     public void onBindViewHolder(RouteViewHolder holder, int position) {
         Route route = routes.get(position);
         holder.nameTextView.setText(route.getName());
-        holder.distanceTextView.setText(String.valueOf(route.getDistance())+"км");
-        holder.timeTextView.setText(String.valueOf(route.getTime())+"ч");
+        holder.distanceTextView.setText(String.valueOf(String.format("%.1f", ((double) route.getDistance())/1000)) + "км");
+        holder.timeTextView.setText(String.valueOf(String.format("%.1f", ((double) route.getTime())/3600)) + "ч");
         holder.cityTextView.setText(route.getCity());
     }
 

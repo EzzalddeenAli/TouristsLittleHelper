@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.insulardevelopment.touristslittlehelper.placetype.PlaceType;
+import com.insulardevelopment.touristslittlehelper.route.Route;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
@@ -19,9 +20,10 @@ import java.sql.SQLException;
 public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "main.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private Dao<PlaceType, Integer> placeTypeDao = null;
+    private Dao<Route, Integer> routeDao = null;
 
     public DataBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,6 +33,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, PlaceType.class);
+            TableUtils.createTable(connectionSource, Route.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -40,6 +43,7 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try{
             TableUtils.dropTable(connectionSource, PlaceType.class, true);
+            TableUtils.dropTable(connectionSource, Route.class, true);
             onCreate(database, connectionSource);
         }
         catch (java.sql.SQLException e){
@@ -47,7 +51,14 @@ public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public Dao getTestDao() throws SQLException{
+    public Dao getRouteDao() throws SQLException{
+        if(routeDao == null){
+            routeDao = getDao(Route.class);
+        }
+        return routeDao;
+    }
+
+    public Dao getTypeDao() throws SQLException{
         if(placeTypeDao == null){
             placeTypeDao = getDao(PlaceType.class);
         }

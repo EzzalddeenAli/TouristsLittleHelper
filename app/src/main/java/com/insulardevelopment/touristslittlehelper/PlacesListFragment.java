@@ -1,11 +1,7 @@
 package com.insulardevelopment.touristslittlehelper;
 
-import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,21 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
-import com.insulardevelopment.touristslittlehelper.place.Http;
 import com.insulardevelopment.touristslittlehelper.place.Place;
 import com.insulardevelopment.touristslittlehelper.place.PlaceActivity;
 import com.insulardevelopment.touristslittlehelper.place.PlaceAdapter;
-import com.insulardevelopment.touristslittlehelper.place.PlaceParser;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Context.LOCATION_SERVICE;
 
 /**
  * Created by Маргарита on 02.02.2017.

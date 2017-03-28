@@ -1,4 +1,4 @@
-package com.insulardevelopment.touristslittlehelper.place;
+package com.insulardevelopment.touristslittlehelper.place.review;
 
 /**
  * Created by Маргарита on 25.12.2016.

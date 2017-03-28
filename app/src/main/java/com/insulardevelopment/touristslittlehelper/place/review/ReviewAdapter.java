@@ -1,4 +1,4 @@
-package com.insulardevelopment.touristslittlehelper.place;
+package com.insulardevelopment.touristslittlehelper.place.review;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

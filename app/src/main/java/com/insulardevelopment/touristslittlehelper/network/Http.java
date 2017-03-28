@@ -1,4 +1,4 @@
-package com.insulardevelopment.touristslittlehelper.place;
+package com.insulardevelopment.touristslittlehelper.network;
 
 import android.util.Log;
 

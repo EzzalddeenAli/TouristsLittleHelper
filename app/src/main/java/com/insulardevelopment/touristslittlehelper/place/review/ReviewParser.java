@@ -1,4 +1,6 @@
-package com.insulardevelopment.touristslittlehelper.place;
+package com.insulardevelopment.touristslittlehelper.place.review;
+
+import com.insulardevelopment.touristslittlehelper.place.review.Review;
 
 import org.json.JSONArray;
 import org.json.JSONException;

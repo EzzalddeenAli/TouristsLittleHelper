@@ -2,6 +2,8 @@ package com.insulardevelopment.touristslittlehelper.route;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.place.Place;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
@@ -10,13 +12,20 @@ import java.util.List;
 /**
  * Класс, содержащий информацию о маршруте
  */
-
+@DatabaseTable(tableName = "routes")
 public class Route {
+
+    @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
+    private int id;
+    @DatabaseField(dataType = DataType.STRING, columnName = "name")
     private String name;
-    private List<Place> places;
+    @DatabaseField(dataType = DataType.DOUBLE, columnName = "distance")
     private double distance;
+    @DatabaseField(dataType = DataType.DOUBLE, columnName = "time")
     private double time;
+    @DatabaseField(dataType = DataType.STRING, columnName = "city")
     private String city;
+    @DatabaseField(dataType = DataType.STRING, columnName = "encoded_poly")
     private String encodedPoly;
 
 
@@ -24,9 +33,8 @@ public class Route {
     public Route() {
     }
 
-    public Route(String city, String name, List<Place> places, double distance, double time, String encodedPoly) {
+    public Route(String city, String name, double distance, double time, String encodedPoly) {
         this.name = name;
-        this.places = places;
         this.distance = distance;
         this.time = time;
         this.city = city;
@@ -46,14 +54,6 @@ public class Route {
     }
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Place> getPlaces() {
-        return places;
-    }
-
-    public void setPlaces(List<Place> places) {
-        this.places = places;
     }
 
     public double getDistance() {
