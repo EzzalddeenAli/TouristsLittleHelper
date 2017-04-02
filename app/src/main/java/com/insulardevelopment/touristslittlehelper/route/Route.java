@@ -6,6 +6,7 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * Класс, содержащий информацию о маршруте
  */
 @DatabaseTable(tableName = "routes")
-public class Route {
+public class Route implements Serializable{
 
     @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
     private int id;

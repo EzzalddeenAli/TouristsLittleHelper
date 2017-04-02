@@ -50,9 +50,10 @@
         </activity>
         <activity android:name=".ChoosePlacesActivity" />
         <activity
-            android:name=".route.RouteActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".placetype.PlaceTypesActivity"></activity>
+            android:name=".route.NewRouteActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".placetype.PlaceTypesActivity" />
+        <activity android:name=".RouteActivity"></activity>
     </application>
 
 </manifest>

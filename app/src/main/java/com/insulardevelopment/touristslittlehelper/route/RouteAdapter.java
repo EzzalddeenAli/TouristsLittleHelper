@@ -1,5 +1,6 @@
 package com.insulardevelopment.touristslittlehelper.route;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.insulardevelopment.touristslittlehelper.R;
+import com.insulardevelopment.touristslittlehelper.RouteActivity;
 
 import java.util.List;
 
@@ -17,12 +19,15 @@ import java.util.List;
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder> {
 
     private List<Route> routes;
+    public Context context;
 
     public class RouteViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView, cityTextView, distanceTextView, timeTextView;
+        public View container;
 
         public RouteViewHolder(final View view) {
             super(view);
+            container = view;
             nameTextView = (TextView) view.findViewById(R.id.route_name_text_view);
             distanceTextView = (TextView) view.findViewById(R.id.route_distance_text_view);
             timeTextView = (TextView) view.findViewById(R.id.route_time_text_view);
@@ -30,8 +35,9 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         }
     }
 
-    public RouteAdapter(List<Route> routes) {
+    public RouteAdapter(Context context, List<Route> routes) {
         this.routes = routes;
+        this.context = context;
     }
 
     @Override
@@ -42,11 +48,17 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
 
     @Override
     public void onBindViewHolder(RouteViewHolder holder, int position) {
-        Route route = routes.get(position);
+        final Route route = routes.get(position);
         holder.nameTextView.setText(route.getName());
         holder.distanceTextView.setText(String.valueOf(String.format("%.1f", ((double) route.getDistance())/1000)) + "км");
         holder.timeTextView.setText(String.valueOf(String.format("%.1f", ((double) route.getTime())/3600)) + "ч");
         holder.cityTextView.setText(route.getCity());
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RouteActivity.start(context, route);
+            }
+        });
     }
 
     @Override

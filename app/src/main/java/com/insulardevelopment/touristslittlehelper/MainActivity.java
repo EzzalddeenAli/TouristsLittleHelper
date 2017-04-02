@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         RecyclerView routeRecycler = (RecyclerView) findViewById(R.id.routes_recycler_view);
-        RouteAdapter adapter = new RouteAdapter(routes);
+        RouteAdapter adapter = new RouteAdapter(this, routes);
         routeRecycler.setAdapter(adapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         routeRecycler.setLayoutManager(layoutManager);

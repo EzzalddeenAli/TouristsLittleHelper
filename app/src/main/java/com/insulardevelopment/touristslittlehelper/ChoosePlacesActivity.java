@@ -18,7 +18,7 @@ import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.place.Place;
 import com.insulardevelopment.touristslittlehelper.place.PlaceParser;
 import com.insulardevelopment.touristslittlehelper.placetype.PlaceType;
-import com.insulardevelopment.touristslittlehelper.route.RouteActivity;
+import com.insulardevelopment.touristslittlehelper.route.NewRouteActivity;
 
 import org.json.JSONObject;
 
@@ -118,7 +118,7 @@ public class ChoosePlacesActivity extends AppCompatActivity {
                     if (p.isChosen()) chosenPlaces.add(p);
                 }
                 ChosenPlaces.getInstance().setPlaces(chosenPlaces);
-                RouteActivity.start(ChoosePlacesActivity.this);
+                NewRouteActivity.start(ChoosePlacesActivity.this);
             }
         });
     }

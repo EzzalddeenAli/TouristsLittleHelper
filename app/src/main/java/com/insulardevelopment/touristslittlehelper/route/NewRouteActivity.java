@@ -25,7 +25,6 @@ import com.insulardevelopment.touristslittlehelper.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.place.Place;
-import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +35,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 
-public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private List<Place> places;
     private GoogleMap map;
@@ -45,6 +44,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private EditText nameEt;
     private Button saveRouteBtn;
     private DataBaseHelper helper;
+
 
     private class DownloadTask extends AsyncTask<String, Void, String> {
         @Override
@@ -64,7 +64,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     public static void start(Context context){
-        Intent intent = new Intent(context, RouteActivity.class);
+        Intent intent = new Intent(context, NewRouteActivity.class);
         context.startActivity(intent);
 
     }
@@ -72,7 +72,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_route);
+        setContentView(R.layout.activity_new_route);
         nameEt = (EditText) findViewById(R.id.new_route_name_text_view);
         helper = new DataBaseHelper(this);
         saveRouteBtn = (Button) findViewById(R.id.save_route_btn);
