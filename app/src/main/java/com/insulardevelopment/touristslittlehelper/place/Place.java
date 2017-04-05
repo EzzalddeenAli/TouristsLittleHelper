@@ -2,25 +2,51 @@ package com.insulardevelopment.touristslittlehelper.place;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.place.review.Review;
+import com.insulardevelopment.touristslittlehelper.route.Route;
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
 import java.util.List;
+
+import static com.insulardevelopment.touristslittlehelper.place.Place.DATABASE_NAME;
 
 /**
  * Created by Маргарита on 20.11.2016.
  */
 
-public class Place{
+@DatabaseTable(tableName = DATABASE_NAME)
+public class Place implements Serializable{
+
+    public static final String DATABASE_NAME = "places";
+
+    @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
+    private int id;
+    @DatabaseField(columnName = "name")
     private String name;
+    @DatabaseField(columnName = "address")
     private String formattedAddress;
+    @DatabaseField(columnName = "phone_number")
     private String formattedPhoneNumber;
     private String icon;
+    @DatabaseField(columnName = "place_id")
     private String placeId;
+    @DatabaseField(columnName = "rating")
     private double rating;
+    @DatabaseField(columnName = "weekday_text")
     private String weekdayText;
-    private LatLng latLng;
+    @DatabaseField(columnName = "latitude")
+    private double latitude;
+    @DatabaseField(columnName = "longitude")
+    private double longitude;
+    @DatabaseField(columnName = "website")
     private String webSite;
-    private List<String> photos;
+    private List<Photo> photos;
     private List<Review> reviews;
+    @DatabaseField(columnName = "route", foreign = true, foreignAutoCreate = true)
+    private Route route;
 
     private boolean chosen = true;
 
@@ -28,7 +54,7 @@ public class Place{
     public Place() {
     }
 
-    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, LatLng latLng, String webSite, List<String> photos, List<Review> reviews) {
+    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, double latitude, double longitude, String webSite, List<Photo> photos, List<Review> reviews, boolean chosen) {
         this.name = name;
         this.formattedAddress = formattedAddress;
         this.formattedPhoneNumber = formattedPhoneNumber;
@@ -36,10 +62,12 @@ public class Place{
         this.placeId = placeId;
         this.rating = rating;
         this.weekdayText = weekdayText;
-        this.latLng = latLng;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.webSite = webSite;
         this.photos = photos;
         this.reviews = reviews;
+        this.chosen = chosen;
     }
 
     public String getName() {
@@ -65,13 +93,29 @@ public class Place{
     public void setFormattedPhoneNumber(String formattedPhoneNumber) {
         this.formattedPhoneNumber = formattedPhoneNumber;
     }
+//
+//    public LatLng getLatLng() {
+//        return latLng;
+//    }
+//
+//    public void setLatLng(LatLng latLng) {
+//        this.latLng = latLng;
+//    }
 
-    public LatLng getLatLng() {
-        return latLng;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLatLng(LatLng latLng) {
-        this.latLng = latLng;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getIcon() {
@@ -106,12 +150,12 @@ public class Place{
         this.weekdayText = weekdayText;
     }
 
-    public List<String> getPhotos() {
+    public List<Photo> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(List<String> photos) {
-        this.photos = photos;
+    public void setPhotos(List<Photo> photos) {
+        this.photos =photos;
     }
 
     public List<Review> getReviews() {
@@ -136,5 +180,13 @@ public class Place{
 
     public void setChosen(boolean chosen) {
         this.chosen = chosen;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
     }
 }

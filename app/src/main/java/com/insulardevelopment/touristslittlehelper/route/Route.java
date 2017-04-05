@@ -2,8 +2,10 @@ package com.insulardevelopment.touristslittlehelper.route;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.place.Place;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
@@ -18,6 +20,10 @@ public class Route implements Serializable{
 
     @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
     private int id;
+
+    @ForeignCollectionField(columnName = "places", eager = true)
+    private ForeignCollection<Place> places;
+
     @DatabaseField(dataType = DataType.STRING, columnName = "name")
     private String name;
     @DatabaseField(dataType = DataType.DOUBLE, columnName = "distance")
@@ -34,8 +40,9 @@ public class Route implements Serializable{
     public Route() {
     }
 
-    public Route(String city, String name, double distance, double time, String encodedPoly) {
+    public Route(String city, String name, ForeignCollection<Place> places, double distance, double time, String encodedPoly) {
         this.name = name;
+        this.places = places;
         this.distance = distance;
         this.time = time;
         this.city = city;
@@ -79,6 +86,14 @@ public class Route implements Serializable{
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public List<Place> getPlaces() {
+        return new ArrayList<>(places);
+    }
+
+    public void setPlaces(List<Place> places) {
+        this.places = (ForeignCollection<Place>) places;
     }
 
     public static List<LatLng> decodePoly(String encoded) {

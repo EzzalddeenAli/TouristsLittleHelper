@@ -25,6 +25,7 @@ import com.insulardevelopment.touristslittlehelper.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.place.Place;
+import com.j256.ormlite.dao.ForeignCollection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,7 +85,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
         List<Address> addresses = null;
         try {
-            addresses = gcd.getFromLocation(places.get(0).getLatLng().latitude, places.get(0).getLatLng().longitude, 1);
+            addresses = gcd.getFromLocation(places.get(0).getLatitude(), places.get(0).getLongitude(), 1);
             route.setCity(addresses.get(0).getLocality());
             cityTv.setText(route.getCity());
         } catch (IOException e) {
@@ -99,6 +100,10 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
                 try {
                     route.setName(nameEt.getText().toString());
                     helper.getRouteDao().create(route);
+                    for(Place place: places){
+                        place.setRoute(route);
+                        helper.getPlaceDao().create(place);
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -109,24 +114,25 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.animateCamera( CameraUpdateFactory.newLatLngZoom(places.get(0).getLatLng(), 13.0f ) );
+        LatLng latLng = new LatLng(places.get(0).getLatitude(), places.get(0).getLongitude());
+        map.animateCamera( CameraUpdateFactory.newLatLngZoom(latLng, 13.0f ) );
         for(Place place: places){
-            if(place.getLatLng()!=null) {
-                map.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName()));
+            if(place.getLongitude()!=0) {
+                map.addMarker(new MarkerOptions().position( new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()));
             }
         }
     }
 
     private String getMapsApiDirectionsUrl() {
-        String origin = "origin=" + places.get(0).getLatLng().latitude + "," + places.get(0).getLatLng().longitude;
+        String origin = "origin=" + places.get(0).getLatitude() + "," + places.get(0).getLongitude();
         String waypoints = "waypoints=optimize:true|";
         int i = -1;
         for(Place place: places){
             i++;
             if (i == 0 || i == places.size() - 1) continue;
-            waypoints += (place.getLatLng().latitude + "," + place.getLatLng().longitude + "|");
+            waypoints += (place.getLatitude() + "," + place.getLongitude() + "|");
         }
-        String destination = "destination=" + places.get(places.size() - 1).getLatLng().latitude + "," + places.get(places.size() - 1).getLatLng().longitude;
+        String destination = "destination=" + places.get(places.size() - 1).getLatitude() + "," + places.get(places.size() - 1).getLongitude();
         String sensor = "sensor=false";
         String mode = "mode=walking";
         String params = origin + "&" + waypoints + "&" + destination + "&" + mode + "&" + sensor;

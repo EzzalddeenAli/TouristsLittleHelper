@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.insulardevelopment.touristslittlehelper.R;
-import com.insulardevelopment.touristslittlehelper.RouteActivity;
 
 import java.util.List;
 

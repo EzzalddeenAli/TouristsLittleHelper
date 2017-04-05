@@ -53,7 +53,7 @@
             android:name=".route.NewRouteActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".placetype.PlaceTypesActivity" />
-        <activity android:name=".RouteActivity"></activity>
+        <activity android:name=".route.RouteActivity"></activity>
     </application>
 
 </manifest>

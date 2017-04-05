@@ -98,8 +98,8 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
  //       mMap.moveCamera(CameraUpdateFactory.newLatLng(selectedLatLng));
         mMap.animateCamera( CameraUpdateFactory.newLatLngZoom(selectedLatLng, 13.0f ) );
         for(PlaceInfo place:placeInfos){
-            if(place.getPlace().getLatLng()!=null) {
-                place.setMarker(mMap.addMarker(new MarkerOptions().position(place.getPlace().getLatLng()).title(place.getPlace().getName())));
+            if(place.getPlace().getLatitude()!=0) {
+                place.setMarker(mMap.addMarker(new MarkerOptions().position(new LatLng(place.getPlace().getLatitude(), place.getPlace().getLongitude())).title(place.getPlace().getName())));
             }
         }
 

@@ -1,10 +1,13 @@
 package com.insulardevelopment.touristslittlehelper.place.review;
 
+
 /**
  * Created by Маргарита on 25.12.2016.
  */
 
 public class Review {
+
+    private int id;
     private String authorName;
     private String authorURL;
     private String profilePhotoURL;

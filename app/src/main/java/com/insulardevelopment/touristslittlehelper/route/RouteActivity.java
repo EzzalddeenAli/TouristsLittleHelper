@@ -1,4 +1,4 @@
-package com.insulardevelopment.touristslittlehelper;
+package com.insulardevelopment.touristslittlehelper.route;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,18 +12,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.place.Place;
-import com.insulardevelopment.touristslittlehelper.route.NewRouteActivity;
-import com.insulardevelopment.touristslittlehelper.route.Route;
 
 import java.util.List;
 
 public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap map;
-    private List<LatLng> places;
+    private List<LatLng> points;
     private Route route;
     private TextView nameTv, timeTv, distanceTv, cityTv;
 
@@ -42,7 +40,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.route_activity_map);
         mapFragment.getMapAsync(this);
         route = (Route) getIntent().getSerializableExtra(CHOSEN_ROUTE);
-        places = Route.decodePoly(route.getEncodedPoly());
+        points = Route.decodePoly(route.getEncodedPoly());
 
         nameTv = (TextView) findViewById(R.id.route_activity_name_text_view);
         timeTv = (TextView) findViewById(R.id.route_activity_time_text_view);
@@ -57,12 +55,13 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.animateCamera( CameraUpdateFactory.newLatLngZoom(places.get(0), 13.0f ) );
-//        for(LatLng place: places){
-//            map.addMarker(new MarkerOptions().position(place));
-//        }
+        map.animateCamera( CameraUpdateFactory.newLatLngZoom(points.get(0), 13.0f ) );
+        List<Place> places = route.getPlaces();
+        for(Place place: route.getPlaces()){
+            map.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())));
+        }
         map.addPolyline(new PolylineOptions()
-                .addAll(places)
+                .addAll(points)
                 .width(12)
                 .color(R.color.transparent_yellow)
                 .geodesic(true)

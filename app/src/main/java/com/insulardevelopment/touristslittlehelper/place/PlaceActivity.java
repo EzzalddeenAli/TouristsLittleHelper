@@ -78,12 +78,14 @@ public class PlaceActivity extends AppCompatActivity {
                             place.setWeekdayText(weekdatText.substring(2, weekdatText.length() - 2));
                         }
                     }
-                    if (googlePlaceJson.has("geometry")) place.setLatLng(new LatLng(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
-                            googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
+                    if (googlePlaceJson.has("geometry")) {
+                        place.setLatitude(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
+                        place.setLongitude(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
+                    }
                     if (googlePlaceJson.has("photos")){
                         JSONArray jsonArray = googlePlaceJson.getJSONArray("photos");
                         int placesCount = jsonArray.length();
-                        place.setPhotos(new ArrayList<String>());
+                        place.setPhotos(new ArrayList<Photo>());
                         for (int i = 0; i < placesCount; i++)  place.getPhotos().add(getPhoto((JSONObject) jsonArray.get(i)));
                     }
                     if (googlePlaceJson.has("reviews")) place.setReviews(ReviewParser.parse(googlePlaceJson.getJSONArray("reviews")));
@@ -94,14 +96,14 @@ public class PlaceActivity extends AppCompatActivity {
             return place;
         }
 
-        private String getPhoto(JSONObject json) throws JSONException {
+        private Photo getPhoto(JSONObject json) throws JSONException {
 
             try {
                 StringBuilder googlePhotoUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
                 googlePhotoUrl.append("photoreference=" + json.getString("photo_reference"));
                 googlePhotoUrl.append("&maxheight=1000&maxwidth=1000&key=AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
                 String url = googlePhotoUrl.toString();
-                return  url;
+                return  new Photo(url);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -164,10 +166,10 @@ public class PlaceActivity extends AppCompatActivity {
         LinearLayout layout = (LinearLayout) findViewById(R.id.photo_layout);
         if(place.getPhotos() != null && place.getPhotos().size() != 0) {
             int i = 0;
-            for (String photoUrl : place.getPhotos()) {
+            for (Photo photoUrl : place.getPhotos()) {
                 ImageView imageView = new ImageView(this);
                 Glide.with(this)
-                        .load(photoUrl)
+                        .load(photoUrl.getUrl())
                         .into(imageView);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 layout.addView(imageView);

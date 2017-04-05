@@ -46,8 +46,10 @@ public class PlaceParser {
             if(googlePlaceJson.has("icon")) place.setIcon(googlePlaceJson.getString("icon"));
             if(googlePlaceJson.has("rating")) place.setRating(googlePlaceJson.getDouble("rating"));
             if(googlePlaceJson.has("place_id")) place.setPlaceId(googlePlaceJson.getString("place_id"));
-            if(googlePlaceJson.has("geometry")) place.setLatLng(new LatLng(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lat"),
-                    googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
+            if(googlePlaceJson.has("geometry")) {
+                place.setLatitude(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
+                place.setLongitude(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
