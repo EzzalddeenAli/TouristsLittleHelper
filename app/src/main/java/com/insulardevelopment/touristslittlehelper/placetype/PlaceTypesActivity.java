@@ -10,9 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 
-import com.insulardevelopment.touristslittlehelper.DataBaseHelper;
+import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.R;
-import com.insulardevelopment.touristslittlehelper.StartActivity;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import java.sql.SQLException;

@@ -30,6 +30,7 @@ public class Place implements Serializable{
     private String formattedAddress;
     @DatabaseField(columnName = "phone_number")
     private String formattedPhoneNumber;
+    @DatabaseField(columnName = "icon")
     private String icon;
     @DatabaseField(columnName = "place_id")
     private String placeId;

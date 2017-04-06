@@ -13,4 +13,6 @@
     <color name="darkYellow">#d2921d</color>
     <color name="colorLight">#fcfaed</color>
     <color name="transparent_yellow">#e6f7e4c0</color>
+    <color name="transparent_blue">#e6cde6f2</color>
+    <color name="light_text_color">#cecece</color>
 </resources>

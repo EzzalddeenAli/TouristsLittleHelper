@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.data.DataBufferObserver;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.network.Http;
@@ -24,8 +26,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+
+import rx.Observable;
+import rx.functions.Action1;
 
 /*
 *   Активити, содержащее информацию о месте
@@ -33,8 +39,6 @@ import java.util.concurrent.ExecutionException;
 
 public class PlaceActivity extends AppCompatActivity {
 
-    private Animator mCurrentAnimator;
-    private int mShortAnimationDuration;
     private static final String CHOSEN_PLACE = "chosen place";
     private Place place;
     private TextView placeNameTextView, addressTextView, phoneNumberTextView, ratingTextView, webSiteTextView, workHoursTextView;
@@ -50,64 +54,11 @@ public class PlaceActivity extends AppCompatActivity {
                 Http http = new Http();
                 googlePlacesData = http.read(googlePlacesUrl);
                 googlePlacesJson = new JSONObject(googlePlacesData);
-                Place googlePlace = (new PlaceParser()).parse(googlePlacesJson);
+                Place googlePlace = (new PlaceParser()).getFullInfo(googlePlacesJson);
                 return googlePlace;
             } catch (Exception e) {
             }
             return new Place();
-        }
-    }
-
-    public class PlaceParser{
-        public Place parse(JSONObject json) {
-            Place place = new Place();
-            try {
-                if (json.has("result")) {
-                    JSONObject googlePlaceJson = json.getJSONObject("result");
-                    if (googlePlaceJson.has("name")) place.setName(googlePlaceJson.getString("name"));
-                    if (googlePlaceJson.has("formatted_address")) place.setFormattedAddress(googlePlaceJson.getString("formatted_address"));
-                    if (googlePlaceJson.has("formatted_phone_number")) place.setFormattedPhoneNumber(googlePlaceJson.getString("formatted_phone_number"));
-                    if (googlePlaceJson.has("icon")) place.setIcon(googlePlaceJson.getString("icon"));
-                    if (googlePlaceJson.has("rating")) place.setRating(googlePlaceJson.getDouble("rating"));
-                    if (googlePlaceJson.has("place_id")) place.setPlaceId(googlePlaceJson.getString("place_id"));
-                    if (googlePlaceJson.has("website")) place.setWebSite(googlePlaceJson.getString("website"));
-                    if (googlePlaceJson.has("opening_hours")) {
-                        JSONObject jsonObject = googlePlaceJson.getJSONObject("opening_hours");
-                        if(jsonObject.has("weekday_text")) {
-                            String weekdatText = jsonObject.getString("weekday_text").replace("\",\"", "\n");
-                            place.setWeekdayText(weekdatText.substring(2, weekdatText.length() - 2));
-                        }
-                    }
-                    if (googlePlaceJson.has("geometry")) {
-                        place.setLatitude(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lat"));
-                        place.setLongitude(googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getDouble("lng"));
-                    }
-                    if (googlePlaceJson.has("photos")){
-                        JSONArray jsonArray = googlePlaceJson.getJSONArray("photos");
-                        int placesCount = jsonArray.length();
-                        place.setPhotos(new ArrayList<Photo>());
-                        for (int i = 0; i < placesCount; i++)  place.getPhotos().add(getPhoto((JSONObject) jsonArray.get(i)));
-                    }
-                    if (googlePlaceJson.has("reviews")) place.setReviews(ReviewParser.parse(googlePlaceJson.getJSONArray("reviews")));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return place;
-        }
-
-        private Photo getPhoto(JSONObject json) throws JSONException {
-
-            try {
-                StringBuilder googlePhotoUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
-                googlePhotoUrl.append("photoreference=" + json.getString("photo_reference"));
-                googlePhotoUrl.append("&maxheight=1000&maxwidth=1000&key=AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
-                String url = googlePhotoUrl.toString();
-                return  new Photo(url);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
         }
     }
 
@@ -121,18 +72,6 @@ public class PlaceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
-        final String placeId = getIntent().getStringExtra(CHOSEN_PLACE);
-        try{
-            StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
-            googlePlacesUrl.append("language=ru&placeid=" + placeId + "&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
-            PlaceActivity.GooglePlacesReadTask googlePlacesReadTask = new PlaceActivity.GooglePlacesReadTask();
-            Object toPass = googlePlacesUrl.toString();
-            place = googlePlacesReadTask.execute(toPass).get();
-        }catch (SecurityException e){} catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
 
         placeNameTextView = (TextView) findViewById(R.id.place_name_text_view);
         addressTextView = (TextView) findViewById(R.id.place_address_text_view);
@@ -141,6 +80,23 @@ public class PlaceActivity extends AppCompatActivity {
         webSiteTextView = (TextView) findViewById(R.id.place_website_text_view);
         workHoursTextView = (TextView) findViewById(R.id.place_work_hours_text_view);
 
+        final String placeId = getIntent().getStringExtra(CHOSEN_PLACE);
+        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
+        googlePlacesUrl.append("language=ru&placeid=" + placeId + "&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
+        PlaceActivity.GooglePlacesReadTask googlePlacesReadTask = new PlaceActivity.GooglePlacesReadTask();
+        String request = googlePlacesUrl.toString();
+        try{
+            place = googlePlacesReadTask.execute(request).get();
+            setContent(place);
+        }catch (SecurityException e){} catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void setContent(Place place){
         placeNameTextView.setText(place.getName());
         if (place.getFormattedAddress() != null ) {
             addressTextView.setText(place.getFormattedAddress());
@@ -187,7 +143,6 @@ public class PlaceActivity extends AppCompatActivity {
             reviewRecycler.setLayoutManager(layoutManager);
             reviewRecycler.setAdapter(adapter);
         }
-
     }
 
 }

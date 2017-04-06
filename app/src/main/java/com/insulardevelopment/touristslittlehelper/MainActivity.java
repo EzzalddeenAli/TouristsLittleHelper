@@ -12,7 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.insulardevelopment.touristslittlehelper.place.Place;
+import com.insulardevelopment.touristslittlehelper.choose_location.ChooseLocationActivity;
+import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.placetype.PlaceTypesActivity;
 import com.insulardevelopment.touristslittlehelper.route.Route;
 import com.insulardevelopment.touristslittlehelper.route.RouteAdapter;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static void start(Context context){
         Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -50,11 +53,15 @@ public class MainActivity extends AppCompatActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        RecyclerView routeRecycler = (RecyclerView) findViewById(R.id.routes_recycler_view);
-        RouteAdapter adapter = new RouteAdapter(this, routes);
-        routeRecycler.setAdapter(adapter);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        routeRecycler.setLayoutManager(layoutManager);
+        if (routes == null || routes.size() == 0){
+            findViewById(R.id.no_routes_rl).setVisibility(View.VISIBLE);
+        }else {
+            RecyclerView routeRecycler = (RecyclerView) findViewById(R.id.routes_recycler_view);
+            RouteAdapter adapter = new RouteAdapter(this, routes);
+            routeRecycler.setAdapter(adapter);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+            routeRecycler.setLayoutManager(layoutManager);
+        }
     }
 
     @Override

@@ -20,12 +20,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.insulardevelopment.touristslittlehelper.ChosenPlaces;
-import com.insulardevelopment.touristslittlehelper.DataBaseHelper;
+import com.insulardevelopment.touristslittlehelper.MainActivity;
+import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.place.Place;
-import com.j256.ormlite.dao.ForeignCollection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +32,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,6 +45,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
     private EditText nameEt;
     private Button saveRouteBtn;
     private DataBaseHelper helper;
+    private static final String PLACES = "places";
 
 
     private class DownloadTask extends AsyncTask<String, Void, String> {
@@ -64,8 +65,9 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    public static void start(Context context){
+    public static void start(Context context, ArrayList<Place> places){
         Intent intent = new Intent(context, NewRouteActivity.class);
+        intent.putExtra(PLACES, places);
         context.startActivity(intent);
 
     }
@@ -80,8 +82,9 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         timeTv = (TextView) findViewById(R.id.new_route_time_text_view);
         distanceTv = (TextView) findViewById(R.id.new_route_distance_text_view);
         cityTv = (TextView) findViewById(R.id.city_name_new_route_text_view);
-        places = ChosenPlaces.getInstance().getPlaces();
+        places = (List<Place>) getIntent().getSerializableExtra(PLACES);
         route = new Route();
+        changePlacesOrder(places);
         Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
         List<Address> addresses = null;
         try {
@@ -107,6 +110,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+                MainActivity.start(NewRouteActivity.this);
             }
         });
     }
@@ -177,5 +181,33 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         } catch (JSONException e) {
 
         }
+    }
+
+    private void changePlacesOrder(List<Place> places){
+        final int R = 6371;
+        double max = 0;
+        Place startPlace = null, finishPlace = null;
+        for (Place place1: places){
+            for (Place place2: places){
+                if(place1 != place2){
+                    double latDistance = Math.toRadians(place2.getLatitude() - place1.getLatitude());
+                    double lonDistance = Math.toRadians(place2.getLongitude() - place1.getLongitude());
+                    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                            + Math.cos(Math.toRadians(place1.getLatitude())) * Math.cos(Math.toRadians(place2.getLatitude()))
+                            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+                    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    double distance = R * c * 1000;
+                    if(distance > max) {
+                        max = distance;
+                        startPlace = place1;
+                        finishPlace = place2;
+                    }
+                }
+            }
+        }
+        places.remove(startPlace);
+        places.remove(finishPlace);
+        places.add(0, startPlace);
+        places.add(finishPlace);
     }
 }
