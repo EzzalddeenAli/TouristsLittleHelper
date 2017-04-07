@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -93,39 +94,39 @@ public class PlaceActivity extends AppCompatActivity {
             }
         });
 
-        Subscriber<String> subscriber = new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
+//        Subscriber<String> subscriber = new Subscriber<String>() {
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(String s) {
+//                try {
+//                    String googlePlacesData = Http.read(s);
+//                    Place googlePlace = (new PlaceParser()).getFullInfo(new JSONObject(s));
+//                    setContent(googlePlace);
+//                } catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//
+//        observable.subscribe(subscriber);
 
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(String s) {
-                try {
-                    String googlePlacesData = Http.read(s);
-                    Place googlePlace = (new PlaceParser()).getFullInfo(new JSONObject(s));
-                    setContent(googlePlace);
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        observable.subscribe(subscriber);
-
-//        try{
-//            place = googlePlacesReadTask.execute(request).get();
-//            setContent(place);
-//        }catch (SecurityException e){} catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
+        try{
+            place = googlePlacesReadTask.execute(request).get();
+            setContent(place);
+        }catch (SecurityException e){} catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
     }
 
