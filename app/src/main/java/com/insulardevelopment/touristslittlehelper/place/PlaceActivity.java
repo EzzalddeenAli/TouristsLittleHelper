@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.functions.Action1;
 
 /*
@@ -43,18 +44,16 @@ public class PlaceActivity extends AppCompatActivity {
     private Place place;
     private TextView placeNameTextView, addressTextView, phoneNumberTextView, ratingTextView, webSiteTextView, workHoursTextView;
 
-    public class GooglePlacesReadTask extends AsyncTask<Object, Integer, Place> {
+    public class GooglePlacesReadTask extends AsyncTask<String, Integer, Place> {
         String googlePlacesData = null;
         JSONObject googlePlacesJson;
 
         @Override
-        protected Place doInBackground(Object... inputObj) {
+        protected Place doInBackground(String... inputObj) {
             try {
-                String googlePlacesUrl = (String) inputObj[0];
-                Http http = new Http();
-                googlePlacesData = http.read(googlePlacesUrl);
-                googlePlacesJson = new JSONObject(googlePlacesData);
-                Place googlePlace = (new PlaceParser()).getFullInfo(googlePlacesJson);
+                String googlePlacesUrl = inputObj[0];
+                googlePlacesData = Http.read(googlePlacesUrl);
+                Place googlePlace = (new PlaceParser()).getFullInfo(new JSONObject(googlePlacesData));
                 return googlePlace;
             } catch (Exception e) {
             }
@@ -85,14 +84,48 @@ public class PlaceActivity extends AppCompatActivity {
         googlePlacesUrl.append("language=ru&placeid=" + placeId + "&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
         PlaceActivity.GooglePlacesReadTask googlePlacesReadTask = new PlaceActivity.GooglePlacesReadTask();
         String request = googlePlacesUrl.toString();
-        try{
-            place = googlePlacesReadTask.execute(request).get();
-            setContent(place);
-        }catch (SecurityException e){} catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+
+        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext(request);
+                subscriber.onCompleted();
+            }
+        });
+
+        Subscriber<String> subscriber = new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+                try {
+                    String googlePlacesData = Http.read(s);
+                    Place googlePlace = (new PlaceParser()).getFullInfo(new JSONObject(s));
+                    setContent(googlePlace);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        observable.subscribe(subscriber);
+
+//        try{
+//            place = googlePlacesReadTask.execute(request).get();
+//            setContent(place);
+//        }catch (SecurityException e){} catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
 
     }
 

@@ -171,7 +171,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
 
             List<LatLng> list = Route.decodePoly(encodedString);
 
-            Polyline line = map.addPolyline(new PolylineOptions()
+            map.addPolyline(new PolylineOptions()
                     .addAll(list)
                     .width(12)
                     .color(R.color.transparent_yellow)
