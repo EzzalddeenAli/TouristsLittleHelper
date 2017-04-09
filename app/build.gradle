@@ -39,5 +39,6 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'io.reactivex:rxjava:1.2.1'
     compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.bignerdranch.android:recyclerview-multiselect:+'
     testCompile 'junit:junit:4.12'
 }

@@ -33,7 +33,9 @@ import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /*
 *   Активити, содержащее информацию о месте
@@ -44,23 +46,6 @@ public class PlaceActivity extends AppCompatActivity {
     private static final String CHOSEN_PLACE = "chosen place";
     private Place place;
     private TextView placeNameTextView, addressTextView, phoneNumberTextView, ratingTextView, webSiteTextView, workHoursTextView;
-
-    public class GooglePlacesReadTask extends AsyncTask<String, Integer, Place> {
-        String googlePlacesData = null;
-        JSONObject googlePlacesJson;
-
-        @Override
-        protected Place doInBackground(String... inputObj) {
-            try {
-                String googlePlacesUrl = inputObj[0];
-                googlePlacesData = Http.read(googlePlacesUrl);
-                Place googlePlace = (new PlaceParser()).getFullInfo(new JSONObject(googlePlacesData));
-                return googlePlace;
-            } catch (Exception e) {
-            }
-            return new Place();
-        }
-    }
 
     public static void start(Context context, Place place){
         Intent intent = new Intent(context, PlaceActivity.class);
@@ -83,50 +68,28 @@ public class PlaceActivity extends AppCompatActivity {
         final String placeId = getIntent().getStringExtra(CHOSEN_PLACE);
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
         googlePlacesUrl.append("language=ru&placeid=" + placeId + "&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
-        PlaceActivity.GooglePlacesReadTask googlePlacesReadTask = new PlaceActivity.GooglePlacesReadTask();
         String request = googlePlacesUrl.toString();
 
-        Observable<String> observable = Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                subscriber.onNext(request);
-                subscriber.onCompleted();
-            }
-        });
-
-//        Subscriber<String> subscriber = new Subscriber<String>() {
-//            @Override
-//            public void onCompleted() {
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onNext(String s) {
-//                try {
-//                    String googlePlacesData = Http.read(s);
-//                    Place googlePlace = (new PlaceParser()).getFullInfo(new JSONObject(s));
-//                    setContent(googlePlace);
-//                } catch (Exception e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//
-//        observable.subscribe(subscriber);
-
-        try{
-            place = googlePlacesReadTask.execute(request).get();
-            setContent(place);
-        }catch (SecurityException e){} catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        Observable.just(request)
+                .map(s -> {
+                    try {
+                        return Http.read(s);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .map(s -> {
+                    try {
+                        return PlaceParser.getFullInfo(new JSONObject(s));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(p -> setContent(p));
 
     }
 

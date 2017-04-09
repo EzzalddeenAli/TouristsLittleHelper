@@ -14,4 +14,6 @@
     <string name="save">Сохранить</string>
     <string name="change_types">Изменить типы мест</string>
     <string name="no_routes">У Вас нет сохраненных маршрутов</string>
+    <string name="delete_items">Удалить маршруты</string>
+    <string name="no_connection">Нет соединения с интернетом</string>
 </resources>

@@ -47,6 +47,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import rx.Observable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 /*
 *   Активити для выбора города
 */
@@ -65,37 +70,29 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     private Place city;
     private LatLng selectedLatLng;
 
-    class PredictionsResult extends AsyncTask<String, Void, ArrayList<AutocompletePrediction>> {
+//    private List<AutocompletePrediction> getPredictions(String query) {
+//
+//        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0,0), new LatLng(0,0));
+//        PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, query, latLngBounds, new AutocompleteFilter.Builder()
+//                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+//                .build());
+//        AutocompletePredictionBuffer autocompletePredictions = result.await(60, TimeUnit.SECONDS);
+//        Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
+//        ArrayList resultList = new ArrayList<>(autocompletePredictions.getCount());
+//        while (iterator.hasNext()) {
+//            AutocompletePrediction prediction = iterator.next();
+//            resultList.add(prediction);
+//        }
+//        return resultList;
+//    }
 
-        @Override
-        protected void onPreExecute() {
-        }
+    private PendingResult<AutocompletePredictionBuffer> getPredictions(String query) {
 
-        @Override
-        protected ArrayList<AutocompletePrediction> doInBackground(String... params) {
-            LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0,0), new LatLng(0,0));
-            PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, params[0].toString(), latLngBounds, new AutocompleteFilter.Builder()
-                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-                    .build());
-            AutocompletePredictionBuffer autocompletePredictions = result.await(60, TimeUnit.SECONDS);
-            Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
-            ArrayList resultList = new ArrayList<>(autocompletePredictions.getCount());
-            while (iterator.hasNext()) {
-                AutocompletePrediction prediction = iterator.next();
-                resultList.add(prediction);
-            }
-            return resultList;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<AutocompletePrediction> result) {
-            adapter.clear();
-            predictions.clear();
-            for (AutocompletePrediction prediction : result) {
-                adapter.add(prediction);
-                predictions.add(prediction);
-            }
-        }
+        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0,0), new LatLng(0,0));
+        PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, query, latLngBounds, new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .build());
+        return result;
     }
 
     public static void start(Context context){
@@ -130,8 +127,20 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                PredictionsResult predictionsResult = new PredictionsResult();
-                predictionsResult.execute(s.toString());
+                Observable.just(s)
+                        .map(str -> getPredictions(str.toString()))
+                        .map(res -> res.await(60, TimeUnit.SECONDS))
+                        .flatMap(Observable::from)
+                        .toList()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(predictions -> {
+                            adapter.clear();
+                            adapter.addAll(predictions);
+                            ChooseLocationActivity.this.predictions = predictions;
+                            adapter.notifyDataSetChanged();
+                        });
+
             }
 
             @Override

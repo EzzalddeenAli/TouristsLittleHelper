@@ -36,6 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private List<Place> places;
@@ -47,23 +51,6 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
     private DataBaseHelper helper;
     private static final String PLACES = "places";
 
-
-    private class DownloadTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... url) {
-            String data = "";
-            try{
-                data = Http.read(url[0]);
-            }catch(Exception e){}
-            return data;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            drawPath(result);
-        }
-    }
 
     public static void start(Context context, ArrayList<Place> places){
         Intent intent = new Intent(context, NewRouteActivity.class);
@@ -96,22 +83,34 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         }
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.route_map);
         mapFragment.getMapAsync(this);
-        new DownloadTask().execute(getMapsApiDirectionsUrl());
-        saveRouteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    route.setName(nameEt.getText().toString());
-                    helper.getRouteDao().create(route);
-                    for(Place place: places){
-                        place.setRoute(route);
-                        helper.getPlaceDao().create(place);
+
+        Observable.just(getMapsApiDirectionsUrl())
+                .map(s -> {
+                    try {
+                        return Http.read(s);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (SQLException e) {
-                    e.printStackTrace();
+                    return "";
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(s -> {
+                    drawPath(s);
+                });
+
+        saveRouteBtn.setOnClickListener(view -> {
+            try {
+                route.setName(nameEt.getText().toString());
+                helper.getRouteDao().create(route);
+                for(Place place: places){
+                    place.setRoute(route);
+                    helper.getPlaceDao().create(place);
                 }
-                MainActivity.start(NewRouteActivity.this);
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+            MainActivity.start(NewRouteActivity.this);
         });
     }
 
@@ -144,6 +143,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + params;
         return url;
     }
+
 
 
     public void drawPath(String result) {

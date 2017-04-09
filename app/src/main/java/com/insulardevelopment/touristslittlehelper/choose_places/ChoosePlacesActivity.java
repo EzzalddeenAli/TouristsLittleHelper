@@ -22,11 +22,17 @@ import com.insulardevelopment.touristslittlehelper.place.PlaceParser;
 import com.insulardevelopment.touristslittlehelper.placetype.PlaceType;
 import com.insulardevelopment.touristslittlehelper.route.NewRouteActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class ChoosePlacesActivity extends AppCompatActivity {
 
@@ -35,25 +41,7 @@ public class ChoosePlacesActivity extends AppCompatActivity {
     private int radius = 5000;
     private List<Place> places;
     private Button nextBtn;
-    private SharedPreferences sp;
 
-
-    public class GooglePlacesReadTask extends AsyncTask<String, Integer, List<Place>> {
-        String googlePlacesData = null;
-        JSONObject googlePlacesJson;
-
-        @Override
-        protected List<Place> doInBackground(String ... inputObj) {
-            try {
-                googlePlacesData = Http.read(inputObj[0]);
-                googlePlacesJson = new JSONObject(googlePlacesData);
-                List<Place> googlePlacesList = PlaceParser.getSomeInfo(googlePlacesJson);
-                return googlePlacesList;
-            } catch (Exception e) {
-            }
-            return new ArrayList<>();
-        }
-    }
 
     public static void start(Context context, LatLng latLng){
         Intent intent = new Intent(context, ChoosePlacesActivity.class);
@@ -82,38 +70,49 @@ public class ChoosePlacesActivity extends AppCompatActivity {
 
         final ViewPager placesViewPager = (ViewPager) findViewById(R.id.places_view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        try{
-            StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-            googlePlacesUrl.append("location=" + selectedLatLng.latitude + "," + selectedLatLng.longitude);
-            googlePlacesUrl.append("&radius=" + radius);
-            googlePlacesUrl.append("&types=" + strTypes);
-            googlePlacesUrl.append("&sensor=true");
-            googlePlacesUrl.append("&language=ru");
-            googlePlacesUrl.append("&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
+        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlacesUrl.append("location=" + selectedLatLng.latitude + "," + selectedLatLng.longitude);
+        googlePlacesUrl.append("&radius=" + radius);
+        googlePlacesUrl.append("&types=" + strTypes);
+        googlePlacesUrl.append("&sensor=true");
+        googlePlacesUrl.append("&language=ru");
+        googlePlacesUrl.append("&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
+        String query = googlePlacesUrl.toString();
 
-            ChoosePlacesActivity.GooglePlacesReadTask googlePlacesReadTask = new ChoosePlacesActivity.GooglePlacesReadTask();
-            String toPass = googlePlacesUrl.toString();
-            places = googlePlacesReadTask.execute(toPass).get();
-        }catch (SecurityException e){} catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        PlacesPagerAdapter adapter = new PlacesPagerAdapter(fragmentManager, selectedLatLng, places);
-        placesViewPager.setAdapter(adapter);
+        Observable.just(query)
+                .map(s -> {
+                    try {
+                        return Http.read(s);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .map(s -> {
+                    try {
+                        return PlaceParser.getSomeInfo(new JSONObject(s));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(places -> {
+                    PlacesPagerAdapter adapter = new PlacesPagerAdapter(fragmentManager, selectedLatLng, places);
+                    placesViewPager.setAdapter(adapter);
+                    ChoosePlacesActivity.this.places = places;
+                });
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(placesViewPager);
         nextBtn = (Button) findViewById(R.id.to_route_btn);
-        nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ArrayList<Place> chosenPlaces = new ArrayList<Place>();
-                for(Place p:places){
-                    if (p.isChosen()) chosenPlaces.add(p);
-                }
-                NewRouteActivity.start(ChoosePlacesActivity.this, chosenPlaces);
+        nextBtn.setOnClickListener(view -> {
+            ArrayList<Place> chosenPlaces = new ArrayList<>();
+            for(Place p: places){
+                if (p.isChosen()) chosenPlaces.add(p);
             }
+            NewRouteActivity.start(ChoosePlacesActivity.this, chosenPlaces);
         });
     }
 

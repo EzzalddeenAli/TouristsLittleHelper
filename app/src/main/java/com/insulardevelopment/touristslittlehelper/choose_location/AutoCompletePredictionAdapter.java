@@ -99,22 +99,6 @@ public class AutoCompletePredictionAdapter extends ArrayAdapter<AutocompletePred
             }
         };
     }
-//    @Override
-//    public int getCount() {
-//        return predictions.size();
-//    }
-//
-//    @Override
-//    public AutocompletePrediction getItem(int position) {
-//        return predictions.get(position);
-//    }
-//
-//    @Override
-//    public void add(AutocompletePrediction object) {
-//        predictions.add(object);
-//        super.add(object);
-//    }
-
 }
 
 

@@ -2,8 +2,10 @@ package com.insulardevelopment.touristslittlehelper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -11,7 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
+import com.bignerdranch.android.multiselector.MultiSelector;
 import com.insulardevelopment.touristslittlehelper.choose_location.ChooseLocationActivity;
 import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.placetype.PlaceTypesActivity;
@@ -27,6 +32,50 @@ public class MainActivity extends AppCompatActivity {
     private Button mainRouteBtn;
     private List<Route> routes;
     private DataBaseHelper helper;
+    RouteAdapter adapter;
+    private MultiSelector multiSelector = new MultiSelector();
+    private ModalMultiSelectorCallback callback = new ModalMultiSelectorCallback(multiSelector) {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.route_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.delete_action_menu:
+                    for (int i = routes.size(); i >= 0; i--) {
+                        if (multiSelector.isSelected(i, 0)) {
+                            try {
+                                helper.getRouteDao().delete(routes.get(i));
+                                routes.remove(i);
+                                adapter.notifyItemChanged(i);
+
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    mode.finish();
+                    if (routes.size() == 0){
+                        findViewById(R.id.no_routes_rl).setVisibility(View.VISIBLE);
+                    }
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            multiSelector.clearSelections();
+            multiSelector.setSelectable(false);
+            super.onDestroyActionMode(mode);
+        }
+    };
 
     public static void start(Context context){
         Intent intent = new Intent(context, MainActivity.class);
@@ -43,7 +92,11 @@ public class MainActivity extends AppCompatActivity {
         mainRouteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChooseLocationActivity.start(MainActivity.this);
+                if (isOnline()) {
+                    ChooseLocationActivity.start(MainActivity.this);
+                } else {
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+                }
             }
         });
         routes = new ArrayList<>();
@@ -53,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (routes == null || routes.size() == 0){
+        if (routes.size() == 0){
             findViewById(R.id.no_routes_rl).setVisibility(View.VISIBLE);
         }else {
             RecyclerView routeRecycler = (RecyclerView) findViewById(R.id.routes_recycler_view);
-            RouteAdapter adapter = new RouteAdapter(this, routes);
+            adapter = new RouteAdapter(routes, this, multiSelector, callback);
             routeRecycler.setAdapter(adapter);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
             routeRecycler.setLayoutManager(layoutManager);
@@ -80,5 +133,13 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null &&
+                cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 }
