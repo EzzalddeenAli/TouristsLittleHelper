@@ -21,10 +21,7 @@ import java.util.Set;
 
 public class PlaceTypesActivity extends AppCompatActivity {
 
-    private SharedPreferences sp;
     private List<PlaceType> placesTypes = null;
-    public static final String CHOSEN_TYPES = "types";
-    public static final String APP_PREFERENCES = "preferences";
     private DataBaseHelper databaseHelper;
 
     public static void start(Context context){
@@ -37,10 +34,8 @@ public class PlaceTypesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_types);
         setTitle(getResources().getString(R.string.types));
-        sp = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.type_menu_recycler);
-        Set types = sp.getStringSet(StartActivity.CHOSEN_TYPES, new HashSet<String>());
         databaseHelper = new DataBaseHelper(this);
 
         try {
@@ -68,11 +63,26 @@ public class PlaceTypesActivity extends AppCompatActivity {
                         updateBuilder.update();
                     }
                 } catch (Exception e){
+                    e.printStackTrace();
                 }
                 this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            for(PlaceType placeType: placesTypes) {
+                UpdateBuilder<PlaceType, Integer> updateBuilder = databaseHelper.getTypeDao().updateBuilder();
+                updateBuilder.where().eq("id", placeType.getId());
+                updateBuilder.updateColumnValue("chosen", placeType.isChosen());
+                updateBuilder.update();
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

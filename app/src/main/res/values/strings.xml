@@ -18,4 +18,5 @@
     <string name="no_connection">Нет соединения с интернетом</string>
     <string name="routes">Маршруты</string>
     <string name="types">Выберите типы мест</string>
+    <string name="no_city_chosen">Вы не выбрали город</string>
 </resources>

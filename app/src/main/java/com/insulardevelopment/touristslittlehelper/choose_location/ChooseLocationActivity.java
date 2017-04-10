@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -70,21 +71,7 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     private Place city;
     private LatLng selectedLatLng;
 
-//    private List<AutocompletePrediction> getPredictions(String query) {
-//
-//        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0,0), new LatLng(0,0));
-//        PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, query, latLngBounds, new AutocompleteFilter.Builder()
-//                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-//                .build());
-//        AutocompletePredictionBuffer autocompletePredictions = result.await(60, TimeUnit.SECONDS);
-//        Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
-//        ArrayList resultList = new ArrayList<>(autocompletePredictions.getCount());
-//        while (iterator.hasNext()) {
-//            AutocompletePrediction prediction = iterator.next();
-//            resultList.add(prediction);
-//        }
-//        return resultList;
-//    }
+
 
     private PendingResult<AutocompletePredictionBuffer> getPredictions(String query) {
 
@@ -114,7 +101,11 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChoosePlacesActivity.start(ChooseLocationActivity.this, selectedLatLng);
+                if(selectedLatLng != null) {
+                    ChoosePlacesActivity.start(ChooseLocationActivity.this, selectedLatLng);
+                } else {
+                    Toast.makeText(ChooseLocationActivity.this, getResources().getText(R.string.no_city_chosen), Toast.LENGTH_SHORT);
+                }
             }
         });
         locationEditText = (AutoCompleteTextView) findViewById(R.id.choose_location_search_place_edit_text);

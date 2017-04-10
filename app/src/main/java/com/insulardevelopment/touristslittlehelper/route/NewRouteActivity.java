@@ -10,13 +10,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -24,7 +30,9 @@ import com.insulardevelopment.touristslittlehelper.MainActivity;
 import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.network.Http;
+import com.insulardevelopment.touristslittlehelper.network.Newtork;
 import com.insulardevelopment.touristslittlehelper.place.Place;
+import com.insulardevelopment.touristslittlehelper.place.PlaceActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,14 +50,20 @@ import rx.schedulers.Schedulers;
 
 public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final String PLACES = "places";
+
     private List<Place> places;
     private GoogleMap map;
     private Route route;
-    private TextView timeTv, distanceTv, cityTv;
+    private TextView timeTv, distanceTv, cityTv, placeNameTv, addressTv;
+    private Button moreInfoBtn;
+    private ImageView placeIconIv;
+    private ImageButton closeIv;
     private EditText nameEt;
     private Button saveRouteBtn;
     private DataBaseHelper helper;
-    private static final String PLACES = "places";
+    private RelativeLayout placeRl;
+    private List<Marker> markers;
 
 
     public static void start(Context context, ArrayList<Place> places){
@@ -69,8 +83,15 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         timeTv = (TextView) findViewById(R.id.new_route_time_text_view);
         distanceTv = (TextView) findViewById(R.id.new_route_distance_text_view);
         cityTv = (TextView) findViewById(R.id.city_name_new_route_text_view);
+        placeNameTv = (TextView) findViewById(R.id.new_route_place_name_info_text_view);
+        addressTv = (TextView) findViewById(R.id.new_route_place_address_text_view);
+        moreInfoBtn = (Button) findViewById(R.id.new_route_more_info_place_btn);
+        placeIconIv = (ImageView) findViewById(R.id.new_route_place_info_icon_iv);
+        closeIv = (ImageButton) findViewById(R.id.new_route_close_ib);
+        placeRl = (RelativeLayout) findViewById(R.id.new_route_place_info_rl);
         places = (List<Place>) getIntent().getSerializableExtra(PLACES);
         route = new Route();
+        markers = new ArrayList<>();
         changePlacesOrder(places);
         Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
         List<Address> addresses = null;
@@ -121,7 +142,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         map.animateCamera( CameraUpdateFactory.newLatLngZoom(latLng, 13.0f ) );
         for(Place place: places){
             if(place.getLongitude()!=0) {
-                map.addMarker(new MarkerOptions().position( new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName()));
+                markers.add(map.addMarker(new MarkerOptions().position( new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName())));
             }
         }
     }
@@ -177,6 +198,32 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
                     .color(R.color.transparent_yellow)
                     .geodesic(true)
             );
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    int i = markers.indexOf(marker);
+                    final Place place = places.get(markers.indexOf(marker));
+                    placeRl.setVisibility(View.VISIBLE);
+                    placeNameTv.setText(place.getName());
+                    addressTv.setText(place.getFormattedAddress());
+                    Glide.with(NewRouteActivity.this)
+                            .load(place.getIcon())
+                            .into(placeIconIv);
+                    moreInfoBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            PlaceActivity.start(NewRouteActivity.this, place);
+                        }
+                    });
+                    closeIv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            placeRl.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                    return true;
+                }
+            });
 
         } catch (JSONException e) {
 
