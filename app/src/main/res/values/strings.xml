@@ -3,7 +3,7 @@
     <string name="title_activity_choose_location">Map</string>
     <string name="next">Далее</string>
     <string name="search_place">Введите место</string>
-    <string name="popular_places_activity_description">Выберете места, которые хотели бы посетить</string>
+    <string name="popular_places_activity_description">Выберите места, которые хотели бы посетить</string>
     <string name="new_route">Построить маршрут</string>
     <string name="start_activity_text">Выберите места, которые вас интересуют</string>
     <string name="confirm">Подтвердить</string>
@@ -16,4 +16,6 @@
     <string name="no_routes">У Вас нет сохраненных маршрутов</string>
     <string name="delete_items">Удалить маршруты</string>
     <string name="no_connection">Нет соединения с интернетом</string>
+    <string name="routes">Маршруты</string>
+    <string name="types">Выберите типы мест</string>
 </resources>

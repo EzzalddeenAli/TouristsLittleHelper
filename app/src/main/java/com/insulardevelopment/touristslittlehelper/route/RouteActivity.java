@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,7 +21,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.insulardevelopment.touristslittlehelper.MainActivity;
 import com.insulardevelopment.touristslittlehelper.R;
+import com.insulardevelopment.touristslittlehelper.choose_location.ChooseLocationActivity;
+import com.insulardevelopment.touristslittlehelper.network.Newtork;
 import com.insulardevelopment.touristslittlehelper.place.Place;
 import com.insulardevelopment.touristslittlehelper.place.PlaceActivity;
 
@@ -32,7 +36,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private GoogleMap map;
     private List<LatLng> points;
     private Route route;
-    private TextView nameTv, timeTv, distanceTv, cityTv, placeNameTv;
+    private TextView nameTv, timeTv, distanceTv, cityTv, placeNameTv, addressTv;
     private Button moreInfoBtn;
     private ImageView placeIconIv;
     private ImageButton closeIv;
@@ -63,6 +67,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         distanceTv = (TextView) findViewById(R.id.route_activity_distance_text_view);
         cityTv = (TextView) findViewById(R.id.city_name_route_activity_text_view);
         placeNameTv = (TextView) findViewById(R.id.route_place_name_info_text_view);
+        addressTv = (TextView) findViewById(R.id.route_place_address_text_view);
         moreInfoBtn = (Button) findViewById(R.id.route_more_info_place_btn);
         placeIconIv = (ImageView) findViewById(R.id.route_place_info_icon_iv);
         closeIv = (ImageButton) findViewById(R.id.route_close_ib);
@@ -94,13 +99,18 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 final Place place = places.get(markers.indexOf(marker));
                 placeRl.setVisibility(View.VISIBLE);
                 placeNameTv.setText(place.getName());
+                addressTv.setText(place.getFormattedAddress());
                 Glide.with(RouteActivity.this)
                         .load(place.getIcon())
                         .into(placeIconIv);
                 moreInfoBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        PlaceActivity.start(RouteActivity.this, place);
+                        if (Newtork.isAvalaible(RouteActivity.this)) {
+                            PlaceActivity.start(RouteActivity.this, place);
+                        } else {
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
                 closeIv.setOnClickListener(new View.OnClickListener() {

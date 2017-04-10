@@ -40,8 +40,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
-        android:background="#fff"
-        android:padding="15dp">
+        android:background="#fff">
     </android.support.v7.widget.RecyclerView>
 
     <Button

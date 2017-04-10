@@ -11,7 +11,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/routes_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:paddingBottom="100dp"
+        android:clipToPadding="false"/>
     <RelativeLayout
         android:id="@+id/no_routes_rl"
         android:visibility="invisible"

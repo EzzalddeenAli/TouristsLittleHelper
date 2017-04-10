@@ -36,6 +36,7 @@ public class PlaceTypesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_types);
+        setTitle(getResources().getString(R.string.types));
         sp = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.type_menu_recycler);

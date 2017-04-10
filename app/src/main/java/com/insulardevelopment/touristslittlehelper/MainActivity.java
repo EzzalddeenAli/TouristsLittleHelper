@@ -19,6 +19,7 @@ import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.insulardevelopment.touristslittlehelper.choose_location.ChooseLocationActivity;
 import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
+import com.insulardevelopment.touristslittlehelper.network.Newtork;
 import com.insulardevelopment.touristslittlehelper.placetype.PlaceTypesActivity;
 import com.insulardevelopment.touristslittlehelper.route.Route;
 import com.insulardevelopment.touristslittlehelper.route.RouteAdapter;
@@ -88,11 +89,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle(getResources().getString(R.string.routes));
         mainRouteBtn = (Button)findViewById(R.id.main_trace_btn);
         mainRouteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isOnline()) {
+                if (Newtork.isAvalaible(MainActivity.this)) {
                     ChooseLocationActivity.start(MainActivity.this);
                 } else {
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
@@ -135,11 +137,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        return cm.getActiveNetworkInfo() != null &&
-                cm.getActiveNetworkInfo().isConnectedOrConnecting();
-    }
 }
