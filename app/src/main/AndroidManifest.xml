@@ -43,7 +43,8 @@
         <activity android:name=".placetype.PlaceTypesActivity" />
         <activity
             android:name=".route.RouteActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".place.photo.PhotoActivity"></activity>
     </application>
 
 </manifest>

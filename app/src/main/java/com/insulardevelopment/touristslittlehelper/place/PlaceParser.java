@@ -1,6 +1,6 @@
 package com.insulardevelopment.touristslittlehelper.place;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.insulardevelopment.touristslittlehelper.place.photo.Photo;
 import com.insulardevelopment.touristslittlehelper.place.review.ReviewParser;
 
 import org.json.JSONArray;

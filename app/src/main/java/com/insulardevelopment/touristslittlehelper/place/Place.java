@@ -1,14 +1,13 @@
 package com.insulardevelopment.touristslittlehelper.place;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.insulardevelopment.touristslittlehelper.place.photo.Photo;
 import com.insulardevelopment.touristslittlehelper.place.review.Review;
 import com.insulardevelopment.touristslittlehelper.route.Route;
-import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.insulardevelopment.touristslittlehelper.place.Place.DATABASE_NAME;
@@ -44,7 +43,7 @@ public class Place implements Serializable{
     private double longitude;
     @DatabaseField(columnName = "website")
     private String webSite;
-    private List<Photo> photos;
+    private ArrayList<Photo> photos;
     private List<Review> reviews;
     @DatabaseField(columnName = "route", foreign = true, foreignAutoCreate = true)
     private Route route;
@@ -55,7 +54,7 @@ public class Place implements Serializable{
     public Place() {
     }
 
-    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, double latitude, double longitude, String webSite, List<Photo> photos, List<Review> reviews, boolean chosen) {
+    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, double latitude, double longitude, String webSite, ArrayList<Photo> photos, List<Review> reviews, boolean chosen) {
         this.name = name;
         this.formattedAddress = formattedAddress;
         this.formattedPhoneNumber = formattedPhoneNumber;
@@ -155,7 +154,7 @@ public class Place implements Serializable{
         return photos;
     }
 
-    public void setPhotos(List<Photo> photos) {
+    public void setPhotos(ArrayList<Photo> photos) {
         this.photos =photos;
     }
 

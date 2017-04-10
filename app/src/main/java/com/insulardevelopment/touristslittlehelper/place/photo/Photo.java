@@ -1,11 +1,13 @@
-package com.insulardevelopment.touristslittlehelper.place;
+package com.insulardevelopment.touristslittlehelper.place.photo;
 
+
+import java.io.Serializable;
 
 /**
  * Created by ritar on 04.04.2017.
  */
 
-public class Photo {
+public class Photo implements Serializable{
 
     private int id;
     private String url;

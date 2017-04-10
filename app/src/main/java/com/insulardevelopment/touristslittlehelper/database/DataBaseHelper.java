@@ -1,13 +1,9 @@
 package com.insulardevelopment.touristslittlehelper.database;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.insulardevelopment.touristslittlehelper.place.Photo;
 import com.insulardevelopment.touristslittlehelper.place.Place;
-import com.insulardevelopment.touristslittlehelper.place.review.Review;
 import com.insulardevelopment.touristslittlehelper.placetype.PlaceType;
 import com.insulardevelopment.touristslittlehelper.route.Route;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;

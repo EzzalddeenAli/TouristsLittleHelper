@@ -1,41 +1,33 @@
 package com.insulardevelopment.touristslittlehelper.place;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.data.DataBufferObserver;
-import com.google.android.gms.common.server.converter.StringToIntConverter;
-import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.network.Http;
+import com.insulardevelopment.touristslittlehelper.place.photo.Photo;
+import com.insulardevelopment.touristslittlehelper.place.photo.PhotoActivity;
 import com.insulardevelopment.touristslittlehelper.place.review.ReviewAdapter;
-import com.insulardevelopment.touristslittlehelper.place.review.ReviewParser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /*
@@ -98,6 +90,7 @@ public class PlaceActivity extends AppCompatActivity {
       //  placeNameTextView.setText(place.getName());
         Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
         toolbar.setTitle(place.getName());
+
         if (place.getFormattedAddress() != null ) {
             addressTextView.setText(place.getFormattedAddress());
         } else {
@@ -120,25 +113,29 @@ public class PlaceActivity extends AppCompatActivity {
         }
         ratingTextView.setText(String.valueOf(place.getRating()));
         LinearLayout layout = (LinearLayout) findViewById(R.id.photo_layout);
-        if(place.getPhotos() != null && place.getPhotos().size() != 0) {
-            int i = 0;
-            for (Photo photoUrl : place.getPhotos()) {
-                ImageView imageView = new ImageView(this);
-                Glide.with(this)
-                        .load(photoUrl.getUrl())
-                        .into(imageView);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                layout.addView(imageView);
-                i++;
-                if (i == 4) break;
-            }
-        } else {
-            layout.setVisibility(View.INVISIBLE);
-        }
-//
-//        Glide.with(this)
-//                .load(place.getPhotos().get(0).getUrl())
-//                .into((ImageView) findViewById(R.id.main_backdrop));
+//        if(place.getPhotos() != null && place.getPhotos().size() != 0) {
+//            int i = 0;
+//            for (Photo photoUrl : place.getPhotos()) {
+//                ImageView imageView = new ImageView(this);
+//                Glide.with(this)
+//                        .load(photoUrl.getUrl())
+//                        .into(imageView);
+//                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+//                layout.addView(imageView);
+//                i++;
+//                if (i == 4) break;
+//            }
+//        } else {
+//            layout.setVisibility(View.INVISIBLE);
+//        }
+
+        ImageView photoIb = (ImageView) findViewById(R.id.place_photo_iv);
+        Glide.with(this)
+                .load(place.getPhotos().get(0).getUrl())
+                .into(photoIb);
+        photoIb.setOnClickListener(v -> {
+            PhotoActivity.start(this, (ArrayList<Photo>) place.getPhotos());
+        });
 
         if (place.getReviews() != null){
             RecyclerView reviewRecycler = (RecyclerView) findViewById(R.id.reviews_recycler_view);
