@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorNextBtn">#78909c</color>
+    <color name="transparentColorNextBtn">#cc78909c</color>
     <color name="colorNextBtnPressed">#546e7a</color>
     <color name="darkBlue">#394d56</color>
     <color name="lightBlue">#74a6be</color>
@@ -15,4 +16,5 @@
     <color name="transparent_yellow">#e6f7e4c0</color>
     <color name="transparent_blue">#e6cde6f2</color>
     <color name="light_text_color">#cecece</color>
+    <color name="dark_background">#55666e</color>
 </resources>

@@ -8,9 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +41,7 @@ public class PlaceActivity extends AppCompatActivity {
     private static final String CHOSEN_PLACE = "chosen place";
     private Place place;
     private TextView placeNameTextView, addressTextView, phoneNumberTextView, ratingTextView, webSiteTextView, workHoursTextView;
+    private RatingBar ratingBar;
 
     public static void start(Context context, Place place){
         Intent intent = new Intent(context, PlaceActivity.class);
@@ -50,13 +53,13 @@ public class PlaceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.temp);
-
      //   placeNameTextView = (TextView) findViewById(R.id.place_name_text_view);
         addressTextView = (TextView) findViewById(R.id.place_address_text_view);
         phoneNumberTextView = (TextView) findViewById(R.id.place_phone_number_text_view);
-        ratingTextView = (TextView) findViewById(R.id.place_rating_text_view);
+  //      ratingTextView = (TextView) findViewById(R.id.place_rating_text_view);
         webSiteTextView = (TextView) findViewById(R.id.place_website_text_view);
         workHoursTextView = (TextView) findViewById(R.id.place_work_hours_text_view);
+        ratingBar = (RatingBar) findViewById(R.id.place_rating_bar);
 
         final String placeId = getIntent().getStringExtra(CHOSEN_PLACE);
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
@@ -88,7 +91,7 @@ public class PlaceActivity extends AppCompatActivity {
 
     private void setContent(Place place){
       //  placeNameTextView.setText(place.getName());
-        Toolbar toolbar = (Toolbar)findViewById(R.id.main_toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.place_toolbar);
         toolbar.setTitle(place.getName());
 
         if (place.getFormattedAddress() != null ) {
@@ -111,7 +114,7 @@ public class PlaceActivity extends AppCompatActivity {
         } else {
             findViewById(R.id.time_icon_iv).setVisibility(View.INVISIBLE);
         }
-        ratingTextView.setText(String.valueOf(place.getRating()));
+  //      ratingTextView.setText(String.valueOf(place.getRating()));
         LinearLayout layout = (LinearLayout) findViewById(R.id.photo_layout);
 //        if(place.getPhotos() != null && place.getPhotos().size() != 0) {
 //            int i = 0;
@@ -128,7 +131,7 @@ public class PlaceActivity extends AppCompatActivity {
 //        } else {
 //            layout.setVisibility(View.INVISIBLE);
 //        }
-
+        ratingBar.setRating((float) place.getRating());
         ImageView photoIb = (ImageView) findViewById(R.id.place_photo_iv);
         Glide.with(this)
                 .load(place.getPhotos().get(0).getUrl())

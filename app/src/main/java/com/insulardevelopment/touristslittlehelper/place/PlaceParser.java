@@ -98,7 +98,7 @@ public class PlaceParser {
         try {
             StringBuilder googlePhotoUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
             googlePhotoUrl.append("photoreference=" + json.getString("photo_reference"));
-            googlePhotoUrl.append("&maxheight=1000&maxwidth=1000&key=AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
+            googlePhotoUrl.append("&maxheight=700&maxwidth=700&key=AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
             String url = googlePhotoUrl.toString();
             return  new Photo(url);
         } catch (Exception e) {

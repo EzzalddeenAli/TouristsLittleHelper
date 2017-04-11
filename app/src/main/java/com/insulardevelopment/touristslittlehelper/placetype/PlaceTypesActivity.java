@@ -84,5 +84,6 @@ public class PlaceTypesActivity extends AppCompatActivity {
         } catch (Exception e){
             e.printStackTrace();
         }
+        super.onBackPressed();
     }
 }
