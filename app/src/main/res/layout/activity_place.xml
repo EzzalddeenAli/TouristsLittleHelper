@@ -58,7 +58,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="6dp"
-                        android:src="@drawable/address_icon" />
+                        android:src="@drawable/address_icon_200" />
 
                     <TextView
                         android:id="@+id/place_address_text_view"
@@ -78,7 +78,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="6dp"
-                        android:src="@drawable/phone_icon" />
+                        android:src="@drawable/phone_icon_200" />
 
                     <TextView
                         android:id="@+id/place_phone_number_text_view"
@@ -99,7 +99,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="6dp"
-                        android:src="@drawable/website_icon" />
+                        android:src="@drawable/website_icon_200" />
 
                     <TextView
                         android:id="@+id/place_website_text_view"
@@ -120,7 +120,7 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="6dp"
-                        android:src="@drawable/time" />
+                        android:src="@drawable/time_71" />
 
                     <TextView
                         android:id="@+id/place_work_hours_text_view"
