@@ -47,7 +47,6 @@ public class Place implements Serializable{
     private List<Review> reviews;
     @DatabaseField(columnName = "route", foreign = true, foreignAutoCreate = true)
     private Route route;
-
     private boolean chosen = true;
 
 

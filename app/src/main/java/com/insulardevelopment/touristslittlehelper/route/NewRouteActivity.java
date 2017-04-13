@@ -159,7 +159,8 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         String destination = "destination=" + places.get(places.size() - 1).getLatitude() + "," + places.get(places.size() - 1).getLongitude();
         String sensor = "sensor=false";
         String mode = "mode=walking";
-        String params = origin + "&" + waypoints + "&" + destination + "&" + mode + "&" + sensor;
+        String key = "key=AIzaSyCz55zRZ4tbx_VLedaQmq68Zp8sQoxkZd8";
+        String params = origin + "&" + waypoints + "&" + destination + "&" + mode + "&" + sensor + "&" + key;
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + params;
         return url;

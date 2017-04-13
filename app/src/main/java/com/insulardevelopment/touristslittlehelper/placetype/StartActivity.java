@@ -26,7 +26,6 @@ public class StartActivity extends AppCompatActivity {
 
     private Button confirmBtn;
     private SharedPreferences sp;
-    public static final String CHOSEN_TYPES = "types";
     public static final String FIRST_LAUNCHING = "first";
     public static final String APP_PREFERENCES = "preferences";
 
@@ -47,15 +46,13 @@ public class StartActivity extends AppCompatActivity {
 
         placesTypes.add(new PlaceType(1, "museum", "Музей", false, path + "museum" + size, 0));
         placesTypes.add(new PlaceType(2, "art_gallery", "Галерея", false, path + "art_gallery" + size, 0));
-        placesTypes.add(new PlaceType(3, "park", "Парк", false, null, R.drawable.park_icon));
+        placesTypes.add(new PlaceType(3, "park", "Парк", false, null, R.drawable.park_icon_400));
         placesTypes.add(new PlaceType(4, "casino", "Казино", false, path + "casino" + size, 0));
-        placesTypes.add(new PlaceType(5, "church", "Собор", false, null, R.drawable.curch_icon));
+        placesTypes.add(new PlaceType(5, "church", "Собор", false, null, R.drawable.curch_icon_360));
         placesTypes.add(new PlaceType(6, "amusement_park", "Парк развлечений", false, null, R.drawable.amusement_park_icon));
         placesTypes.add(new PlaceType(7, "zoo", "Зоопарк", false, path + "zoo" + size, 0));
         placesTypes.add(new PlaceType(8, "stadium", "Стадион", false, path + "stadium" + size, 0));
         placesTypes.add(new PlaceType(9, "aquarium", "Океанариум", false, path + "aquarium" + size, 0));
-
-
 
         final PlaceTypeAdapter placeTypeAdapter = new PlaceTypeAdapter(this, placesTypes);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -64,21 +61,18 @@ public class StartActivity extends AppCompatActivity {
         recyclerView.setAdapter(placeTypeAdapter);
 
         confirmBtn = (Button) findViewById(R.id.start_confirm_btn);
-        confirmBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean(FIRST_LAUNCHING, false);
-                editor.commit();
-                    for(PlaceType placeType: placesTypes) {
-                        try {
-                            databaseHelper.getTypeDao().create(placeType);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
+        confirmBtn.setOnClickListener(v -> {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean(FIRST_LAUNCHING, false);
+            editor.commit();
+                for(PlaceType placeType: placesTypes) {
+                    try {
+                        databaseHelper.getTypeDao().create(placeType);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                MainActivity.start(StartActivity.this);
-            }
+                }
+            MainActivity.start(StartActivity.this);
         });
     }
 }

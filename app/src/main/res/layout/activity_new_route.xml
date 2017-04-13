@@ -114,7 +114,7 @@
         android:layout_height="wrap_content"
         android:background="@color/transparent_blue"
         android:id="@+id/new_route_place_info_rl"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:padding="7dp">
         <ImageButton
             android:id="@+id/new_route_close_ib"

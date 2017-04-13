@@ -2,6 +2,8 @@ package com.insulardevelopment.touristslittlehelper.place;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +18,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.place.photo.Photo;
@@ -39,8 +44,7 @@ import rx.schedulers.Schedulers;
 public class PlaceActivity extends AppCompatActivity {
 
     private static final String CHOSEN_PLACE = "chosen place";
-    private Place place;
-    private TextView placeNameTextView, addressTextView, phoneNumberTextView, ratingTextView, webSiteTextView, workHoursTextView;
+    private TextView addressTextView, phoneNumberTextView, webSiteTextView, workHoursTextView;
     private RatingBar ratingBar;
 
     public static void start(Context context, Place place){
@@ -52,11 +56,9 @@ public class PlaceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.temp);
-     //   placeNameTextView = (TextView) findViewById(R.id.place_name_text_view);
+        setContentView(R.layout.activity_place);
         addressTextView = (TextView) findViewById(R.id.place_address_text_view);
         phoneNumberTextView = (TextView) findViewById(R.id.place_phone_number_text_view);
-  //      ratingTextView = (TextView) findViewById(R.id.place_rating_text_view);
         webSiteTextView = (TextView) findViewById(R.id.place_website_text_view);
         workHoursTextView = (TextView) findViewById(R.id.place_work_hours_text_view);
         ratingBar = (RatingBar) findViewById(R.id.place_rating_bar);
@@ -90,7 +92,6 @@ public class PlaceActivity extends AppCompatActivity {
     }
 
     private void setContent(Place place){
-      //  placeNameTextView.setText(place.getName());
         Toolbar toolbar = (Toolbar)findViewById(R.id.place_toolbar);
         toolbar.setTitle(place.getName());
 
@@ -114,31 +115,18 @@ public class PlaceActivity extends AppCompatActivity {
         } else {
             findViewById(R.id.time_icon_iv).setVisibility(View.INVISIBLE);
         }
-  //      ratingTextView.setText(String.valueOf(place.getRating()));
-        LinearLayout layout = (LinearLayout) findViewById(R.id.photo_layout);
-//        if(place.getPhotos() != null && place.getPhotos().size() != 0) {
-//            int i = 0;
-//            for (Photo photoUrl : place.getPhotos()) {
-//                ImageView imageView = new ImageView(this);
-//                Glide.with(this)
-//                        .load(photoUrl.getUrl())
-//                        .into(imageView);
-//                imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-//                layout.addView(imageView);
-//                i++;
-//                if (i == 4) break;
-//            }
-//        } else {
-//            layout.setVisibility(View.INVISIBLE);
-//        }
         ratingBar.setRating((float) place.getRating());
         ImageView photoIb = (ImageView) findViewById(R.id.place_photo_iv);
-        Glide.with(this)
-                .load(place.getPhotos().get(0).getUrl())
-                .into(photoIb);
-        photoIb.setOnClickListener(v -> {
-            PhotoActivity.start(this, (ArrayList<Photo>) place.getPhotos());
-        });
+        if (place.getPhotos() != null && place.getPhotos().size() != 0) {
+            Glide.with(this)
+                    .load(place.getPhotos().get(0).getUrl())
+                    .into(photoIb);
+            photoIb.setOnClickListener(v -> {
+                PhotoActivity.start(this, (ArrayList<Photo>) place.getPhotos());
+            });
+        } else {
+            photoIb.setImageDrawable(getResources().getDrawable(R.drawable.tourist_icon));
+        }
 
         if (place.getReviews() != null){
             RecyclerView reviewRecycler = (RecyclerView) findViewById(R.id.reviews_recycler_view);
