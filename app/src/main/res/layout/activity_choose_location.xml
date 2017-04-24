@@ -10,7 +10,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.insulardevelopment.touristslittlehelper.choose_location.ChooseLocationActivity" />
+        tools:context="com.insulardevelopment.touristslittlehelper.view.activities.ChooseLocationActivity" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:backgroundTint="@color/colorNextBtnPressed"
             android:hint="@string/search_place"
             android:inputType="text"
             android:textCursorDrawable="@null" />

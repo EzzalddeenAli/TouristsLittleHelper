@@ -3,9 +3,9 @@ package com.insulardevelopment.touristslittlehelper.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.insulardevelopment.touristslittlehelper.place.Place;
-import com.insulardevelopment.touristslittlehelper.placetype.PlaceType;
-import com.insulardevelopment.touristslittlehelper.route.Route;
+import com.insulardevelopment.touristslittlehelper.model.Place;
+import com.insulardevelopment.touristslittlehelper.model.PlaceType;
+import com.insulardevelopment.touristslittlehelper.model.Route;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
@@ -14,7 +14,7 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 
 /**
- * Created by Маргарита on 27.03.2017.
+ * Класс для работы с базой данных
  */
 
 public class DataBaseHelper extends OrmLiteSqliteOpenHelper {

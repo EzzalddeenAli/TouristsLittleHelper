@@ -13,16 +13,16 @@
         <ImageView
             android:id="@+id/start_icon_iv"
             android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_height="30dp" />
 
         <TextView
             android:id="@+id/place_type_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="3dp"
             android:text="Place type"
-            android:textSize="20sp"
-            android:layout_marginTop="3dp"/>
+            android:textSize="20sp" />
     </LinearLayout>
 
     <CheckBox
@@ -32,10 +32,10 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:buttonTint="@color/colorNextBtn"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
+        android:buttonTint="@color/colorPrimaryLight"
         android:checked="true"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"
+        android:scaleX="1.5"
+        android:scaleY="1.5" />
 </RelativeLayout>

@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
     android:orientation="vertical"
+    android:padding="16dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp">
 
@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="name"
-                android:textColor="@color/darkBlue"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="28dp" />
 
             <TextView
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-3dp"
                 android:text="city"
-                android:textColor="@color/colorNextBtnPressed"
+                android:textColor="@color/colorPrimary"
                 android:textSize="15dp" />
         </LinearLayout>
     </LinearLayout>
@@ -53,10 +53,10 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_margin="6dp"
-            android:src="@drawable/distance" />
+            android:src="@drawable/distance_200" />
 
         <TextView
             android:id="@+id/route_distance_text_view"
@@ -65,15 +65,15 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="12dp"
             android:text="10km"
-            android:textColor="@color/darkBlue"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="15dp" />
 
         <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_margin="6dp"
             android:layout_marginLeft="70dp"
-            android:src="@drawable/time" />
+            android:src="@drawable/time_71" />
 
         <TextView
             android:id="@+id/route_time_text_view"
@@ -81,9 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="5h"
-            android:textColor="@color/darkBlue"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="15dp" />
     </LinearLayout>
-
-
 </LinearLayout>

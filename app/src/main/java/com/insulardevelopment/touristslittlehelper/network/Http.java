@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by Маргарита on 19.01.2017.
+ * Класс для работы с сетью
  */
 
 public class Http {

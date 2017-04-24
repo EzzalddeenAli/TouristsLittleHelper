@@ -13,20 +13,20 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
+        <activity android:name=".view.activities.MainActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".choose_location.ChooseLocationActivity"
+            android:name=".view.activities.ChooseLocationActivity"
             android:label="@string/title_activity_choose_location" />
         <activity
-            android:name=".place.PlaceActivity"
+            android:name=".view.activities.PlaceActivity"
             android:theme="@style/AppThemeNoActionBar" />
         <activity
-            android:name=".placetype.StartActivity"
+            android:name=".view.activities.StartActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             >
@@ -36,16 +36,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".choose_places.ChoosePlacesActivity" />
+        <activity android:name=".view.activities.ChoosePlacesActivity" />
         <activity
-            android:name=".route.NewRouteActivity"
+            android:name=".view.activities.NewRouteActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".placetype.PlaceTypesActivity" />
+        <activity android:name=".view.activities.PlaceTypesActivity" />
         <activity
-            android:name=".route.RouteActivity"
+            android:name=".view.activities.RouteActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".place.photo.PhotoActivity"
+            android:name=".view.activities.PhotoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 

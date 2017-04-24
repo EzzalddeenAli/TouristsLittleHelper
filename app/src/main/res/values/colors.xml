@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="colorNextBtn">#78909c</color>
-    <color name="transparentColorNextBtn">#cc78909c</color>
+    <color name="colorPrimary">#546e7a</color>
+    <color name="colorPrimaryDark">#394d56</color>
+    <color name="colorAccent">#e7a835</color>
+    <color name="colorPrimaryLight">#78909c</color>
+    <color name="colorPrimaryTransparent">#cc78909c</color>
     <color name="colorNextBtnPressed">#546e7a</color>
     <color name="darkBlue">#394d56</color>
     <color name="lightBlue">#74a6be</color>

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 
 /**
- * Created by Маргарита on 09.04.2017.
+ * Вспомогательный класс для работы с интернетом
  */
 
 public class Newtork {

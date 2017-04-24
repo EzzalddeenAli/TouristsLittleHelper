@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.insulardevelopment.touristslittlehelper.placetype.StartActivity">
+    tools:context="com.insulardevelopment.touristslittlehelper.view.activities.StartActivity">
 
     <ImageView
         android:id="@+id/start_logo_image_view"
@@ -30,19 +30,17 @@
         android:text="@string/start_activity_text" />
 
     <android.support.v7.widget.RecyclerView
-
         android:id="@+id/places_types_recycler_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/start_text_view"
         android:layout_above="@+id/start_confirm_btn"
+        android:layout_below="@+id/start_text_view"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="10dp"
-        android:background="#fff">
-    </android.support.v7.widget.RecyclerView>
+        android:background="#fff"/>
 
     <Button
         android:id="@+id/start_confirm_btn"

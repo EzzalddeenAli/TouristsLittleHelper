@@ -9,7 +9,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.insulardevelopment.touristslittlehelper.choose_places.ChoosePlacesActivity" />
+        tools:context="com.insulardevelopment.touristslittlehelper.view.activities.ChoosePlacesActivity" />
 
     <include layout="@layout/place_info_layout" />
 </RelativeLayout>
