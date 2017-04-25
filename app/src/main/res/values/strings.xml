@@ -19,4 +19,10 @@
     <string name="routes">Маршруты</string>
     <string name="types">Выберите типы мест</string>
     <string name="no_city_chosen">Вы не выбрали город</string>
+    <string name="choose_start_place">Выберете, откуда хотите начать маршрут</string>
+    <string name="choose_finish_place">Выберете, где хотите закончить маршрут</string>
+    <string name="ok">Ок</string>
+    <string name="cancel">Отмена</string>
+    <string name="if_choose_start_and_finish_place">Хотите ли вы выбрать, откуда начинать маршрут и где его заканчивать?</string>
+    <string name="no_place_chosen">Вы не выбрали место</string>
 </resources>

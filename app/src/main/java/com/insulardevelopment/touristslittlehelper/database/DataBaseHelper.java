@@ -20,7 +20,7 @@ import java.sql.SQLException;
 public class DataBaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String DATABASE_NAME = "main.db";
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     private Dao<PlaceType, Integer> placeTypeDao = null;
     private Dao<Route, Integer> routeDao = null;

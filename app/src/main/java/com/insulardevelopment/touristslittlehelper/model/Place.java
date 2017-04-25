@@ -17,6 +17,8 @@ import static com.insulardevelopment.touristslittlehelper.model.Place.DATABASE_N
 public class Place implements Serializable{
 
     public static final String DATABASE_NAME = "places";
+    public static final String START_PLACE = "start";
+    public static final String FINISH_PLACE = "finish";
 
     @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
     private int id;
@@ -48,6 +50,12 @@ public class Place implements Serializable{
 
 
     public Place() {
+    }
+
+    public Place(String name, double latitude, double longitude) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, double latitude, double longitude, String webSite, ArrayList<Photo> photos, List<Review> reviews, boolean chosen) {

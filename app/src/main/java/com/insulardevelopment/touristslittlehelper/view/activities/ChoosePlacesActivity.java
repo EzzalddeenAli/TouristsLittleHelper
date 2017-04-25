@@ -1,5 +1,6 @@
 package com.insulardevelopment.touristslittlehelper.view.activities;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -17,6 +18,7 @@ import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.model.parsers.PlaceParser;
 import com.insulardevelopment.touristslittlehelper.model.PlaceType;
+import com.insulardevelopment.touristslittlehelper.view.fragments.StartFinishPlaceDialogFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +35,7 @@ import rx.schedulers.Schedulers;
 *   Активити для выбора мест
 */
 
-public class ChoosePlacesActivity extends AppCompatActivity {
+public class ChoosePlacesActivity extends AppCompatActivity implements StartFinishPlaceDialogFragment.OnDialogResultListener{
 
     private static final String SELECTED_LATLNG = "latlng";
     private static final int RADIUS = 5000;
@@ -87,13 +89,10 @@ public class ChoosePlacesActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(placesViewPager);
         nextBtn.setOnClickListener(view -> {
-            ArrayList<Place> chosenPlaces = new ArrayList<>();
-            for(Place p: places){
-                if (p.isChosen()) {
-                    chosenPlaces.add(p);
-                }
-            }
-            NewRouteActivity.start(ChoosePlacesActivity.this, chosenPlaces);
+            StartFinishPlaceDialogFragment dialogFragment = new StartFinishPlaceDialogFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            dialogFragment.setOnDialogResultListener(this);
+            dialogFragment.show(ft, "dialog");
         });
     }
 
@@ -122,5 +121,27 @@ public class ChoosePlacesActivity extends AppCompatActivity {
         placesViewPager = (ViewPager) findViewById(R.id.places_view_pager);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         nextBtn = (Button) findViewById(R.id.to_route_btn);
+    }
+
+    @Override
+    public void onPositiveResult() {
+        ArrayList<Place> chosenPlaces = new ArrayList<>();
+        for(Place p: places){
+            if (p.isChosen()) {
+                chosenPlaces.add(p);
+            }
+        }
+        ChooseStartAndFinishPlaceActivity.start(ChoosePlacesActivity.this, ChooseStartAndFinishPlaceActivity.CHOOSE_START_PLACE, chosenPlaces);
+    }
+
+    @Override
+    public void onNegativeResult() {
+        ArrayList<Place> chosenPlaces = new ArrayList<>();
+        for(Place p: places){
+            if (p.isChosen()) {
+                chosenPlaces.add(p);
+            }
+        }
+        NewRouteActivity.start(ChoosePlacesActivity.this, chosenPlaces, false);
     }
 }

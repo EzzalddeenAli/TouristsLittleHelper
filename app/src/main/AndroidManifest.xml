@@ -47,6 +47,8 @@
         <activity
             android:name=".view.activities.PhotoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".view.activities.ChooseStartAndFinishPlaceActivity"
+            android:theme="@style/AppThemeNoActionBar"/>
     </application>
 
 </manifest>

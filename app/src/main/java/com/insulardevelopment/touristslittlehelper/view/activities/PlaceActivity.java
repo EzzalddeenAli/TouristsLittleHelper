@@ -136,4 +136,5 @@ public class PlaceActivity extends AppCompatActivity {
         workHoursTextView = (TextView) findViewById(R.id.place_work_hours_text_view);
         ratingBar = (RatingBar) findViewById(R.id.place_rating_bar);
     }
+
 }

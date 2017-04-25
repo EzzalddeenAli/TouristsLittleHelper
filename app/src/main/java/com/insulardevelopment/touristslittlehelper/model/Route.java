@@ -34,19 +34,19 @@ public class Route implements Serializable{
     private String city;
     @DatabaseField(dataType = DataType.STRING, columnName = "encoded_poly")
     private String encodedPoly;
-
-
+    @DatabaseField(dataType = DataType.BOOLEAN, columnName = "has_start_and_finish")
+    private boolean hasStartAndFinish;
 
     public Route() {
     }
 
-    public Route(String city, String name, ForeignCollection<Place> places, double distance, double time, String encodedPoly) {
+    public Route(String name, double distance, double time, String city, String encodedPoly, boolean hasStartAndFinish) {
         this.name = name;
-        this.places = places;
         this.distance = distance;
         this.time = time;
         this.city = city;
         this.encodedPoly = encodedPoly;
+        this.hasStartAndFinish = hasStartAndFinish;
     }
 
     public String getName() {
@@ -94,6 +94,14 @@ public class Route implements Serializable{
 
     public void setPlaces(List<Place> places) {
         this.places = (ForeignCollection<Place>) places;
+    }
+
+    public boolean isHasStartAndFinish() {
+        return hasStartAndFinish;
+    }
+
+    public void setHasStartAndFinish(boolean hasStartAndFinish) {
+        this.hasStartAndFinish = hasStartAndFinish;
     }
 
     public static List<LatLng> decodePoly(String encoded) {

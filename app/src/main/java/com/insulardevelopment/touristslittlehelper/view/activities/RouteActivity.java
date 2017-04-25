@@ -71,7 +71,11 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         map.animateCamera( CameraUpdateFactory.newLatLngZoom(points.get(0), 13.0f ) );
         drawRoute();
         for(Place place: route.getPlaces()){
-            markers.add(map.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude()))));
+            if (!(place.getName().equals(Place.START_PLACE) || place.getName().equals(Place.FINISH_PLACE))) {
+                if (place.getLongitude() != 0) {
+                    markers.add(map.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName())));
+                }
+            }
         }
         map.setOnMarkerClickListener(marker -> {
             Place place = route.getPlaces().get(markers.indexOf(marker));
