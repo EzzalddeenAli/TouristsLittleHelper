@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -21,13 +22,26 @@ import java.util.List;
  * Адаптер мест для отображения в виде списка
  */
 
-public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {
+public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int FOOTER_VIEW = 1;
+
     private List<Place> places;
     private OnItemClickListener onItemClickListener;
+    private OnStartClickListener onStartClickListener;
+    private OnFinishClickListener onFinishClickListener;
     private Context context;
 
     public interface OnItemClickListener {
         public void onItemClick(View view, int position);
+    }
+
+    public interface OnStartClickListener {
+        public void onStartClick(View view, int position);
+    }
+
+    public interface OnFinishClickListener {
+        public void onFinishClick(View view, int position);
     }
 
     public class PlaceViewHolder extends RecyclerView.ViewHolder {
@@ -46,6 +60,16 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         }
     }
 
+    public class FooterViewHolder extends RecyclerView.ViewHolder{
+
+        public Button chooseStartBtn, chooseFinishBtn;
+
+        public FooterViewHolder(View itemView) {
+            super(itemView);
+            chooseStartBtn = (Button) itemView.findViewById(R.id.choose_start_place_btn);
+            chooseFinishBtn = (Button) itemView.findViewById(R.id.choose_finish_place_btn);
+        }
+    }
 
     public PlaceAdapter(Context context, List<Place> places, OnItemClickListener onItemClickListener) {
         this.places = places;
@@ -53,30 +77,64 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
         this.context = context;
     }
 
-    @Override
-    public PlaceAdapter.PlaceViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.popular_places_item, parent, false);
-        return new PlaceViewHolder(itemView);
+    public void setOnStartClickListener(OnStartClickListener onStartClickListener) {
+        this.onStartClickListener = onStartClickListener;
+    }
+
+    public void setOnFinishClickListener(OnFinishClickListener onFinishClickListener) {
+        this.onFinishClickListener = onFinishClickListener;
     }
 
     @Override
-    public void onBindViewHolder(final PlaceAdapter.PlaceViewHolder holder, final int position) {
-        final Place place = places.get(position);
-        holder.checkBox.setOnCheckedChangeListener(null);
-        holder.addressTextView.setText(place.getFormattedAddress());
-        holder.nameTextView.setText(place.getName());
-        holder.checkBox.setChecked(place.isChosen());
-        holder.checkBox.setOnCheckedChangeListener((compoundButton, b) -> place.setChosen(b));
-        Glide.with(context)
-                .load(place.getIcon())
-                .into(holder.iconImageView);
-        holder.container.setOnClickListener(v -> onItemClickListener.onItemClick(v, position));
+    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+        View view;
+        if (viewType == FOOTER_VIEW) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.choose_start_ans_finish_place_layout, parent, false);
+            FooterViewHolder viewHolder = new FooterViewHolder(view);
+            return viewHolder;
+        }
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.popular_places_item, parent, false);
+        PlaceViewHolder viewHolder = new PlaceViewHolder(view);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, final int position) {
+        try {
+            if (viewHolder instanceof PlaceViewHolder) {
+                PlaceViewHolder holder = (PlaceViewHolder) viewHolder;
+                final Place place = places.get(position);
+                holder.checkBox.setOnCheckedChangeListener(null);
+                holder.addressTextView.setText(place.getFormattedAddress());
+                holder.nameTextView.setText(place.getName());
+                holder.checkBox.setChecked(place.isChosen());
+                holder.checkBox.setOnCheckedChangeListener((compoundButton, b) -> place.setChosen(b));
+                Glide.with(context)
+                        .load(place.getIcon())
+                        .into(holder.iconImageView);
+                holder.container.setOnClickListener(v -> onItemClickListener.onItemClick(v, position));
+            } else if (viewHolder instanceof FooterViewHolder) {
+                FooterViewHolder holder = (FooterViewHolder) viewHolder;
+                holder.chooseStartBtn.setOnClickListener(view -> onStartClickListener.onStartClick(view, position));
+                holder.chooseFinishBtn.setOnClickListener(view -> onFinishClickListener.onFinishClick(view, position));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        return places.size();
+        return places.size()+1;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position == places.size()) {
+            return FOOTER_VIEW;
+        }
+        return super.getItemViewType(position);
+    }
 
 }

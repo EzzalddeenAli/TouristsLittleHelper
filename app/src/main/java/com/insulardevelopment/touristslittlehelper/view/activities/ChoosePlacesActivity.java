@@ -1,6 +1,5 @@
 package com.insulardevelopment.touristslittlehelper.view.activities;
 
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -8,8 +7,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.view.adapters.PlacesPagerAdapter;
@@ -18,7 +19,6 @@ import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.model.parsers.PlaceParser;
 import com.insulardevelopment.touristslittlehelper.model.PlaceType;
-import com.insulardevelopment.touristslittlehelper.view.fragments.StartFinishPlaceDialogFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +35,7 @@ import rx.schedulers.Schedulers;
 *   Активити для выбора мест
 */
 
-public class ChoosePlacesActivity extends AppCompatActivity implements StartFinishPlaceDialogFragment.OnDialogResultListener{
+public class ChoosePlacesActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String SELECTED_LATLNG = "latlng";
     private static final int RADIUS = 5000;
@@ -45,6 +45,8 @@ public class ChoosePlacesActivity extends AppCompatActivity implements StartFini
     private Button nextBtn;
     private LatLng selectedLatLng;
     private List<Place> places;
+    private Place startPlace, finishPlace;
+    private boolean hasStartAndFinish = false;
 
 
     public static void start(Context context, LatLng latLng){
@@ -88,12 +90,7 @@ public class ChoosePlacesActivity extends AppCompatActivity implements StartFini
                 });
 
         tabLayout.setupWithViewPager(placesViewPager);
-        nextBtn.setOnClickListener(view -> {
-            StartFinishPlaceDialogFragment dialogFragment = new StartFinishPlaceDialogFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            dialogFragment.setOnDialogResultListener(this);
-            dialogFragment.show(ft, "dialog");
-        });
+        nextBtn.setOnClickListener(this);
     }
 
     private String getMapsApiPlacesUrl(){
@@ -123,25 +120,46 @@ public class ChoosePlacesActivity extends AppCompatActivity implements StartFini
         nextBtn = (Button) findViewById(R.id.to_route_btn);
     }
 
+
     @Override
-    public void onPositiveResult() {
-        ArrayList<Place> chosenPlaces = new ArrayList<>();
-        for(Place p: places){
-            if (p.isChosen()) {
-                chosenPlaces.add(p);
-            }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case ChooseStartAndFinishPlaceActivity.CHOOSE_START_PLACE:
+                if (resultCode == CommonStatusCodes.SUCCESS) {
+                    if (data != null) {
+                        startPlace = (Place) data.getSerializableExtra(ChooseStartAndFinishPlaceActivity.DATA);
+                        hasStartAndFinish = true;
+                    }
+                }
+                break;
+            case ChooseStartAndFinishPlaceActivity.CHOOSE_FINISH_PLACE:
+                if (resultCode == CommonStatusCodes.SUCCESS) {
+                    if (data != null) {
+                        finishPlace = (Place) data.getSerializableExtra(ChooseStartAndFinishPlaceActivity.DATA);
+                        hasStartAndFinish = true;
+                    }
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
-        ChooseStartAndFinishPlaceActivity.start(ChoosePlacesActivity.this, ChooseStartAndFinishPlaceActivity.CHOOSE_START_PLACE, chosenPlaces);
     }
 
     @Override
-    public void onNegativeResult() {
+    public void onClick(View view) {
         ArrayList<Place> chosenPlaces = new ArrayList<>();
         for(Place p: places){
             if (p.isChosen()) {
                 chosenPlaces.add(p);
             }
         }
-        NewRouteActivity.start(ChoosePlacesActivity.this, chosenPlaces, false);
+        if (startPlace != null){
+            chosenPlaces.add(0, startPlace);
+        }
+        if (finishPlace != null){
+            chosenPlaces.add(finishPlace);
+        }
+        NewRouteActivity.start(ChoosePlacesActivity.this, chosenPlaces, hasStartAndFinish);
     }
+
 }

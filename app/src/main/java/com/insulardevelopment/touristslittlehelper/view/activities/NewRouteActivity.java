@@ -50,7 +50,7 @@ import rx.schedulers.Schedulers;
 public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String PLACES = "places";
-    private static final String START_AND_FINISH = "places";
+    private static final String START_AND_FINISH = "start and finish";
 
     private List<Place> places;
     private GoogleMap map;
@@ -78,25 +78,12 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_route);
-        nameEt = (EditText) findViewById(R.id.new_route_name_text_view);
-        helper = new DataBaseHelper(this);
-        saveRouteBtn = (Button) findViewById(R.id.save_route_btn);
-        timeTv = (TextView) findViewById(R.id.new_route_time_text_view);
-        distanceTv = (TextView) findViewById(R.id.new_route_distance_text_view);
-        cityTv = (TextView) findViewById(R.id.city_name_new_route_text_view);
-        placeNameTv = (TextView) findViewById(R.id.new_route_place_name_info_text_view);
-        addressTv = (TextView) findViewById(R.id.new_route_place_address_text_view);
-        moreInfoBtn = (Button) findViewById(R.id.new_route_more_info_place_btn);
-        placeIconIv = (ImageView) findViewById(R.id.new_route_place_info_icon_iv);
-        closeIv = (ImageButton) findViewById(R.id.new_route_close_ib);
-        placeRl = (RelativeLayout) findViewById(R.id.new_route_place_info_rl);
+        initViews();
         places = (List<Place>) getIntent().getSerializableExtra(PLACES);
         hasStartAndFinish = getIntent().getBooleanExtra(START_AND_FINISH, false);
         route = new Route();
         markers = new ArrayList<>();
-        if (!hasStartAndFinish) {
-            changePlacesOrder(places);
-        }
+        changePlacesOrder(places, hasStartAndFinish);
         Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
         List<Address> addresses = null;
         try {
@@ -223,24 +210,36 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    private void changePlacesOrder(List<Place> places){
-        final int R = 6371;
-        double max = 0;
+    private void changePlacesOrder(List<Place> places, boolean hasStartAndFinish){
         Place startPlace = null, finishPlace = null;
-        for (Place place1: places){
-            for (Place place2: places){
-                if(place1 != place2){
-                    double latDistance = Math.toRadians(place2.getLatitude() - place1.getLatitude());
-                    double lonDistance = Math.toRadians(place2.getLongitude() - place1.getLongitude());
-                    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                            + Math.cos(Math.toRadians(place1.getLatitude())) * Math.cos(Math.toRadians(place2.getLatitude()))
-                            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-                    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                    double distance = R * c * 1000;
-                    if(distance > max) {
-                        max = distance;
-                        startPlace = place1;
-                        finishPlace = place2;
+        if (hasStartAndFinish){
+            for (Place place: places){
+                if (place.getName().equals(Place.START_PLACE)){
+                    startPlace = place;
+                }
+                if (place.getName().equals(Place.FINISH_PLACE)){
+                    finishPlace = place;
+                }
+            }
+        }
+        else {
+            final int R = 6371;
+            double max = 0;
+            for (Place place1 : places) {
+                for (Place place2 : places) {
+                    if (place1 != place2) {
+                        double latDistance = Math.toRadians(place2.getLatitude() - place1.getLatitude());
+                        double lonDistance = Math.toRadians(place2.getLongitude() - place1.getLongitude());
+                        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                                + Math.cos(Math.toRadians(place1.getLatitude())) * Math.cos(Math.toRadians(place2.getLatitude()))
+                                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+                        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                        double distance = R * c * 1000;
+                        if (distance > max) {
+                            max = distance;
+                            startPlace = place1;
+                            finishPlace = place2;
+                        }
                     }
                 }
             }
@@ -249,5 +248,20 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         places.remove(finishPlace);
         places.add(0, startPlace);
         places.add(finishPlace);
+    }
+
+    private void initViews(){
+        nameEt = (EditText) findViewById(R.id.new_route_name_text_view);
+        helper = new DataBaseHelper(this);
+        saveRouteBtn = (Button) findViewById(R.id.save_route_btn);
+        timeTv = (TextView) findViewById(R.id.new_route_time_text_view);
+        distanceTv = (TextView) findViewById(R.id.new_route_distance_text_view);
+        cityTv = (TextView) findViewById(R.id.city_name_new_route_text_view);
+        placeNameTv = (TextView) findViewById(R.id.new_route_place_name_info_text_view);
+        addressTv = (TextView) findViewById(R.id.new_route_place_address_text_view);
+        moreInfoBtn = (Button) findViewById(R.id.new_route_more_info_place_btn);
+        placeIconIv = (ImageView) findViewById(R.id.new_route_place_info_icon_iv);
+        closeIv = (ImageButton) findViewById(R.id.new_route_close_ib);
+        placeRl = (RelativeLayout) findViewById(R.id.new_route_place_info_rl);
     }
 }

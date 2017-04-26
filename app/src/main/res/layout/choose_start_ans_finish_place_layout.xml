@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/place_info_rl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent_yellow"
+    android:orientation="horizontal"
+    android:padding="15dp">
+
+    <Button
+        android:id="@+id/choose_start_place_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:text="@string/choose_start_place_btn"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15dp" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/choose_finish_place_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1"
+        android:background="@null"
+        android:text="@string/choose_finish_place_btn"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15dp" />
+
+</LinearLayout>

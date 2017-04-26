@@ -32,11 +32,11 @@ public class PlacesPagerAdapter extends FragmentPagerAdapter{
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return PlacesListFragment.newInstance(places);
+                return PlacesListFragment.newInstance(places, latLng);
             case 1:
                 return PlacesMapFragment.newInstance(latLng, places);
             default:
-                return PlacesListFragment.newInstance(places);
+                return PlacesListFragment.newInstance(places, latLng);
         }
     }
 

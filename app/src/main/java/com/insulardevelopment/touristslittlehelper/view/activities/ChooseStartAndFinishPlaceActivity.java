@@ -1,5 +1,6 @@
 package com.insulardevelopment.touristslittlehelper.view.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.location.LocationServices;
@@ -51,10 +53,11 @@ import rx.schedulers.Schedulers;
 
 public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    public static final String DATA = "data";
     private static final String CODE = "code";
     public static final int CHOOSE_START_PLACE = 1;
     public static final int CHOOSE_FINISH_PLACE = 2;
-    private static final String PLACES = "places";
+    private static final String SELECTED_LATLNG = "latlng";
 
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
@@ -67,15 +70,14 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
     private List<AutocompletePrediction> predictions;
     private AutocompletePrediction selected;
     private Place city;
-    private LatLng selectedLatLng;
+    private LatLng selectedLatLng, userLatLng;
     private int code;
-    private ArrayList<com.insulardevelopment.touristslittlehelper.model.Place> places;
 
-    public static void start(Context context, int code, ArrayList<com.insulardevelopment.touristslittlehelper.model.Place> places) {
+    public static void start(Context context, int code, LatLng latLng) {
         Intent intent = new Intent(context, ChooseStartAndFinishPlaceActivity.class);
         intent.putExtra(CODE, code);
-        intent.putExtra(PLACES, places);
-        context.startActivity(intent);
+        intent.putExtra(SELECTED_LATLNG, latLng);
+        ((Activity)context).startActivityForResult(intent, code);
     }
 
     @Override
@@ -83,7 +85,7 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_start_and_finish_place);
         code = getIntent().getIntExtra(CODE, 0);
-        places = (ArrayList<com.insulardevelopment.touristslittlehelper.model.Place>) getIntent().getSerializableExtra(PLACES);
+        userLatLng = getIntent().getParcelableExtra(SELECTED_LATLNG);
         initViews();
         switch (code){
             case CHOOSE_START_PLACE:
@@ -100,15 +102,22 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
         adapter.setNotifyOnChange(true);
         okBtn.setOnClickListener(view -> {
             if (selectedLatLng != null) {
+                Intent data;
+                com.insulardevelopment.touristslittlehelper.model.Place place;
                 switch (code){
                     case CHOOSE_START_PLACE:
-                        places.add(0,
-                                new com.insulardevelopment.touristslittlehelper.model.Place(com.insulardevelopment.touristslittlehelper.model.Place.START_PLACE, selectedLatLng.latitude, selectedLatLng.longitude));
-                        ChooseStartAndFinishPlaceActivity.start(ChooseStartAndFinishPlaceActivity.this, CHOOSE_FINISH_PLACE, places);
+                        place = new com.insulardevelopment.touristslittlehelper.model.Place(com.insulardevelopment.touristslittlehelper.model.Place.START_PLACE, selectedLatLng.latitude, selectedLatLng.longitude);
+                        data = new Intent();
+                        data.putExtra(DATA, place);
+                        setResult(CommonStatusCodes.SUCCESS, data);
+                        finish();
                         break;
                     case CHOOSE_FINISH_PLACE:
-                        places.add(new com.insulardevelopment.touristslittlehelper.model.Place(com.insulardevelopment.touristslittlehelper.model.Place.FINISH_PLACE, selectedLatLng.latitude, selectedLatLng.longitude));
-                        NewRouteActivity.start(ChooseStartAndFinishPlaceActivity.this, places, true);
+                        place = new com.insulardevelopment.touristslittlehelper.model.Place(com.insulardevelopment.touristslittlehelper.model.Place.FINISH_PLACE, selectedLatLng.latitude, selectedLatLng.longitude);
+                        data = new Intent();
+                        data.putExtra(DATA, place);
+                        setResult(CommonStatusCodes.SUCCESS, data);
+                        finish();
                         break;
                 }
             } else {
@@ -175,7 +184,7 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
     }
 
     private PendingResult<AutocompletePredictionBuffer> getPredictions(String query) {
-        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0, 0), new LatLng(0, 0));
+        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(userLatLng.latitude - 2, userLatLng.longitude - 2), new LatLng(userLatLng.latitude + 2, userLatLng.longitude + 2));
         PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi.getAutocompletePredictions(googleApiClient, query, latLngBounds, new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE)
                 .build());
@@ -185,7 +194,7 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.animateCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(places.get(0).getLatitude(), places.get(0).getLongitude()), 13.0f ) );
+        map.animateCamera( CameraUpdateFactory.newLatLngZoom(userLatLng, 13.0f ) );
         map.setOnMapClickListener(latLng -> {
             try {
                 Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
