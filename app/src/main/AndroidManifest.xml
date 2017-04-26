@@ -39,11 +39,11 @@
         <activity android:name=".view.activities.ChoosePlacesActivity" />
         <activity
             android:name=".view.activities.NewRouteActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppThemeNoActionBar"/>
         <activity android:name=".view.activities.PlaceTypesActivity" />
         <activity
             android:name=".view.activities.RouteActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppThemeNoActionBar" />
         <activity
             android:name=".view.activities.PhotoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
