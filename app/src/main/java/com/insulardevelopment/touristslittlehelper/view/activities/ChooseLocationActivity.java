@@ -54,7 +54,7 @@ import rx.schedulers.Schedulers;
 *   Активити для выбора города
 */
 
-public class ChooseLocationActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class ChooseLocationActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks {
 
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
@@ -140,7 +140,6 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .addApi(Places.GEO_DATA_API)
                     .addApi(Places.PLACE_DETECTION_API)
@@ -151,10 +150,9 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
 
     private PendingResult<AutocompletePredictionBuffer> getPredictions(String query) {
         LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0, 0), new LatLng(0, 0));
-        PendingResult<AutocompletePredictionBuffer> result = Places.GeoDataApi.getAutocompletePredictions(googleApiClient, query, latLngBounds, new AutocompleteFilter.Builder()
+        return Places.GeoDataApi.getAutocompletePredictions(googleApiClient, query, latLngBounds, new AutocompleteFilter.Builder()
                 .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                 .build());
-        return result;
     }
 
     @Override
@@ -205,10 +203,6 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
 
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 
     private void initViews(){
         nextButton = (Button) findViewById(R.id.next_btn);

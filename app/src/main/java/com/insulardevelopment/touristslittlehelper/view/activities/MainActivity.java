@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         mainRouteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Newtork.isAvalaible(MainActivity.this)) {
+                if (Newtork.isAvailable(MainActivity.this)) {
                     ChooseLocationActivity.start(MainActivity.this);
                 } else {
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();

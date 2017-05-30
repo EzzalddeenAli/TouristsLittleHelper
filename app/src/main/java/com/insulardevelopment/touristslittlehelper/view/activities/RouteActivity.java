@@ -2,6 +2,7 @@ package com.insulardevelopment.touristslittlehelper.view.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -78,7 +79,12 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             }
         }
         map.setOnMarkerClickListener(marker -> {
-            Place place = route.getPlaces().get(markers.indexOf(marker));
+            Place place;
+            if (route.isHasStartAndFinish()){
+                place = route.getPlaces().get(markers.indexOf(marker) + 1);
+            } else {
+                place = route.getPlaces().get(markers.indexOf(marker));
+            }
             setInfoLayoutContent(place);
             return true;
         });
@@ -92,7 +98,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 .load(place.getIcon())
                 .into(placeIconIv);
         moreInfoBtn.setOnClickListener(view -> {
-            if (Newtork.isAvalaible(RouteActivity.this)) {
+            if (Newtork.isAvailable(RouteActivity.this)) {
                 PlaceActivity.start(RouteActivity.this, place);
             } else {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
@@ -105,7 +111,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         map.addPolyline(new PolylineOptions()
                 .addAll(points)
                 .width(12)
-                .color(R.color.transparent_yellow)
+                .color(ContextCompat.getColor(this, R.color.maps_color))
                 .geodesic(true)
         );
     }

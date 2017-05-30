@@ -8,7 +8,7 @@ import android.net.ConnectivityManager;
  */
 
 public class Newtork {
-    public static boolean isAvalaible(Context context){
+    public static boolean isAvailable(Context context){
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null &&

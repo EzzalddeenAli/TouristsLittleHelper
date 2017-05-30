@@ -25,7 +25,7 @@ import java.util.List;
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHolder> {
 
     private List<Route> routes;
-    public Context context;
+    private Context context;
     private MultiSelector multiSelector;
     private ActionMode actionMode;
     private ModalMultiSelectorCallback callback;

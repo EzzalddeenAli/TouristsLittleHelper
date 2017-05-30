@@ -36,7 +36,6 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
 
     private GoogleMap mMap;
     private LatLng selectedLatLng;
-    private List<Place> places;
     private List<PlaceInfo> placeInfos;
     private RelativeLayout relativeLayout;
     private ImageView iconIv;
@@ -76,7 +75,6 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
 
     public PlacesMapFragment(LatLng latLng, List<Place> places){
         super();
-        this.places = places;
         this.selectedLatLng = latLng;
         placeInfos = new ArrayList<>();
         for (Place place: places){
@@ -97,7 +95,6 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
                 place.setMarker(mMap.addMarker(new MarkerOptions().position(new LatLng(place.getPlace().getLatitude(), place.getPlace().getLongitude())).title(place.getPlace().getName())));
             }
         }
-
         mMap.setOnMarkerClickListener(this);
     }
 
@@ -110,7 +107,6 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
         mapFragment.getMapAsync(this);
         return view;
     }
-
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -129,12 +125,10 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
         final PlaceInfo finalPlaceInfo = placeInfo;
         moreInfoBtn.setOnClickListener(view -> PlaceActivity.start(getActivity(), finalPlaceInfo.getPlace()));
         closeIb.setOnClickListener(view -> relativeLayout.setVisibility(View.INVISIBLE));
-        final PlaceInfo finalPlaceInfo1 = placeInfo;
-        placeCb.setOnCheckedChangeListener((compoundButton, b) -> finalPlaceInfo1.getPlace().setChosen(b));
-        placeCb.setChecked(finalPlaceInfo1.getPlace().isChosen());
+        placeCb.setOnCheckedChangeListener((compoundButton, b) -> finalPlaceInfo.getPlace().setChosen(b));
+        placeCb.setChecked(finalPlaceInfo.getPlace().isChosen());
         return true;
     }
-
 
     private void initViews(View view){
         relativeLayout = (RelativeLayout) view.findViewById(R.id.place_info_rl);

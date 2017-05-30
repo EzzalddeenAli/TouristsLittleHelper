@@ -17,4 +17,5 @@
     <color name="transparent_blue">#e6cde6f2</color>
     <color name="light_text_color">#cecece</color>
     <color name="dark_background">#55666e</color>
+    <color name="maps_color">#9d3543ac</color>
 </resources>

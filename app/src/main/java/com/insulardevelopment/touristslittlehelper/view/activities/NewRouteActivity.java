@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -113,6 +114,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
 
         saveRouteBtn.setOnClickListener(view -> {
             try {
+                route.setHasStartAndFinish(hasStartAndFinish);
                 route.setName(nameEt.getText().toString());
                 helper.getRouteDao().create(route);
                 for(Place place: places){
@@ -150,10 +152,9 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
             waypoints += (place.getLatitude() + "," + place.getLongitude() + "|");
         }
         String destination = "destination=" + places.get(places.size() - 1).getLatitude() + "," + places.get(places.size() - 1).getLongitude();
-        String sensor = "sensor=false";
         String mode = "mode=walking";
-        String key = "key=AIzaSyCz55zRZ4tbx_VLedaQmq68Zp8sQoxkZd8";
-        String params = origin + "&" + waypoints + "&" + destination + "&" + mode + "&" + sensor + "&" + key;
+        String key = "key=" + getResources().getString(R.string.google_api_key);
+        String params = origin + "&" + waypoints + "&" + destination + "&" + mode + "&" + key;
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + params;
         return url;
@@ -188,12 +189,17 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
             map.addPolyline(new PolylineOptions()
                     .addAll(list)
                     .width(12)
-                    .color(R.color.transparent_yellow)
+                    .color(ContextCompat.getColor(this, R.color.maps_color))
                     .geodesic(true)
             );
             map.setOnMarkerClickListener(marker -> {
                 int i = markers.indexOf(marker);
-                final Place place = places.get(markers.indexOf(marker));
+                Place place;
+                if (hasStartAndFinish){
+                    place = places.get(markers.indexOf(marker) + 1);
+                } else {
+                    place = places.get(markers.indexOf(marker));
+                }
                 placeRl.setVisibility(View.VISIBLE);
                 placeNameTv.setText(place.getName());
                 addressTv.setText(place.getFormattedAddress());

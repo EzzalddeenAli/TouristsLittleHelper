@@ -108,7 +108,6 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
         googlePlacesUrl.append("location=" + selectedLatLng.latitude + "," + selectedLatLng.longitude);
         googlePlacesUrl.append("&radius=" + RADIUS);
         googlePlacesUrl.append("&types=" + strTypes);
-        googlePlacesUrl.append("&sensor=true");
         googlePlacesUrl.append("&language=ru");
         googlePlacesUrl.append("&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
         return googlePlacesUrl.toString();
