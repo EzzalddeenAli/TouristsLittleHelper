@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
@@ -29,7 +28,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBuffer;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +37,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.insulardevelopment.touristslittlehelper.R;
+import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.view.adapters.AutoCompletePredictionAdapter;
 
 import java.io.IOException;
@@ -69,7 +68,7 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
     private String location;
     private List<AutocompletePrediction> predictions;
     private AutocompletePrediction selected;
-    private Place city;
+    private com.google.android.gms.location.places.Place city;
     private LatLng selectedLatLng, userLatLng;
     private int code;
 
@@ -103,17 +102,19 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
         okBtn.setOnClickListener(view -> {
             if (selectedLatLng != null) {
                 Intent data;
-                com.insulardevelopment.touristslittlehelper.model.Place place;
+                Place place = new Place();
+                place.setGeometry(new Place.Geometry());
+                place.getGeometry().setLocation(new Place.Location(selectedLatLng.latitude, selectedLatLng.longitude));
                 switch (code){
                     case CHOOSE_START_PLACE:
-                        place = new com.insulardevelopment.touristslittlehelper.model.Place(com.insulardevelopment.touristslittlehelper.model.Place.START_PLACE, selectedLatLng.latitude, selectedLatLng.longitude);
+                        place.setName(Place.START_PLACE);
                         data = new Intent();
                         data.putExtra(DATA, place);
                         setResult(CommonStatusCodes.SUCCESS, data);
                         finish();
                         break;
                     case CHOOSE_FINISH_PLACE:
-                        place = new com.insulardevelopment.touristslittlehelper.model.Place(com.insulardevelopment.touristslittlehelper.model.Place.FINISH_PLACE, selectedLatLng.latitude, selectedLatLng.longitude);
+                        place.setName(Place.FINISH_PLACE);
                         data = new Intent();
                         data.putExtra(DATA, place);
                         setResult(CommonStatusCodes.SUCCESS, data);

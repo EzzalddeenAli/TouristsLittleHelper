@@ -1,7 +1,6 @@
 package com.insulardevelopment.touristslittlehelper.model;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;

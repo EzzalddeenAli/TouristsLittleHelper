@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -91,8 +90,10 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
         mMap = googleMap;
         mMap.animateCamera( CameraUpdateFactory.newLatLngZoom(selectedLatLng, 13.0f ) );
         for(PlaceInfo place: placeInfos){
-            if(place.getPlace().getLatitude()!=0) {
-                place.setMarker(mMap.addMarker(new MarkerOptions().position(new LatLng(place.getPlace().getLatitude(), place.getPlace().getLongitude())).title(place.getPlace().getName())));
+            if(place.getPlace().getGeometry().getLocation().getLatitude()!=0) {
+                place.setMarker(mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(place.getPlace().getGeometry().getLocation().getLatitude(), place.getPlace().getGeometry().getLocation().getLongitude()))
+                        .title(place.getPlace().getName())));
             }
         }
         mMap.setOnMarkerClickListener(this);

@@ -3,9 +3,9 @@ package com.insulardevelopment.touristslittlehelper.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.model.PlaceType;
 import com.insulardevelopment.touristslittlehelper.model.Route;
+import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;

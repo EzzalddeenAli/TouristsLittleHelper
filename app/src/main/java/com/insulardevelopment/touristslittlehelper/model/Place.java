@@ -1,18 +1,20 @@
 package com.insulardevelopment.touristslittlehelper.model;
 
+import com.google.gson.annotations.SerializedName;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.insulardevelopment.touristslittlehelper.model.Place.DATABASE_NAME;
+import static com.insulardevelopment.touristslittlehelper.model.Place.Geometry.GEOMETRY_TABLE;
+import static com.insulardevelopment.touristslittlehelper.model.Place.Location.LOCATION_TABLE;
+import static com.insulardevelopment.touristslittlehelper.model.Place.OpeningHours.OPENING_HOURS_TABLE;
 
 /**
  * Класс, содержащий информацию о месте
  */
-
 @DatabaseTable(tableName = DATABASE_NAME)
 public class Place implements Serializable{
 
@@ -21,57 +23,73 @@ public class Place implements Serializable{
     public static final String FINISH_PLACE = "finish";
 
     @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
-    private int id;
+    private int idPlace;
+
     @DatabaseField(columnName = "name")
+    @SerializedName("name")
     private String name;
+
     @DatabaseField(columnName = "address")
+    @SerializedName("formatted_address")
     private String formattedAddress;
+
     @DatabaseField(columnName = "phone_number")
+    @SerializedName("formatted_phone_number")
     private String formattedPhoneNumber;
+
     @DatabaseField(columnName = "icon")
+    @SerializedName("icon")
     private String icon;
+
     @DatabaseField(columnName = "place_id")
+    @SerializedName("place_id")
     private String placeId;
+
     @DatabaseField(columnName = "rating")
+    @SerializedName("rating")
     private double rating;
-    @DatabaseField(columnName = "weekday_text")
-    private String weekdayText;
-    @DatabaseField(columnName = "latitude")
-    private double latitude;
-    @DatabaseField(columnName = "longitude")
-    private double longitude;
+
+//    @DatabaseField(columnName = "opening_hours", foreign = true, foreignAutoCreate = true)
+    @SerializedName("opening_hours")
+    private OpeningHours openingHours;
+
     @DatabaseField(columnName = "website")
+    @SerializedName("website")
     private String webSite;
-    private ArrayList<Photo> photos;
+
+    @SerializedName("geometry")
+    private Geometry geometry;
+
+    @SerializedName("reviews")
     private List<Review> reviews;
+
+    @SerializedName("photos")
+    private List<Photo> photos;
+
     @DatabaseField(columnName = "route", foreign = true, foreignAutoCreate = true)
     private Route route;
-    private boolean chosen = true;
 
+    private boolean chosen = true;
 
     public Place() {
     }
 
-    public Place(String name, double latitude, double longitude) {
+    public Place(String name) {
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
     }
 
-    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, String weekdayText, double latitude, double longitude, String webSite, ArrayList<Photo> photos, List<Review> reviews, boolean chosen) {
+    public Place(String name, String formattedAddress, String formattedPhoneNumber, String icon, String placeId, double rating, OpeningHours openingHours, String webSite, Geometry geometry, List<Review> reviews, List<Photo> photos) {
         this.name = name;
         this.formattedAddress = formattedAddress;
         this.formattedPhoneNumber = formattedPhoneNumber;
         this.icon = icon;
         this.placeId = placeId;
         this.rating = rating;
-        this.weekdayText = weekdayText;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.openingHours = openingHours;
         this.webSite = webSite;
-        this.photos = photos;
+        this.geometry = geometry;
         this.reviews = reviews;
-        this.chosen = chosen;
+        this.photos = photos;
     }
 
     public String getName() {
@@ -98,22 +116,6 @@ public class Place implements Serializable{
         this.formattedPhoneNumber = formattedPhoneNumber;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
     public String getIcon() {
         return icon;
     }
@@ -138,28 +140,12 @@ public class Place implements Serializable{
         this.rating = rating;
     }
 
-    public String getWeekdayText() {
-        return weekdayText;
+    public OpeningHours getOpeningHours() {
+        return openingHours;
     }
 
-    public void setWeekdayText(String weekdayText) {
-        this.weekdayText = weekdayText;
-    }
-
-    public List<Photo> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(ArrayList<Photo> photos) {
-        this.photos =photos;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
+    public void setOpeningHours(OpeningHours openingHours) {
+        this.openingHours = openingHours;
     }
 
     public String getWebSite() {
@@ -170,6 +156,34 @@ public class Place implements Serializable{
         this.webSite = webSite;
     }
 
+    public Geometry getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(Geometry geometry) {
+        this.geometry = geometry;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
+    }
+
     public boolean isChosen() {
         return chosen;
     }
@@ -178,11 +192,100 @@ public class Place implements Serializable{
         this.chosen = chosen;
     }
 
-    public Route getRoute() {
-        return route;
+    @DatabaseTable(tableName = GEOMETRY_TABLE)
+    public static class Geometry implements Serializable{
+
+        public static final String GEOMETRY_TABLE = "geometry";
+
+        @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
+        private int idGeom;
+
+        @DatabaseField(columnName = "location")
+        @SerializedName("location")
+        private Location location;
+
+        public Geometry() {
+        }
+
+        public Geometry(Location location) {
+            this.location = location;
+        }
+
+        public Location getLocation() {
+            return location;
+        }
+
+        public void setLocation(Location location) {
+            this.location = location;
+        }
     }
 
-    public void setRoute(Route route) {
-        this.route = route;
+    @DatabaseTable(tableName = LOCATION_TABLE)
+    public static class Location implements Serializable{
+
+        public static final String LOCATION_TABLE = "location";
+
+        @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
+        private int idLoc;
+
+        @DatabaseField(columnName = "latitude")
+        @SerializedName("lat")
+        private double latitude;
+
+        @DatabaseField(columnName = "longitude")
+        @SerializedName("lng")
+        private double longitude;
+
+        public Location(double latitude, double longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        public Location() {
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(double latitude) {
+            this.latitude = latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        public void setLongitude(double longitude) {
+            this.longitude = longitude;
+        }
+    }
+
+    @DatabaseTable(tableName = OPENING_HOURS_TABLE)
+    public static class OpeningHours implements Serializable{
+
+        public static final String OPENING_HOURS_TABLE = "opening hours";
+
+        @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
+        private int idOpen;
+
+        @DatabaseField(columnName = "weekday_text")
+        @SerializedName("weekday_text")
+        private List<String> weekdayText;
+
+        public OpeningHours() {
+        }
+
+        public OpeningHours(List<String> weekdayText) {
+            this.weekdayText = weekdayText;
+        }
+
+        public List<String> getWeekdayText() {
+            return weekdayText;
+        }
+
+        public void setWeekdayText(List<String> weekdayText) {
+            this.weekdayText = weekdayText;
+        }
     }
 }

@@ -1,14 +1,12 @@
 package com.insulardevelopment.touristslittlehelper.network;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.insulardevelopment.touristslittlehelper.BuildConfig;
 import com.insulardevelopment.touristslittlehelper.model.PlaceType;
 import com.insulardevelopment.touristslittlehelper.network.entities.ArrayResponse;
 import com.insulardevelopment.touristslittlehelper.network.entities.ObjectResponse;
-import com.insulardevelopment.touristslittlehelper.network.entities.Place;
+import com.insulardevelopment.touristslittlehelper.model.Place;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

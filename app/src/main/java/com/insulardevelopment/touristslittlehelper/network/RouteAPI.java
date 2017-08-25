@@ -1,14 +1,10 @@
 package com.insulardevelopment.touristslittlehelper.network;
 
-import com.insulardevelopment.touristslittlehelper.model.Photo;
 import com.insulardevelopment.touristslittlehelper.network.entities.ArrayResponse;
 import com.insulardevelopment.touristslittlehelper.network.entities.ObjectResponse;
-import com.insulardevelopment.touristslittlehelper.network.entities.Place;
-
-import java.util.List;
+import com.insulardevelopment.touristslittlehelper.model.Place;
 
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
 

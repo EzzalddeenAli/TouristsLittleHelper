@@ -88,7 +88,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
         List<Address> addresses = null;
         try {
-            addresses = gcd.getFromLocation(places.get(0).getLatitude(), places.get(0).getLongitude(), 1);
+            addresses = gcd.getFromLocation(places.get(0).getGeometry().getLocation().getLatitude(), places.get(0).getGeometry().getLocation().getLongitude(), 1);
             route.setCity(addresses.get(0).getLocality());
             cityTv.setText(route.getCity());
         } catch (IOException e) {
@@ -131,32 +131,34 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        LatLng latLng = new LatLng(places.get(0).getLatitude(), places.get(0).getLongitude());
+        LatLng latLng = new LatLng(places.get(0).getGeometry().getLocation().getLatitude(), places.get(0).getGeometry().getLocation().getLongitude());
         map.animateCamera( CameraUpdateFactory.newLatLngZoom(latLng, 13.0f ) );
         for(Place place: places){
             if (!(place.getName().equals(Place.START_PLACE) || place.getName().equals(Place.FINISH_PLACE))) {
-                if (place.getLongitude() != 0) {
-                    markers.add(map.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName())));
+                if (place.getGeometry().getLocation().getLongitude() != 0) {
+                    markers.add(map.addMarker(new MarkerOptions()
+                            .position(new LatLng(place.getGeometry().getLocation().getLatitude(), place.getGeometry().getLocation().getLongitude()))
+                            .title(place.getName())));
                 }
             }
         }
     }
 
     private String getMapsApiDirectionsUrl() {
-        String origin = "origin=" + places.get(0).getLatitude() + "," + places.get(0).getLongitude();
+        String origin = "origin=" + places.get(0).getGeometry().getLocation().getLatitude() + "," + places.get(0).getGeometry().getLocation().getLongitude();
         String waypoints = "waypoints=optimize:true|";
-        int i = -1;
-        for(Place place: places){
-            i++;
-            if (i == 0 || i == places.size() - 1) continue;
-            waypoints += (place.getLatitude() + "," + place.getLongitude() + "|");
-        }
-        String destination = "destination=" + places.get(places.size() - 1).getLatitude() + "," + places.get(places.size() - 1).getLongitude();
+//        int i = -1;
+//        for(Place place: places){
+//            i++;
+//            if (i == 0 || i == places.size() - 1) continue;
+//            waypoints += (place.getLatitude() + "," + place.getLongitude() + "|");
+//        }
+//        String destination = "destination=" + places.get(places.size() - 1).getLatitude() + "," + places.get(places.size() - 1).getLongitude();
         String mode = "mode=walking";
         String key = "key=" + getResources().getString(R.string.google_api_key);
-        String params = origin + "&" + waypoints + "&" + destination + "&" + mode + "&" + key;
+       // String params = origin + "&" + waypoints + "&" + destination + "&" + mode + "&" + key;
         String output = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + params;
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + "prams";
         return url;
     }
 
@@ -272,10 +274,10 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
 
     private double findDistance(Place place1, Place place2){
         final int earthRadius = 6371;
-        double latDistance = Math.toRadians(place2.getLatitude() - place1.getLatitude());
-        double lonDistance = Math.toRadians(place2.getLongitude() - place1.getLongitude());
+        double latDistance = Math.toRadians(place2.getGeometry().getLocation().getLatitude() - place1.getGeometry().getLocation().getLatitude());
+        double lonDistance = Math.toRadians(place2.getGeometry().getLocation().getLongitude() - place1.getGeometry().getLocation().getLongitude());
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(place1.getLatitude())) * Math.cos(Math.toRadians(place2.getLatitude()))
+                + Math.cos(Math.toRadians(place1.getGeometry().getLocation().getLatitude())) * Math.cos(Math.toRadians(place2.getGeometry().getLocation().getLatitude()))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return earthRadius * c * 1000;

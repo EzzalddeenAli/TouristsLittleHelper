@@ -5,9 +5,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.view.fragments.PlacesListFragment;
 import com.insulardevelopment.touristslittlehelper.view.fragments.PlacesMapFragment;
-import com.insulardevelopment.touristslittlehelper.model.Place;
 
 import java.util.List;
 

@@ -1,18 +1,23 @@
 package com.insulardevelopment.touristslittlehelper.model;
 
+import com.google.gson.annotations.SerializedName;
 
 /**
- * Класс, содержащий информацию об отзыве
+ * Created by Маргарита on 24.08.2017.
  */
 
 public class Review {
-
-    private int id;
+    @SerializedName("author_name")
     private String authorName;
+    @SerializedName("author_url")
     private String authorURL;
+    @SerializedName("profile_photo_url")
     private String profilePhotoURL;
+    @SerializedName("relative_time_description")
     private String time;
+    @SerializedName("text")
     private String text;
+    @SerializedName("rating")
     private int rating;
 
     public Review() {

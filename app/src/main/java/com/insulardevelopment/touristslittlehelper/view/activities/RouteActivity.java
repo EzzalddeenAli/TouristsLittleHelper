@@ -73,8 +73,10 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         drawRoute();
         for(Place place: route.getPlaces()){
             if (!(place.getName().equals(Place.START_PLACE) || place.getName().equals(Place.FINISH_PLACE))) {
-                if (place.getLongitude() != 0) {
-                    markers.add(map.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName())));
+                if (place.getGeometry().getLocation().getLongitude() != 0) {
+                    markers.add(map.addMarker(new MarkerOptions()
+                            .position(new LatLng(place.getGeometry().getLocation().getLatitude(), place.getGeometry().getLocation().getLongitude()))
+                            .title(place.getName())));
                 }
             }
         }
