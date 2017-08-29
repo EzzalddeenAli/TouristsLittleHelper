@@ -23,9 +23,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.insulardevelopment.touristslittlehelper.R;
+import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.model.Route;
 import com.insulardevelopment.touristslittlehelper.network.Newtork;
-import com.insulardevelopment.touristslittlehelper.model.Place;
 
 import java.util.ArrayList;
 import java.util.List;

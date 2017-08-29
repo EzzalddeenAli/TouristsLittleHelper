@@ -26,13 +26,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.R;
-import com.insulardevelopment.touristslittlehelper.model.Route;
-import com.insulardevelopment.touristslittlehelper.network.Http;
 import com.insulardevelopment.touristslittlehelper.model.Place;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.insulardevelopment.touristslittlehelper.model.Route;
+import com.insulardevelopment.touristslittlehelper.network.APIWorker;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -40,17 +36,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 /**
  * Активити для построения маршрута
  */
 
 public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String PLACES = "places";
     private static final String START_AND_FINISH = "start and finish";
 
     private List<Place> places;
@@ -68,10 +59,9 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
     private boolean hasStartAndFinish;
 
 
-    public static void start(Context context, ArrayList<Place> places, boolean hasStartAndFinish){
+    public static void start(Context context, boolean hasStartAndFinish) {
         Intent intent = new Intent(context, NewRouteActivity.class);
         intent.putExtra(START_AND_FINISH, hasStartAndFinish);
-        intent.putExtra(PLACES, places);
         context.startActivity(intent);
     }
 
@@ -80,44 +70,24 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_route);
         initViews();
-        places = (List<Place>) getIntent().getSerializableExtra(PLACES);
+        places = ChoosePlacesActivity.getChosenPlaces();
         hasStartAndFinish = getIntent().getBooleanExtra(START_AND_FINISH, false);
         route = new Route();
         markers = new ArrayList<>();
         changePlacesOrder(places, hasStartAndFinish);
-        Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
-        List<Address> addresses = null;
-        try {
-            addresses = gcd.getFromLocation(places.get(0).getLatitude(), places.get(0).getLongitude(), 1);
-            route.setCity(addresses.get(0).getLocality());
-            cityTv.setText(route.getCity());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.route_map);
         mapFragment.getMapAsync(this);
 
-        Observable.just(getMapsApiDirectionsUrl())
-                .map(s -> {
-                    try {
-                        return Http.read(s);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return "";
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(s -> {
-                    drawPath(s);
-                });
+        APIWorker.getRoute(places, getResources().getString(R.string.google_api_key))
+                .subscribe(this::setupRoute);
 
         saveRouteBtn.setOnClickListener(view -> {
             try {
                 route.setHasStartAndFinish(hasStartAndFinish);
                 route.setName(nameEt.getText().toString());
                 helper.getRouteDao().create(route);
-                for(Place place: places){
+                for (Place place : places) {
                     place.setRoute(route);
                     helper.getPlaceDao().create(place);
                 }
@@ -132,109 +102,87 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         LatLng latLng = new LatLng(places.get(0).getLatitude(), places.get(0).getLongitude());
-        map.animateCamera( CameraUpdateFactory.newLatLngZoom(latLng, 13.0f ) );
-        for(Place place: places){
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13.0f));
+        for (Place place : places) {
             if (!(place.getName().equals(Place.START_PLACE) || place.getName().equals(Place.FINISH_PLACE))) {
                 if (place.getLongitude() != 0) {
-                    markers.add(map.addMarker(new MarkerOptions().position(new LatLng(place.getLatitude(), place.getLongitude())).title(place.getName())));
+                    markers.add(map.addMarker(new MarkerOptions()
+                            .position(new LatLng(place.getLatitude(), place.getLongitude()))
+                            .title(place.getName())));
                 }
             }
         }
     }
 
-    private String getMapsApiDirectionsUrl() {
-        String origin = "origin=" + places.get(0).getLatitude() + "," + places.get(0).getLongitude();
-        String waypoints = "waypoints=optimize:true|";
-        int i = -1;
-        for(Place place: places){
-            i++;
-            if (i == 0 || i == places.size() - 1) continue;
-            waypoints += (place.getLatitude() + "," + place.getLongitude() + "|");
-        }
-        String destination = "destination=" + places.get(places.size() - 1).getLatitude() + "," + places.get(places.size() - 1).getLongitude();
-        String mode = "mode=walking";
-        String key = "key=" + getResources().getString(R.string.google_api_key);
-        String params = origin + "&" + waypoints + "&" + destination + "&" + mode + "&" + key;
-        String output = "json";
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + params;
-        return url;
+    private void setupRoute(com.insulardevelopment.touristslittlehelper.network.entities.route.Route serverRoute) {
+        route = serverRoute.toModelRoute();
+        timeTv.setText(String.valueOf(String.format("%.1f", ((double) route.getTime()) / 3600)) + "ч");
+        distanceTv.setText(String.valueOf(String.format("%.1f", ((double) route.getDistance()) / 1000)) + "км");
+
+        drawPath(Route.decodePoly(route.getEncodedPoly()));
+        route.setCity(getCity());
+        cityTv.setText(route.getCity());
+
+        route.setHasStartAndFinish(hasStartAndFinish);
+        map.setOnMarkerClickListener(marker -> {
+            Place place;
+            if (hasStartAndFinish) {
+                place = places.get(markers.indexOf(marker) + 1);
+            } else {
+                place = places.get(markers.indexOf(marker));
+            }
+            placeRl.setVisibility(View.VISIBLE);
+            placeNameTv.setText(place.getName());
+            addressTv.setText(place.getFormattedAddress());
+            Glide.with(NewRouteActivity.this)
+                    .load(place.getIcon())
+                    .into(placeIconIv);
+            moreInfoBtn.setOnClickListener(view -> PlaceActivity.start(NewRouteActivity.this, place));
+            closeIv.setOnClickListener(view -> placeRl.setVisibility(View.INVISIBLE));
+            return true;
+        });
+
     }
 
+    private void drawPath(List<LatLng> points){
+        map.addPolyline(new PolylineOptions()
+                .addAll(points)
+                .width(12)
+                .color(ContextCompat.getColor(this, R.color.maps_color))
+                .geodesic(true)
+        );
+    }
 
-
-    private void drawPath(String result) {
+    private String getCity(){
+        Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
+        List<Address> addresses = null;
         try {
-            final JSONObject json = new JSONObject(result);
-            JSONArray routeArray = json.getJSONArray("routes");
-            JSONObject routes = routeArray.getJSONObject(0);
-            JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
-            String encodedString = overviewPolylines.getString("points");
-            route.setEncodedPoly(encodedString);
-            int distance = 0, time = 0;
-            JSONArray legs = routes.getJSONArray("legs");
-            int count = legs.length();
-            for (int i = 0; i < count; i++){
-                JSONObject jsonObject = (JSONObject)legs.get(i);
-                distance += ((JSONObject)jsonObject.get("distance")).getInt("value");
-                time += ((JSONObject)jsonObject.get("duration")).getInt("value");
-            }
-            timeTv.setText(String.valueOf(String.format("%.1f", ((double) time)/3600)) + "ч");
-            distanceTv.setText(String.valueOf(String.format("%.1f", ((double) distance)/1000)) + "км");
-
-            route.setTime(time);
-            route.setDistance(distance);
-
-            List<LatLng> list = Route.decodePoly(encodedString);
-
-            map.addPolyline(new PolylineOptions()
-                    .addAll(list)
-                    .width(12)
-                    .color(ContextCompat.getColor(this, R.color.maps_color))
-                    .geodesic(true)
-            );
-            map.setOnMarkerClickListener(marker -> {
-                int i = markers.indexOf(marker);
-                Place place;
-                if (hasStartAndFinish){
-                    place = places.get(markers.indexOf(marker) + 1);
-                } else {
-                    place = places.get(markers.indexOf(marker));
-                }
-                placeRl.setVisibility(View.VISIBLE);
-                placeNameTv.setText(place.getName());
-                addressTv.setText(place.getFormattedAddress());
-                Glide.with(NewRouteActivity.this)
-                        .load(place.getIcon())
-                        .into(placeIconIv);
-                moreInfoBtn.setOnClickListener(view -> PlaceActivity.start(NewRouteActivity.this, place));
-                closeIv.setOnClickListener(view -> placeRl.setVisibility(View.INVISIBLE));
-                return true;
-            });
-
-        } catch (JSONException e) {
-
+            addresses = gcd.getFromLocation(places.get(0).getLatitude(), places.get(0).getLongitude(), 1);
+            return addresses.get(0).getLocality();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return "";
     }
 
-    private void changePlacesOrder(List<Place> places, boolean hasStartAndFinish){
+    private void changePlacesOrder(List<Place> places, boolean hasStartAndFinish) {
         Place startPlace = null, finishPlace = null;
-        if (hasStartAndFinish){
-            for (Place place: places){
-                if (place.getName().equals(Place.START_PLACE)){
+        if (hasStartAndFinish) {
+            for (Place place : places) {
+                if (place.getName().equals(Place.START_PLACE)) {
                     startPlace = place;
                 }
-                if (place.getName().equals(Place.FINISH_PLACE)){
+                if (place.getName().equals(Place.FINISH_PLACE)) {
                     finishPlace = place;
                 }
             }
-            if (finishPlace == null){
+            if (finishPlace == null) {
                 finishPlace = findMostFarPlace(startPlace);
             }
-            if (startPlace == null){
+            if (startPlace == null) {
                 startPlace = findMostFarPlace(finishPlace);
             }
-        }
-        else {
+        } else {
             double max = 0;
             for (Place place1 : places) {
                 for (Place place2 : places) {
@@ -255,7 +203,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         places.add(finishPlace);
     }
 
-    private Place findMostFarPlace(Place place1){
+    private Place findMostFarPlace(Place place1) {
         Place place2 = null;
         double max = 0;
         for (Place place : places) {
@@ -270,7 +218,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         return place2;
     }
 
-    private double findDistance(Place place1, Place place2){
+    private double findDistance(Place place1, Place place2) {
         final int earthRadius = 6371;
         double latDistance = Math.toRadians(place2.getLatitude() - place1.getLatitude());
         double lonDistance = Math.toRadians(place2.getLongitude() - place1.getLongitude());
@@ -281,7 +229,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         return earthRadius * c * 1000;
     }
 
-    private void initViews(){
+    private void initViews() {
         nameEt = (EditText) findViewById(R.id.new_route_name_text_view);
         helper = new DataBaseHelper(this);
         saveRouteBtn = (Button) findViewById(R.id.save_route_btn);
