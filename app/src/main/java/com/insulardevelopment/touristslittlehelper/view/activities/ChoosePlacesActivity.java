@@ -13,8 +13,8 @@ import android.widget.Button;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.R;
-import com.insulardevelopment.touristslittlehelper.network.APIWorker;
 import com.insulardevelopment.touristslittlehelper.model.Place;
+import com.insulardevelopment.touristslittlehelper.network.APIWorker;
 import com.insulardevelopment.touristslittlehelper.view.adapters.PlacesPagerAdapter;
 import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.model.PlaceType;
@@ -37,7 +37,7 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
     private List<Place> places;
     private Place startPlace, finishPlace;
     private boolean hasStartAndFinish = false;
-
+    private static ArrayList<Place> chosenPlaces;
 
     public static void start(Context context, LatLng latLng){
         Intent intent = new Intent(context, ChoosePlacesActivity.class);
@@ -58,7 +58,7 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
         List<PlaceType> types;
         try {
             types = helper.getTypeDao().queryForAll();
-            APIWorker.getPlaces(selectedLatLng, RADIUS, types, "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y")
+            APIWorker.getPlaces(selectedLatLng, RADIUS, types, getString(R.string.google_api_key))
                     .subscribe(places -> {
                         PlacesPagerAdapter adapter = new PlacesPagerAdapter(fragmentManager, selectedLatLng, places);
                         placesViewPager.setAdapter(adapter);
@@ -71,6 +71,10 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
 
         tabLayout.setupWithViewPager(placesViewPager);
         nextBtn.setOnClickListener(this);
+    }
+
+    public static ArrayList<Place> getChosenPlaces() {
+        return chosenPlaces;
     }
 
     private void initViews(){
@@ -106,7 +110,7 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        ArrayList<Place> chosenPlaces = new ArrayList<>();
+        chosenPlaces = new ArrayList<>();
         for(Place p: places){
             if (p.isChosen()) {
                 chosenPlaces.add(p);
@@ -118,7 +122,7 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
         if (finishPlace != null){
             chosenPlaces.add(finishPlace);
         }
-        NewRouteActivity.start(ChoosePlacesActivity.this, chosenPlaces, hasStartAndFinish);
+        NewRouteActivity.start(ChoosePlacesActivity.this, hasStartAndFinish);
     }
 
 }

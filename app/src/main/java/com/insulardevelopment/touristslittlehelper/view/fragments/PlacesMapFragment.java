@@ -90,9 +90,9 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
         mMap = googleMap;
         mMap.animateCamera( CameraUpdateFactory.newLatLngZoom(selectedLatLng, 13.0f ) );
         for(PlaceInfo place: placeInfos){
-            if(place.getPlace().getGeometry().getLocation().getLatitude()!=0) {
+            if(place.getPlace().getLatitude()!=0) {
                 place.setMarker(mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(place.getPlace().getGeometry().getLocation().getLatitude(), place.getPlace().getGeometry().getLocation().getLongitude()))
+                        .position(new LatLng(place.getPlace().getLatitude(), place.getPlace().getLongitude()))
                         .title(place.getPlace().getName())));
             }
         }

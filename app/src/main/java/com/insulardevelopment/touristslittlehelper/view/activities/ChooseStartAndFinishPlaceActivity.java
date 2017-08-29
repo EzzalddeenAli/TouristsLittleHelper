@@ -37,7 +37,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.insulardevelopment.touristslittlehelper.R;
-import com.insulardevelopment.touristslittlehelper.model.Place;
+import com.insulardevelopment.touristslittlehelper.network.entities.Place.Geometry;
+import com.insulardevelopment.touristslittlehelper.network.entities.Place.Place;
 import com.insulardevelopment.touristslittlehelper.view.adapters.AutoCompletePredictionAdapter;
 
 import java.io.IOException;
@@ -103,8 +104,8 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
             if (selectedLatLng != null) {
                 Intent data;
                 Place place = new Place();
-                place.setGeometry(new Place.Geometry());
-                place.getGeometry().setLocation(new Place.Location(selectedLatLng.latitude, selectedLatLng.longitude));
+                place.setGeometry(new Geometry());
+                place.getGeometry().setLocation(new com.insulardevelopment.touristslittlehelper.network.entities.Place.Location(selectedLatLng.latitude, selectedLatLng.longitude));
                 switch (code){
                     case CHOOSE_START_PLACE:
                         place.setName(Place.START_PLACE);

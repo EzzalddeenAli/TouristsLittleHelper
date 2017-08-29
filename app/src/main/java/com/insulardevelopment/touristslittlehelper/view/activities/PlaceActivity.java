@@ -15,9 +15,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.insulardevelopment.touristslittlehelper.R;
+import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.network.APIWorker;
 import com.insulardevelopment.touristslittlehelper.model.Photo;
-import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.view.adapters.ReviewAdapter;
 
 import java.util.ArrayList;
@@ -44,10 +44,8 @@ public class PlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place);
         initViews();
         placeId = getIntent().getStringExtra(CHOSEN_PLACE);
-        APIWorker.getPlace(placeId, "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y")
-                .subscribe(p -> {
-                    setContent(p);
-                });
+        APIWorker.getPlace(placeId, getString(R.string.google_api_key))
+                .subscribe(this::setContent);
     }
 
     private void setContent(Place place){
@@ -69,12 +67,8 @@ public class PlaceActivity extends AppCompatActivity {
         } else {
             findViewById(R.id.website_icon_iv).setVisibility(View.GONE);
         }
-        if (place.getOpeningHours() != null && place.getOpeningHours().getWeekdayText() != null ) {
-            String weekdayText = "";
-            for (String day: place.getOpeningHours().getWeekdayText()){
-                weekdayText += (day + "\n");
-            }
-            workHoursTextView.setText(weekdayText);
+        if (place.getWeekdayText() != null) {
+            workHoursTextView.setText(place.getWeekdayText());
         } else {
             findViewById(R.id.time_icon_iv).setVisibility(View.GONE);
         }
