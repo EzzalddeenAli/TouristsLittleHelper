@@ -10,11 +10,11 @@ import java.util.List;
 import static com.insulardevelopment.touristslittlehelper.model.Place.DATABASE_NAME;
 
 /**
- * Класс, содержащий информацию о месте
+ * Created by Маргарита on 29.08.2017.
  */
 
 @DatabaseTable(tableName = DATABASE_NAME)
-public class Place implements Serializable{
+public class Place implements Serializable {
 
     public static final String DATABASE_NAME = "places";
     public static final String START_PLACE = "start";

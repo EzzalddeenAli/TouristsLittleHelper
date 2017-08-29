@@ -16,21 +16,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
-import com.insulardevelopment.touristslittlehelper.network.Http;
+import com.insulardevelopment.touristslittlehelper.network.APIWorker;
 import com.insulardevelopment.touristslittlehelper.model.Photo;
-import com.insulardevelopment.touristslittlehelper.model.parsers.PlaceParser;
 import com.insulardevelopment.touristslittlehelper.view.adapters.ReviewAdapter;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 /*
 *   Активити, содержащее информацию о месте
 */
@@ -54,26 +44,8 @@ public class PlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place);
         initViews();
         placeId = getIntent().getStringExtra(CHOSEN_PLACE);
-        Observable.just(getMapsApiPlacesUrl())
-                .map(s -> {
-                    try {
-                        return Http.read(s);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                })
-                .map(s -> {
-                    try {
-                        return PlaceParser.getFullInfo(new JSONObject(s));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(p -> setContent(p));
+        APIWorker.getPlace(placeId, getString(R.string.google_api_key))
+                .subscribe(this::setContent);
     }
 
     private void setContent(Place place){
@@ -83,22 +55,22 @@ public class PlaceActivity extends AppCompatActivity {
         if (place.getFormattedAddress() != null ) {
             addressTextView.setText(place.getFormattedAddress());
         } else {
-            findViewById(R.id.address_icon_iv).setVisibility(View.INVISIBLE);
+            findViewById(R.id.address_icon_iv).setVisibility(View.GONE);
         }
         if (place.getFormattedPhoneNumber() != null ) {
             phoneNumberTextView.setText(place.getFormattedPhoneNumber());
         } else {
-            findViewById(R.id.phone_icon_iv).setVisibility(View.INVISIBLE);
+            findViewById(R.id.phone_icon_iv).setVisibility(View.GONE);
         }
         if (place.getWebSite() != null ) {
             webSiteTextView.setText(place.getWebSite());
         } else {
-            findViewById(R.id.website_icon_iv).setVisibility(View.INVISIBLE);
+            findViewById(R.id.website_icon_iv).setVisibility(View.GONE);
         }
-        if (place.getWeekdayText() != null ) {
+        if (place.getWeekdayText() != null) {
             workHoursTextView.setText(place.getWeekdayText());
         } else {
-            findViewById(R.id.time_icon_iv).setVisibility(View.INVISIBLE);
+            findViewById(R.id.time_icon_iv).setVisibility(View.GONE);
         }
         ratingBar.setRating((float) place.getRating());
         ImageView photoIb = (ImageView) findViewById(R.id.place_photo_iv);
@@ -120,13 +92,6 @@ public class PlaceActivity extends AppCompatActivity {
             reviewRecycler.setLayoutManager(layoutManager);
             reviewRecycler.setAdapter(adapter);
         }
-    }
-
-    private String getMapsApiPlacesUrl() {
-        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
-        googlePlacesUrl.append("language=ru&placeid=" + placeId);
-        googlePlacesUrl.append("&key=" + "AIzaSyCjnoH7MNT5iS90ZHk4cV_fYj3ZZTKKp_Y");
-        return googlePlacesUrl.toString();
     }
 
     private void initViews(){
