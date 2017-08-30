@@ -66,7 +66,7 @@ public class APIWorker {
                 .toList();
     }
 
-    public static Observable<Route> getRoute(List<com.insulardevelopment.touristslittlehelper.model.Place> places, String key){
+    public static Observable<com.insulardevelopment.touristslittlehelper.model.Route> getRoute(List<com.insulardevelopment.touristslittlehelper.model.Place> places, String key){
         String origin = places.get(0).getLatitude() + "," + places.get(0).getLongitude();
         String waypoints = "optimize:true|";
         for(com.insulardevelopment.touristslittlehelper.model.Place place: places){
@@ -82,6 +82,7 @@ public class APIWorker {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .map(RouteResponse::getResult)
-                .map(list -> list.get(0));
+                .map(list -> list.get(0))
+                .map(Route::toModelRoute);
     }
 }

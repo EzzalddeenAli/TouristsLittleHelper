@@ -5,15 +5,8 @@ import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,7 +18,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.model.Route;
-import com.insulardevelopment.touristslittlehelper.network.Newtork;
+import com.insulardevelopment.touristslittlehelper.view.AboutPlaceView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +31,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private static final String CHOSEN_ROUTE = "chosen route";
 
     private GoogleMap map;
-    private TextView nameTv, timeTv, distanceTv, cityTv, placeNameTv, addressTv;
-    private Button moreInfoBtn;
-    private ImageView placeIconIv;
-    private ImageButton closeIv;
-    private RelativeLayout placeRl;
+    private TextView nameTv, timeTv, distanceTv, cityTv;
+    private AboutPlaceView placeRl;
     private SupportMapFragment mapFragment;
     private List<LatLng> points;
     private Route route;
@@ -85,26 +75,9 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             } else {
                 place = route.getPlaces().get(markers.indexOf(marker));
             }
-            setInfoLayoutContent(place);
+            placeRl.setPlace(place);
             return true;
         });
-    }
-
-    private void setInfoLayoutContent(Place place){
-        placeRl.setVisibility(View.VISIBLE);
-        placeNameTv.setText(place.getName());
-        addressTv.setText(place.getFormattedAddress());
-        Glide.with(RouteActivity.this)
-                .load(place.getIcon())
-                .into(placeIconIv);
-        moreInfoBtn.setOnClickListener(view -> {
-            if (Newtork.isAvailable(RouteActivity.this)) {
-                PlaceActivity.start(RouteActivity.this, place);
-            } else {
-                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-            }
-        });
-        closeIv.setOnClickListener(view -> placeRl.setVisibility(View.INVISIBLE));
     }
 
     private void drawRoute(){
@@ -121,12 +94,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         timeTv = (TextView) findViewById(R.id.route_activity_time_text_view);
         distanceTv = (TextView) findViewById(R.id.route_activity_distance_text_view);
         cityTv = (TextView) findViewById(R.id.city_name_route_activity_text_view);
-        placeNameTv = (TextView) findViewById(R.id.route_place_name_info_text_view);
-        addressTv = (TextView) findViewById(R.id.route_place_address_text_view);
-        moreInfoBtn = (Button) findViewById(R.id.route_more_info_place_btn);
-        placeIconIv = (ImageView) findViewById(R.id.route_place_info_icon_iv);
-        closeIv = (ImageButton) findViewById(R.id.route_close_ib);
-        placeRl = (RelativeLayout) findViewById(R.id.route_place_info_rl);
+        placeRl = (AboutPlaceView) findViewById(R.id.route_place_info_rl);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.route_activity_map);
     }
 

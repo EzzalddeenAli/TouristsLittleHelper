@@ -5,14 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -22,7 +15,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
-import com.insulardevelopment.touristslittlehelper.view.activities.PlaceActivity;
+import com.insulardevelopment.touristslittlehelper.view.AboutPlaceView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +29,7 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
     private GoogleMap mMap;
     private LatLng selectedLatLng;
     private List<PlaceInfo> placeInfos;
-    private RelativeLayout relativeLayout;
-    private ImageView iconIv;
-    private ImageButton closeIb;
-    private TextView placeNameTv;
-    private CheckBox placeCb;
-    private Button moreInfoBtn;
+    private AboutPlaceView aboutPlaceView;
 
     class PlaceInfo{
         private Place place;
@@ -111,7 +99,6 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        relativeLayout.setVisibility(View.VISIBLE);
         PlaceInfo placeInfo = null;
         for(PlaceInfo place: placeInfos){
             if (place.getMarker()!=null && place.getMarker().getPosition().equals(marker.getPosition())){
@@ -119,24 +106,11 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
                 break;
             }
         }
-        placeNameTv.setText(placeInfo.getPlace().getName());
-        Glide.with(getActivity())
-                .load(placeInfo.getPlace().getIcon())
-                .into(iconIv);
-        final PlaceInfo finalPlaceInfo = placeInfo;
-        moreInfoBtn.setOnClickListener(view -> PlaceActivity.start(getActivity(), finalPlaceInfo.getPlace()));
-        closeIb.setOnClickListener(view -> relativeLayout.setVisibility(View.INVISIBLE));
-        placeCb.setOnCheckedChangeListener((compoundButton, b) -> finalPlaceInfo.getPlace().setChosen(b));
-        placeCb.setChecked(finalPlaceInfo.getPlace().isChosen());
+        aboutPlaceView.setPlace(placeInfo.getPlace());
         return true;
     }
 
     private void initViews(View view){
-        relativeLayout = (RelativeLayout) view.findViewById(R.id.place_info_rl);
-        closeIb = (ImageButton) view.findViewById(R.id.close_ib);
-        iconIv = (ImageView) view.findViewById(R.id.place_info_icon_iv);
-        placeNameTv = (TextView) view.findViewById(R.id.place_name_info_text_view);
-        placeCb = (CheckBox) view.findViewById(R.id.map_choose_place_check_box);
-        moreInfoBtn = (Button) view.findViewById(R.id.more_info_place_btn);
+        aboutPlaceView = (AboutPlaceView) view.findViewById(R.id.about_place);
     }
 }

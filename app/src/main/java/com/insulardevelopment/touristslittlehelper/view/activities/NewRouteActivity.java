@@ -7,15 +7,11 @@ import android.location.Geocoder;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,6 +25,7 @@ import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.model.Route;
 import com.insulardevelopment.touristslittlehelper.network.APIWorker;
+import com.insulardevelopment.touristslittlehelper.view.AboutPlaceView;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -47,14 +44,11 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
     private List<Place> places;
     private GoogleMap map;
     private Route route;
-    private TextView timeTv, distanceTv, cityTv, placeNameTv, addressTv;
-    private Button moreInfoBtn;
-    private ImageView placeIconIv;
-    private ImageButton closeIv;
+    private TextView timeTv, distanceTv, cityTv;
     private EditText nameEt;
     private Button saveRouteBtn;
     private DataBaseHelper helper;
-    private RelativeLayout placeRl;
+    private AboutPlaceView aboutPlaceView;
     private List<Marker> markers;
     private boolean hasStartAndFinish;
 
@@ -69,7 +63,9 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_route);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         initViews();
+        helper = new DataBaseHelper(this);
         places = ChoosePlacesActivity.getChosenPlaces();
         hasStartAndFinish = getIntent().getBooleanExtra(START_AND_FINISH, false);
         route = new Route();
@@ -114,16 +110,16 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
         }
     }
 
-    private void setupRoute(com.insulardevelopment.touristslittlehelper.network.entities.route.Route serverRoute) {
-        route = serverRoute.toModelRoute();
-        timeTv.setText(String.valueOf(String.format("%.1f", ((double) route.getTime()) / 3600)) + "ч");
-        distanceTv.setText(String.valueOf(String.format("%.1f", ((double) route.getDistance()) / 1000)) + "км");
+    private void setupRoute(Route serverRoute) {
+        route = serverRoute;
+        timeTv.setText(String.valueOf(String.format("%.1f", ((double) serverRoute.getTime()) / 3600)) + "ч");
+        distanceTv.setText(String.valueOf(String.format("%.1f", ((double) serverRoute.getDistance()) / 1000)) + "км");
 
-        drawPath(Route.decodePoly(route.getEncodedPoly()));
+        drawPath(Route.decodePoly(serverRoute.getEncodedPoly()));
         route.setCity(getCity());
         cityTv.setText(route.getCity());
 
-        route.setHasStartAndFinish(hasStartAndFinish);
+        serverRoute.setHasStartAndFinish(hasStartAndFinish);
         map.setOnMarkerClickListener(marker -> {
             Place place;
             if (hasStartAndFinish) {
@@ -131,14 +127,7 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
             } else {
                 place = places.get(markers.indexOf(marker));
             }
-            placeRl.setVisibility(View.VISIBLE);
-            placeNameTv.setText(place.getName());
-            addressTv.setText(place.getFormattedAddress());
-            Glide.with(NewRouteActivity.this)
-                    .load(place.getIcon())
-                    .into(placeIconIv);
-            moreInfoBtn.setOnClickListener(view -> PlaceActivity.start(NewRouteActivity.this, place));
-            closeIv.setOnClickListener(view -> placeRl.setVisibility(View.INVISIBLE));
+            aboutPlaceView.setPlace(place);
             return true;
         });
 
@@ -155,9 +144,8 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
 
     private String getCity(){
         Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
-        List<Address> addresses = null;
         try {
-            addresses = gcd.getFromLocation(places.get(0).getLatitude(), places.get(0).getLongitude(), 1);
+            List<Address> addresses = gcd.getFromLocation(places.get(0).getLatitude(), places.get(0).getLongitude(), 1);
             return addresses.get(0).getLocality();
         } catch (IOException e) {
             e.printStackTrace();
@@ -231,16 +219,10 @@ public class NewRouteActivity extends AppCompatActivity implements OnMapReadyCal
 
     private void initViews() {
         nameEt = (EditText) findViewById(R.id.new_route_name_text_view);
-        helper = new DataBaseHelper(this);
         saveRouteBtn = (Button) findViewById(R.id.save_route_btn);
         timeTv = (TextView) findViewById(R.id.new_route_time_text_view);
         distanceTv = (TextView) findViewById(R.id.new_route_distance_text_view);
         cityTv = (TextView) findViewById(R.id.city_name_new_route_text_view);
-        placeNameTv = (TextView) findViewById(R.id.new_route_place_name_info_text_view);
-        addressTv = (TextView) findViewById(R.id.new_route_place_address_text_view);
-        moreInfoBtn = (Button) findViewById(R.id.new_route_more_info_place_btn);
-        placeIconIv = (ImageView) findViewById(R.id.new_route_place_info_icon_iv);
-        closeIv = (ImageButton) findViewById(R.id.new_route_close_ib);
-        placeRl = (RelativeLayout) findViewById(R.id.new_route_place_info_rl);
+        aboutPlaceView = (AboutPlaceView) findViewById(R.id.new_route_place_info_rl);
     }
 }

@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent_yellow"
-    android:padding="7dp"
-    android:visibility="invisible">
+    android:visibility="invisible"
+    android:padding="7dp">
 
     <ImageButton
         android:id="@+id/close_ib"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:layout_alignParentRight="true"
-        android:layout_margin="5dp"
+        android:padding="5dp"
         android:background="@null"
         android:scaleType="centerCrop"
         android:src="@drawable/close_icon" />
@@ -45,6 +45,29 @@
                 android:textSize="20dp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/address_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/address_icon_iv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="6dp"
+                android:src="@drawable/address_icon_200" />
+
+            <TextView
+                android:id="@+id/address_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/darkBlue"
+                android:textSize="15dp" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/more_info_place_btn"
             android:layout_width="wrap_content"
@@ -55,10 +78,12 @@
             android:textSize="10dp" />
 
         <LinearLayout
+            android:id="@+id/check_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="-14dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/question_place_tv"

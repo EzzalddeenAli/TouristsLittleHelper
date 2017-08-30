@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <fragment
         android:id="@+id/map_places"
@@ -11,5 +12,9 @@
         android:layout_height="match_parent"
         tools:context="com.insulardevelopment.touristslittlehelper.view.activities.ChoosePlacesActivity" />
 
-    <include layout="@layout/place_info_layout" />
+    <com.insulardevelopment.touristslittlehelper.view.AboutPlaceView
+        android:id="@+id/about_place"
+        app:checkable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>
