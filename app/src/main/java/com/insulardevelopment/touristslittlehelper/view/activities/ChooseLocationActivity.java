@@ -3,6 +3,7 @@ package com.insulardevelopment.touristslittlehelper.view.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.inputmethodservice.Keyboard;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -13,10 +14,13 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -56,22 +60,21 @@ import rx.schedulers.Schedulers;
 
 public class ChooseLocationActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks {
 
-    private GoogleApiClient googleApiClient;
-    private Location lastLocation;
     private GoogleMap map;
+    private GoogleApiClient googleApiClient;
+    private List<AutocompletePrediction> predictions;
+
     private Button nextButton;
     private AutoCompleteTextView locationEditText;
     private AutoCompletePredictionAdapter adapter;
+
     private String location;
-    private List<AutocompletePrediction> predictions;
-    private AutocompletePrediction selected;
     private Place city;
     private LatLng selectedLatLng;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, ChooseLocationActivity.class);
         context.startActivity(intent);
-
     }
 
     @Override
@@ -81,78 +84,16 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         initViews();
+        setupLocationEditText();
+        setupGoogleClient();
         predictions = new ArrayList<>();
-        adapter = new AutoCompletePredictionAdapter(this, R.layout.autocomplete_prediction_layout);
-        adapter.setNotifyOnChange(true);
         nextButton.setOnClickListener(v -> {
             if (selectedLatLng != null) {
                 ChoosePlacesActivity.start(ChooseLocationActivity.this, selectedLatLng);
             } else {
-                Toast.makeText(ChooseLocationActivity.this, getResources().getText(R.string.no_city_chosen), Toast.LENGTH_SHORT);
+                Toast.makeText(ChooseLocationActivity.this, getString(R.string.no_city_chosen), Toast.LENGTH_SHORT).show();
             }
         });
-        locationEditText.setAdapter(adapter);
-        locationEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Observable.just(s)
-                        .map(str -> getPredictions(str.toString()))
-                        .map(res -> res.await(60, TimeUnit.SECONDS))
-                        .flatMap(Observable::from)
-                        .toList()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(predictions -> {
-                            adapter.clear();
-                            adapter.addAll(predictions);
-                            ChooseLocationActivity.this.predictions = predictions;
-                            adapter.notifyDataSetChanged();
-                        });
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        locationEditText.setOnItemClickListener((parent, view, position, id) -> {
-            selected = predictions.get(position);
-            Places.GeoDataApi.getPlaceById(googleApiClient, selected.getPlaceId())
-                    .setResultCallback(places -> {
-                        if (places.getStatus().isSuccess()) {
-                            city = places.get(0);
-                            LatLng loc = city.getLatLng();
-                            map.clear();
-                            map.addMarker(new MarkerOptions().position(loc));
-                            map.moveCamera(CameraUpdateFactory.newLatLng(loc));
-                            selectedLatLng = loc;
-                        }
-                        places.release();
-                    });
-        });
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addApi(LocationServices.API)
-                    .addApi(Places.GEO_DATA_API)
-                    .addApi(Places.PLACE_DETECTION_API)
-                    .build();
-            googleApiClient.connect();
-        }
-    }
-
-    private PendingResult<AutocompletePredictionBuffer> getPredictions(String query) {
-        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0, 0), new LatLng(0, 0));
-        return Places.GeoDataApi.getAutocompletePredictions(googleApiClient, query, latLngBounds, new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
-                .build());
     }
 
     @Override
@@ -178,19 +119,20 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     @Override
     public void onConnected(Bundle connectionHint) {
         try {
-            lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
             if (lastLocation != null) {
                 Geocoder gcd = new Geocoder(getApplicationContext(), Locale.getDefault());
                 List<Address> addresses = gcd.getFromLocation(lastLocation.getLatitude(), lastLocation.getLongitude(), 1);
                 if (addresses.size() > 0) {
-                    locationEditText.setText(addresses.get(0).getAddressLine(1));
+                    location = addresses.get(0).getAddressLine(1);
+                    locationEditText.setText(location);
                 }
-                location = addresses.get(0).getAddressLine(1);
             }
-            LatLng loc = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-            map.addMarker(new MarkerOptions().position(loc));
-            map.moveCamera(CameraUpdateFactory.newLatLng(loc));
-            selectedLatLng = loc;
+            if (lastLocation != null) {
+                selectedLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                map.addMarker(new MarkerOptions().position(selectedLatLng));
+                map.moveCamera(CameraUpdateFactory.newLatLng(selectedLatLng));
+            }
         } catch (SecurityException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -203,6 +145,83 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
 
     }
 
+    private PendingResult<AutocompletePredictionBuffer> getPredictions(String query) {
+        LatLngBounds latLngBounds = new LatLngBounds(new LatLng(-0, 0), new LatLng(0, 0));
+        return Places.GeoDataApi.getAutocompletePredictions(googleApiClient, query, latLngBounds, new AutocompleteFilter.Builder()
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
+                .build());
+    }
+
+    private void setupGoogleClient(){
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .build();
+            googleApiClient.connect();
+        }
+    }
+
+    private void setupLocationEditText(){
+        locationEditText.setOnEditorActionListener((textView, i, keyEvent) -> {
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                nextButton.performClick();
+                return true;
+            }
+            return false;
+        });
+
+        adapter = new AutoCompletePredictionAdapter(this, R.layout.autocomplete_prediction_layout);
+        adapter.setNotifyOnChange(true);
+        locationEditText.setAdapter(adapter);
+        locationEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Observable.just(s)
+                          .map(str -> getPredictions(str.toString()))
+                          .map(res -> res.await(60, TimeUnit.SECONDS))
+                          .flatMap(Observable::from)
+                          .toList()
+                          .observeOn(AndroidSchedulers.mainThread())
+                          .subscribeOn(Schedulers.io())
+                          .subscribe(predictions -> {
+                              adapter.clear();
+                              adapter.addAll(predictions);
+                              ChooseLocationActivity.this.predictions = predictions;
+                              adapter.notifyDataSetChanged();
+                          });
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+        locationEditText.setOnItemClickListener((parent, view, position, id) -> {
+            AutocompletePrediction selected = predictions.get(position);
+            Places.GeoDataApi.getPlaceById(googleApiClient, selected.getPlaceId())
+                             .setResultCallback(places -> {
+                                 if (places.getStatus().isSuccess()) {
+                                     city = places.get(0);
+                                     selectedLatLng = city.getLatLng();
+                                     map.clear();
+                                     map.addMarker(new MarkerOptions().position(selectedLatLng));
+                                     map.moveCamera(CameraUpdateFactory.newLatLng(selectedLatLng));
+                                 }
+                                 places.release();
+                             });
+        });
+    }
 
     private void initViews(){
         nextButton = (Button) findViewById(R.id.next_btn);
