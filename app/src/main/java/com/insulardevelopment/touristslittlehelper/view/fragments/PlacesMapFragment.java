@@ -28,45 +28,14 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
 
     private GoogleMap mMap;
     private LatLng selectedLatLng;
-    private List<PlaceInfo> placeInfos;
+    private List<Place> places;
+    private List<Marker> markers;
     private AboutPlaceView aboutPlaceView;
-
-    class PlaceInfo{
-        private Place place;
-        private Marker marker;
-
-        public PlaceInfo() {
-        }
-
-        public PlaceInfo(Place place) {
-            this.place = place;
-        }
-
-        public Place getPlace() {
-            return place;
-        }
-
-        public void setPlace(Place place) {
-            this.place = place;
-        }
-
-        public Marker getMarker() {
-            return marker;
-        }
-
-        public void setMarker(Marker marker) {
-            this.marker = marker;
-        }
-
-    }
 
     public PlacesMapFragment(LatLng latLng, List<Place> places){
         super();
         this.selectedLatLng = latLng;
-        placeInfos = new ArrayList<>();
-        for (Place place: places){
-            placeInfos.add(new PlaceInfo(place));
-        }
+        this.places = places;
     }
 
     public  static PlacesMapFragment newInstance(LatLng latLng, List<Place> places){
@@ -77,11 +46,11 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.animateCamera( CameraUpdateFactory.newLatLngZoom(selectedLatLng, 13.0f ) );
-        for(PlaceInfo place: placeInfos){
-            if(place.getPlace().getLatitude()!=0) {
-                place.setMarker(mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(place.getPlace().getLatitude(), place.getPlace().getLongitude()))
-                        .title(place.getPlace().getName())));
+        for(Place place: places){
+            if(place.getLatitude()!=0) {
+                markers.add(mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(place.getLatitude(), place.getLongitude()))
+                        .title(place.getName())));
             }
         }
         mMap.setOnMarkerClickListener(this);
@@ -91,6 +60,7 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_places_map, container, false);
         setRetainInstance(true);
+        markers = new ArrayList<>();
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_places);
         initViews(view);
         mapFragment.getMapAsync(this);
@@ -99,15 +69,14 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        PlaceInfo placeInfo = null;
-        for(PlaceInfo place: placeInfos){
-            if (place.getMarker()!=null && place.getMarker().getPosition().equals(marker.getPosition())){
-                placeInfo = place;
-                break;
+        for(Place place: places){
+            Marker m = markers.get(places.indexOf(place));
+            if (m!=null && m.getPosition().equals(marker.getPosition())){
+                aboutPlaceView.setPlace(place);
+                return true;
             }
         }
-        aboutPlaceView.setPlace(placeInfo.getPlace());
-        return true;
+        return false;
     }
 
     private void initViews(View view){
