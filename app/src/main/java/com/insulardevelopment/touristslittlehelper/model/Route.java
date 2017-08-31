@@ -103,16 +103,16 @@ public class Route implements Serializable{
         this.hasStartAndFinish = hasStartAndFinish;
     }
 
-    public static List<LatLng> decodePoly(String encoded) {
+    public List<LatLng> decodePoly() {
 
         List<LatLng> poly = new ArrayList<LatLng>();
-        int index = 0, len = encoded.length();
+        int index = 0, len = encodedPoly.length();
         int lat = 0, lng = 0;
 
         while (index < len) {
             int b, shift = 0, result = 0;
             do {
-                b = encoded.charAt(index++) - 63;
+                b = encodedPoly.charAt(index++) - 63;
                 result |= (b & 0x1f) << shift;
                 shift += 5;
             } while (b >= 0x20);
@@ -122,7 +122,7 @@ public class Route implements Serializable{
             shift = 0;
             result = 0;
             do {
-                b = encoded.charAt(index++) - 63;
+                b = encodedPoly.charAt(index++) - 63;
                 result |= (b & 0x1f) << shift;
                 shift += 5;
             } while (b >= 0x20);

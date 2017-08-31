@@ -37,7 +37,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/new_route_name_text_view"
+                    android:id="@+id/route_name_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="90dp"
@@ -46,7 +46,7 @@
                     android:textSize="17dp" />
 
                 <TextView
-                    android:id="@+id/city_name_new_route_text_view"
+                    android:id="@+id/city_name_route_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="city"
@@ -72,7 +72,7 @@
                 android:src="@drawable/distance_200" />
 
             <TextView
-                android:id="@+id/new_route_distance_text_view"
+                android:id="@+id/route_distance_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
@@ -89,7 +89,7 @@
                 android:src="@drawable/time_71" />
 
             <TextView
-                android:id="@+id/new_route_time_text_view"
+                android:id="@+id/route_time_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -103,16 +103,16 @@
         android:id="@+id/save_route_btn"
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="21dp"
         android:background="@drawable/round_button"
         android:text="@string/save"
         android:textColor="@color/colorLight"
-        android:elevation="6dp"/>
+        android:elevation="6dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <com.insulardevelopment.touristslittlehelper.view.AboutPlaceView
-        android:id="@+id/new_route_place_info_rl"
+        android:id="@+id/route_place_info_rl"
         app:backgroundColor="@color/transparent_blue"
         app:showAddress="true"
         android:layout_width="match_parent"
