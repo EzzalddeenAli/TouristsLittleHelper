@@ -37,10 +37,10 @@ public abstract class AbstractRouteActivity extends AppCompatActivity implements
     protected List<Marker> markers;
 
     protected void initViews(){
-        timeTv = (TextView) findViewById(R.id.route_time_text_view);
-        distanceTv = (TextView) findViewById(R.id.route_distance_text_view);
-        cityTv = (TextView) findViewById(R.id.city_name_route_text_view);
-        placeRl = (AboutPlaceView) findViewById(R.id.route_place_info_rl);
+        timeTv = findViewById(R.id.route_time_text_view);
+        distanceTv = findViewById(R.id.route_distance_text_view);
+        cityTv = findViewById(R.id.city_name_route_text_view);
+        placeRl = findViewById(R.id.route_place_info_rl);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.route_map);
     }
 

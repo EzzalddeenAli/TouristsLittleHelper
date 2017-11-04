@@ -48,7 +48,7 @@ public class RouteActivity extends AbstractRouteActivity {
     }
 
     protected void initViews(){
-        nameTv = (TextView) findViewById(R.id.route_activity_name_text_view);
+        nameTv = findViewById(R.id.route_activity_name_text_view);
         super.initViews();
     }
 

@@ -248,9 +248,9 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
     }
 
     private void initViews(){
-        descriptionTv = (TextView) findViewById(R.id.choose_start_and_finish_place_tv);
-        okBtn = (Button) findViewById(R.id.choose_start_place_ok_btn);
-        cancelBtn = (Button) findViewById(R.id.choose_start_place_cancel_btn);
-        locationEditText = (AutoCompleteTextView) findViewById(R.id.choose_start_place_edit_text);
+        descriptionTv = findViewById(R.id.choose_start_and_finish_place_tv);
+        okBtn = findViewById(R.id.choose_start_place_ok_btn);
+        cancelBtn = findViewById(R.id.choose_start_place_cancel_btn);
+        locationEditText = findViewById(R.id.choose_start_place_edit_text);
     }
 }

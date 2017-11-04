@@ -159,8 +159,8 @@ public class NewRouteActivity extends AbstractRouteActivity{
     }
 
     protected void initViews() {
-        nameEt = (EditText) findViewById(R.id.route_name_text_view);
-        saveRouteBtn = (Button) findViewById(R.id.save_route_btn);
+        nameEt = findViewById(R.id.route_name_text_view);
+        saveRouteBtn = findViewById(R.id.save_route_btn);
         super.initViews();
     }
 }

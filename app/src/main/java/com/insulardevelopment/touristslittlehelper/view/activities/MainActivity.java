@@ -91,15 +91,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(getResources().getString(R.string.routes));
-        mainRouteBtn = (Button)findViewById(R.id.main_trace_btn);
-        mainRouteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Newtork.isAvailable(MainActivity.this)) {
-                    ChooseLocationActivity.start(MainActivity.this);
-                } else {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
-                }
+        mainRouteBtn = findViewById(R.id.main_trace_btn);
+        mainRouteBtn.setOnClickListener(v -> {
+            if (Newtork.isAvailable(MainActivity.this)) {
+                ChooseLocationActivity.start(MainActivity.this);
+            } else {
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
             }
         });
         routes = new ArrayList<>();
@@ -112,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         if (routes.size() == 0){
             findViewById(R.id.no_routes_rl).setVisibility(View.VISIBLE);
         }else {
-            RecyclerView routeRecycler = (RecyclerView) findViewById(R.id.routes_recycler_view);
+            RecyclerView routeRecycler = findViewById(R.id.routes_recycler_view);
             adapter = new RouteAdapter(routes, this, multiSelector, callback);
             routeRecycler.setAdapter(adapter);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());

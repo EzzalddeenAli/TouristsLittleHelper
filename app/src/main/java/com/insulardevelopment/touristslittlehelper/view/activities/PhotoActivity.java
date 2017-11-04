@@ -33,7 +33,7 @@ public class PhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
         photos = (ArrayList<Photo>) getIntent().getSerializableExtra(PHOTOS);
-        final ViewPager photosViewPager = (ViewPager) findViewById(R.id.photos_view_pager);
+        final ViewPager photosViewPager = findViewById(R.id.photos_view_pager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         PhotoPagerAdapter adapter = new PhotoPagerAdapter(fragmentManager, photos);
         photosViewPager.setAdapter(adapter);

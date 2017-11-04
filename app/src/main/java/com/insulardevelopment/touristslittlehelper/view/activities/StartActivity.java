@@ -66,8 +66,8 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void initViews(){
-        confirmBtn = (Button) findViewById(R.id.start_confirm_btn);
-        typesRecycler = (RecyclerView) findViewById(R.id.places_types_recycler_view);
+        confirmBtn = findViewById(R.id.start_confirm_btn);
+        typesRecycler = findViewById(R.id.places_types_recycler_view);
     }
 
     private void setPlaceTypes(){

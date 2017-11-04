@@ -78,9 +78,9 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initViews(){
-        placesViewPager = (ViewPager) findViewById(R.id.places_view_pager);
-        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        nextBtn = (Button) findViewById(R.id.to_route_btn);
+        placesViewPager = findViewById(R.id.places_view_pager);
+        tabLayout = findViewById(R.id.tab_layout);
+        nextBtn = findViewById(R.id.to_route_btn);
     }
 
 

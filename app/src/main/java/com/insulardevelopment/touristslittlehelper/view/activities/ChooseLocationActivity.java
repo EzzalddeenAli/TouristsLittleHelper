@@ -224,8 +224,8 @@ public class ChooseLocationActivity extends FragmentActivity implements OnMapRea
     }
 
     private void initViews(){
-        nextButton = (Button) findViewById(R.id.next_btn);
-        locationEditText = (AutoCompleteTextView) findViewById(R.id.choose_location_search_place_edit_text);
+        nextButton = findViewById(R.id.next_btn);
+        locationEditText = findViewById(R.id.choose_location_search_place_edit_text);
     }
 
 }

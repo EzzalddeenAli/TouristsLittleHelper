@@ -38,7 +38,7 @@ public class PlaceTypesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place_types);
         setTitle(getResources().getString(R.string.types));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.type_menu_recycler);
+        RecyclerView recyclerView = findViewById(R.id.type_menu_recycler);
         databaseHelper = new DataBaseHelper(this);
         try {
             placesTypes = databaseHelper.getTypeDao().queryForAll();

@@ -95,11 +95,11 @@ public class PlaceActivity extends AppCompatActivity {
     }
 
     private void initViews(){
-        addressTextView = (TextView) findViewById(R.id.place_address_text_view);
-        phoneNumberTextView = (TextView) findViewById(R.id.place_phone_number_text_view);
-        webSiteTextView = (TextView) findViewById(R.id.place_website_text_view);
-        workHoursTextView = (TextView) findViewById(R.id.place_work_hours_text_view);
-        ratingBar = (RatingBar) findViewById(R.id.place_rating_bar);
+        addressTextView = findViewById(R.id.place_address_text_view);
+        phoneNumberTextView = findViewById(R.id.place_phone_number_text_view);
+        webSiteTextView = findViewById(R.id.place_website_text_view);
+        workHoursTextView = findViewById(R.id.place_work_hours_text_view);
+        ratingBar = findViewById(R.id.place_rating_bar);
     }
 
 }
