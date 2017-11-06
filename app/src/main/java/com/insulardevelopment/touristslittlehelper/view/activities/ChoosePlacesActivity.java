@@ -5,19 +5,19 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.maps.model.LatLng;
+import com.insulardevelopment.touristslittlehelper.view.AbstractActivity;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
-import com.insulardevelopment.touristslittlehelper.network.APIWorker;
 import com.insulardevelopment.touristslittlehelper.view.adapters.PlacesPagerAdapter;
 import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.model.PlaceType;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.ChoosePlacesViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 *   Активити для выбора мест
 */
 
-public class ChoosePlacesActivity extends AppCompatActivity implements View.OnClickListener{
+public class ChoosePlacesActivity extends AbstractActivity implements View.OnClickListener{
 
     private static final String SELECTED_LATLNG = "latlng";
     private static final int RADIUS = 5000;
@@ -39,6 +39,8 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
     private boolean hasStartAndFinish = false;
     private static ArrayList<Place> chosenPlaces;
 
+    private ChoosePlacesViewModel choosePlacesViewModel;
+
     public static void start(Context context, LatLng latLng){
         Intent intent = new Intent(context, ChoosePlacesActivity.class);
         intent.putExtra(SELECTED_LATLNG, latLng);
@@ -48,6 +50,8 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        choosePlacesViewModel = getViewModel(ChoosePlacesViewModel.class);
         setContentView(R.layout.activity_choose_places);
         initViews();
         setTitle(R.string.popular_places_activity_description);
@@ -58,12 +62,12 @@ public class ChoosePlacesActivity extends AppCompatActivity implements View.OnCl
         List<PlaceType> types;
         try {
             types = helper.getTypeDao().queryForAll();
-            APIWorker.getPlaces(selectedLatLng, RADIUS, types, getString(R.string.google_api_key))
-                    .subscribe(places -> {
-                        PlacesPagerAdapter adapter = new PlacesPagerAdapter(fragmentManager, selectedLatLng, places);
-                        placesViewPager.setAdapter(adapter);
-                        ChoosePlacesActivity.this.places = places;
-                    });
+
+            choosePlacesViewModel.getPlaces(selectedLatLng, RADIUS, types, getString(R.string.google_api_key)).observe(this, placesList -> {
+                PlacesPagerAdapter adapter = new PlacesPagerAdapter(fragmentManager, selectedLatLng, placesList);
+                placesViewPager.setAdapter(adapter);
+                places = placesList;
+            });
         }
         catch (Exception e) {
             e.printStackTrace();

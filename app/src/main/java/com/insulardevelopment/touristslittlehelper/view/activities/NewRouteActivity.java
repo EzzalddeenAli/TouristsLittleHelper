@@ -9,13 +9,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.model.Route;
-import com.insulardevelopment.touristslittlehelper.network.APIWorker;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.RouteViewModel;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -36,6 +35,7 @@ public class NewRouteActivity extends AbstractRouteActivity{
     private DataBaseHelper helper;
     private boolean hasStartAndFinish;
 
+    private RouteViewModel routeViewModel;
 
     public static void start(Context context, boolean hasStartAndFinish) {
         Intent intent = new Intent(context, NewRouteActivity.class);
@@ -47,6 +47,9 @@ public class NewRouteActivity extends AbstractRouteActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_route);
+
+        routeViewModel = getViewModel(RouteViewModel.class);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         initViews();
         helper = new DataBaseHelper(this);
@@ -57,8 +60,8 @@ public class NewRouteActivity extends AbstractRouteActivity{
         mapFragment.getMapAsync(this);
         changePlacesOrder(places, hasStartAndFinish);
 
-        APIWorker.getRoute(places, getResources().getString(R.string.google_api_key))
-                .subscribe(this::setupRoute);
+        routeViewModel.getRoute(places, getResources().getString(R.string.google_api_key))
+                .observe(this, this::setupRoute);
 
         saveRouteBtn.setOnClickListener(view -> {
             try {

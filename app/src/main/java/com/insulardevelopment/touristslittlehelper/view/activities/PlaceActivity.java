@@ -3,7 +3,6 @@ package com.insulardevelopment.touristslittlehelper.view.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,23 +13,26 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.insulardevelopment.touristslittlehelper.view.AbstractActivity;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
-import com.insulardevelopment.touristslittlehelper.network.APIWorker;
 import com.insulardevelopment.touristslittlehelper.model.Photo;
 import com.insulardevelopment.touristslittlehelper.view.adapters.ReviewAdapter;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.PlaceViewModel;
 
 import java.util.ArrayList;
 /*
 *   Активити, содержащее информацию о месте
 */
 
-public class PlaceActivity extends AppCompatActivity {
+public class PlaceActivity extends AbstractActivity {
 
     private static final String CHOSEN_PLACE = "chosen place";
     private TextView addressTextView, phoneNumberTextView, webSiteTextView, workHoursTextView;
     private RatingBar ratingBar;
     private String placeId;
+
+    private PlaceViewModel placeViewModel;
 
     public static void start(Context context, Place place){
         Intent intent = new Intent(context, PlaceActivity.class);
@@ -42,14 +44,17 @@ public class PlaceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place);
+
+        placeViewModel = getViewModel(PlaceViewModel.class);
+
         initViews();
         placeId = getIntent().getStringExtra(CHOSEN_PLACE);
-        APIWorker.getPlace(placeId, getString(R.string.google_api_key))
-                .subscribe(this::setContent);
+        placeViewModel.getPlace(placeId, getString(R.string.google_api_key))
+                .observe(this, this::setContent);
     }
 
     private void setContent(Place place){
-        Toolbar toolbar = (Toolbar)findViewById(R.id.place_toolbar);
+        Toolbar toolbar = findViewById(R.id.place_toolbar);
         toolbar.setTitle(place.getName());
 
         if (place.getFormattedAddress() != null ) {
@@ -86,7 +91,7 @@ public class PlaceActivity extends AppCompatActivity {
         }
 
         if (place.getReviews() != null){
-            RecyclerView reviewRecycler = (RecyclerView) findViewById(R.id.reviews_recycler_view);
+            RecyclerView reviewRecycler = findViewById(R.id.reviews_recycler_view);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
             ReviewAdapter adapter = new ReviewAdapter(place.getReviews());
             reviewRecycler.setLayoutManager(layoutManager);

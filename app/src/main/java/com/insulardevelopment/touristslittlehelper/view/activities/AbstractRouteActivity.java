@@ -1,8 +1,6 @@
 package com.insulardevelopment.touristslittlehelper.view.activities;
 
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -13,19 +11,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.insulardevelopment.touristslittlehelper.view.AbstractActivity;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.model.Route;
 import com.insulardevelopment.touristslittlehelper.view.AboutPlaceView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Маргарита on 31.08.2017.
  */
 
-public abstract class AbstractRouteActivity extends AppCompatActivity implements OnMapReadyCallback {
+public abstract class AbstractRouteActivity extends AbstractActivity implements OnMapReadyCallback {
 
     protected GoogleMap map;
     protected TextView timeTv, distanceTv, cityTv;

@@ -7,7 +7,7 @@ import android.net.ConnectivityManager;
  * Вспомогательный класс для работы с интернетом
  */
 
-public class Newtork {
+public class Network {
     public static boolean isAvailable(Context context){
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

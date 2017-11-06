@@ -18,7 +18,7 @@ import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
-import com.insulardevelopment.touristslittlehelper.network.Newtork;
+import com.insulardevelopment.touristslittlehelper.network.Network;
 import com.insulardevelopment.touristslittlehelper.model.Route;
 import com.insulardevelopment.touristslittlehelper.view.adapters.RouteAdapter;
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         setTitle(getResources().getString(R.string.routes));
         mainRouteBtn = findViewById(R.id.main_trace_btn);
         mainRouteBtn.setOnClickListener(v -> {
-            if (Newtork.isAvailable(MainActivity.this)) {
+            if (Network.isAvailable(MainActivity.this)) {
                 ChooseLocationActivity.start(MainActivity.this);
             } else {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
