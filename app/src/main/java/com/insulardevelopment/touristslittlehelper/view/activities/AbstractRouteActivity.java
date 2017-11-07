@@ -11,12 +11,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.insulardevelopment.touristslittlehelper.view.AbstractActivity;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.model.Route;
 import com.insulardevelopment.touristslittlehelper.view.AboutPlaceView;
+import com.insulardevelopment.touristslittlehelper.view.AbstractActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public abstract class AbstractRouteActivity extends AbstractActivity implements 
     protected LatLng moveToLatLng;
     protected Route route;
     protected List<Place> places;
-    protected List<Marker> markers;
+    protected List<Marker> markers = new ArrayList<>();
 
     protected void initViews(){
         timeTv = findViewById(R.id.route_time_text_view);

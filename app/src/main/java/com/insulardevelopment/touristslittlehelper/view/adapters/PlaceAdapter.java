@@ -31,48 +31,25 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context context;
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public interface OnStartClickListener {
-        public void onStartClick(View view, int position);
+        void onStartClick(View view, int position);
     }
 
     public interface OnFinishClickListener {
-        public void onFinishClick(View view, int position);
-    }
-
-    public class PlaceViewHolder extends RecyclerView.ViewHolder {
-        public TextView nameTextView, addressTextView;
-        public View container;
-        public CheckBox checkBox;
-        public ImageView iconImageView;
-
-        public PlaceViewHolder(final View view) {
-            super(view);
-            container = view;
-            nameTextView = (TextView) view.findViewById(R.id.popular_places_item_name_text_view);
-            addressTextView = (TextView) view.findViewById(R.id.popular_places_item_address_text_view);
-            checkBox = (CheckBox) view.findViewById(R.id.choose_place_check_box);
-            iconImageView = (ImageView) view.findViewById(R.id.popular_places_icon_image_view);
-        }
-    }
-
-    public class FooterViewHolder extends RecyclerView.ViewHolder{
-
-        public Button chooseStartBtn, chooseFinishBtn;
-
-        public FooterViewHolder(View itemView) {
-            super(itemView);
-            chooseStartBtn = (Button) itemView.findViewById(R.id.choose_start_place_btn);
-            chooseFinishBtn = (Button) itemView.findViewById(R.id.choose_finish_place_btn);
-        }
+        void onFinishClick(View view, int position);
     }
 
     public PlaceAdapter(Context context, List<Place> places, OnItemClickListener onItemClickListener) {
         this.places = places;
         this.onItemClickListener = onItemClickListener;
         this.context = context;
+    }
+
+    public List<Place> getItems() {
+        return places;
     }
 
     public void setOnStartClickListener(OnStartClickListener onStartClickListener) {
@@ -88,38 +65,18 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         View view;
         if (viewType == FOOTER_VIEW) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.choose_start_ans_finish_place_layout, parent, false);
-            FooterViewHolder viewHolder = new FooterViewHolder(view);
-            return viewHolder;
+            return new FooterViewHolder(view);
         }
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.popular_places_item, parent, false);
-        PlaceViewHolder viewHolder = new PlaceViewHolder(view);
-        return viewHolder;
+        return new PlaceViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, final int position) {
-        try {
-            if (viewHolder instanceof PlaceViewHolder) {
-                PlaceViewHolder holder = (PlaceViewHolder) viewHolder;
-                final Place place = places.get(position);
-                holder.checkBox.setOnCheckedChangeListener(null);
-                holder.addressTextView.setText(place.getFormattedAddress());
-                holder.nameTextView.setText(place.getName());
-                holder.checkBox.setChecked(place.isChosen());
-                holder.checkBox.setOnCheckedChangeListener((compoundButton, b) -> place.setChosen(b));
-                Glide.with(context)
-                        .load(place.getIcon())
-                        .into(holder.iconImageView);
-                holder.container.setOnClickListener(v -> onItemClickListener.onItemClick(v, position));
-            } else if (viewHolder instanceof FooterViewHolder) {
-                FooterViewHolder holder = (FooterViewHolder) viewHolder;
-                holder.chooseStartBtn.setOnClickListener(view -> onStartClickListener.onStartClick(view, position));
-                holder.chooseFinishBtn.setOnClickListener(view -> onFinishClickListener.onFinishClick(view, position));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (viewHolder instanceof PlaceViewHolder) {
+            PlaceViewHolder holder = (PlaceViewHolder) viewHolder;
+            holder.setupHolder(places.get(position));
         }
-
     }
 
     @Override
@@ -133,6 +90,48 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return FOOTER_VIEW;
         }
         return super.getItemViewType(position);
+    }
+
+    public class PlaceViewHolder extends RecyclerView.ViewHolder {
+        public TextView nameTextView, addressTextView;
+        public CheckBox checkBox;
+        public ImageView iconImageView;
+
+        public PlaceViewHolder(final View view) {
+            super(view);
+            nameTextView = view.findViewById(R.id.popular_places_item_name_text_view);
+            addressTextView = view.findViewById(R.id.popular_places_item_address_text_view);
+            checkBox = view.findViewById(R.id.choose_place_check_box);
+            iconImageView = view.findViewById(R.id.popular_places_icon_image_view);
+
+            itemView.setOnClickListener(v -> onItemClickListener.onItemClick(v, getAdapterPosition()));
+        }
+
+        public void setupHolder(Place place) {
+            checkBox.setOnCheckedChangeListener(null);
+            addressTextView.setText(place.getFormattedAddress());
+            nameTextView.setText(place.getName());
+            checkBox.setChecked(place.isChosen());
+            checkBox.setOnCheckedChangeListener((compoundButton, b) -> place.setChosen(b));
+            Glide.with(context)
+                    .load(place.getIcon())
+                    .into(iconImageView);
+
+        }
+    }
+
+    public class FooterViewHolder extends RecyclerView.ViewHolder {
+
+        public Button chooseStartBtn, chooseFinishBtn;
+
+        public FooterViewHolder(View itemView) {
+            super(itemView);
+            chooseStartBtn = itemView.findViewById(R.id.choose_start_place_btn);
+            chooseFinishBtn = itemView.findViewById(R.id.choose_finish_place_btn);
+
+            chooseStartBtn.setOnClickListener(view -> onStartClickListener.onStartClick(view, getAdapterPosition()));
+            chooseFinishBtn.setOnClickListener(view -> onFinishClickListener.onFinishClick(view, getAdapterPosition()));
+        }
     }
 
 }

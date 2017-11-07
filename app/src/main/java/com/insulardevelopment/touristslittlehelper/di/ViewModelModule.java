@@ -3,12 +3,13 @@ package com.insulardevelopment.touristslittlehelper.di;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
-import com.insulardevelopment.touristslittlehelper.view.viewmodel.PlaceTypesViewModel;
-import com.insulardevelopment.touristslittlehelper.view.viewmodel.ViewModelFactory;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.ChoosePlacesViewModel;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.MainViewModel;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.PlaceTypesViewModel;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.PlaceViewModel;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.PlacesMapViewModel;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.RouteViewModel;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.ViewModelFactory;
 
 import dagger.Binds;
 import dagger.Module;
@@ -40,6 +41,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PlaceTypesViewModel.class)
     abstract ViewModel bindPlaceTypesViewModel(PlaceTypesViewModel placeTypesViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PlacesMapViewModel.class)
+    abstract ViewModel bindPlacesMapViewModel(PlacesMapViewModel placesMapViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(ViewModelFactory factory);

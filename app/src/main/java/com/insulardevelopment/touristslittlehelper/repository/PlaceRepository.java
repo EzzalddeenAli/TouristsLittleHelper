@@ -14,19 +14,23 @@ import com.insulardevelopment.touristslittlehelper.network.entities.ObjectRespon
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Маргарита on 06.11.2017.
  */
 
+@Singleton
 public class PlaceRepository {
     protected RouteAPI routeAPI;
     private AppDatabase appDatabase;
+
+    private List<Place> chosenPlaces;
 
     @Inject
     public PlaceRepository(RouteAPI routeAPI, MyApplication app) {
@@ -60,5 +64,13 @@ public class PlaceRepository {
 
     public void insert(Place place){
         appDatabase.placeDao().insert(place);
+    }
+
+    public List<Place> getChosenPlaces() {
+        return chosenPlaces;
+    }
+
+    public void setChosenPlaces(List<Place> chosenPlaces) {
+        this.chosenPlaces = chosenPlaces;
     }
 }

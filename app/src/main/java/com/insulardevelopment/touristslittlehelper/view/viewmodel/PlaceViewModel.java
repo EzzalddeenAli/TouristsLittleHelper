@@ -15,7 +15,7 @@ import javax.inject.Inject;
 public class PlaceViewModel extends ViewModel{
     protected PlaceRepository placeRepository;
 
-    private MutableLiveData<String> errorLiveData;
+    private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
 
     @Inject
     public PlaceViewModel(PlaceRepository placeRepository) {

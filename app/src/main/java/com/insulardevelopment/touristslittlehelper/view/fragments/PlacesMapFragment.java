@@ -1,7 +1,7 @@
 package com.insulardevelopment.touristslittlehelper.view.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,72 +11,62 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.view.AboutPlaceView;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.insulardevelopment.touristslittlehelper.view.AbstractFragment;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.ChoosePlacesViewModel;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.PlacesMapViewModel;
 
 /**
  * Фрагмент для отображения мест в на карте
  */
 
-public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class PlacesMapFragment extends AbstractFragment implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-    private LatLng selectedLatLng;
-    private List<Place> places;
-    private List<Marker> markers;
+    private GoogleMap map;
     private AboutPlaceView aboutPlaceView;
 
-    public PlacesMapFragment(LatLng latLng, List<Place> places){
-        super();
-        this.selectedLatLng = latLng;
-        this.places = places;
-    }
+    private ChoosePlacesViewModel choosePlacesViewModel;
+    private PlacesMapViewModel placesMapViewModel;
 
-    public  static PlacesMapFragment newInstance(LatLng latLng, List<Place> places){
-        return new PlacesMapFragment(latLng, places);
+    public static PlacesMapFragment newInstance() {
+        return new PlacesMapFragment();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.animateCamera( CameraUpdateFactory.newLatLngZoom(selectedLatLng, 13.0f ) );
-        for(Place place: places){
-            if(place.getLatitude()!=0) {
-                markers.add(mMap.addMarker(new MarkerOptions()
+        map = googleMap;
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(choosePlacesViewModel.getSelectedLatLng(), 13.0f));
+        for (Place place : choosePlacesViewModel.getPlaces()) {
+            if (place.getLatitude() != 0) {
+                placesMapViewModel.setMarkerAndPlace(map.addMarker(new MarkerOptions()
                         .position(new LatLng(place.getLatitude(), place.getLongitude()))
-                        .title(place.getName())));
+                        .title(place.getName())), place);
             }
         }
-        mMap.setOnMarkerClickListener(this);
+
+        map.setOnMarkerClickListener(marker -> placesMapViewModel.onMarkerClick(marker));
+        placesMapViewModel.getPlaceMutableLiveData().observe(this, place -> aboutPlaceView.setPlace(place));
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        choosePlacesViewModel = getActivityViewModel(ChoosePlacesViewModel.class);
+        placesMapViewModel = getViewModel(PlacesMapViewModel.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_places_map, container, false);
         setRetainInstance(true);
-        markers = new ArrayList<>();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_places);
         initViews(view);
         mapFragment.getMapAsync(this);
         return view;
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        for(Place place: places){
-            Marker m = markers.get(places.indexOf(place));
-            if (m!=null && m.getPosition().equals(marker.getPosition())){
-                aboutPlaceView.setPlace(place);
-                return true;
-            }
-        }
-        return false;
     }
 
     private void initViews(View view){
