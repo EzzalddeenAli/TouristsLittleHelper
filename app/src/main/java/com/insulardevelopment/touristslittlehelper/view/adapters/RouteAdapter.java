@@ -37,10 +37,10 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
         public RouteViewHolder(final View view) {
             super(view, multiSelector);
             container = view;
-            nameTextView = (TextView) view.findViewById(R.id.route_name_text_view);
-            distanceTextView = (TextView) view.findViewById(R.id.route_distance_text_view);
-            timeTextView = (TextView) view.findViewById(R.id.route_time_text_view);
-            cityTextView = (TextView) view.findViewById(R.id.city_name_route_text_view);
+            nameTextView = view.findViewById(R.id.route_name_text_view);
+            distanceTextView = view.findViewById(R.id.route_distance_text_view);
+            timeTextView = view.findViewById(R.id.route_time_text_view);
+            cityTextView = view.findViewById(R.id.city_name_route_text_view);
             view.setLongClickable(true);
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
@@ -76,6 +76,14 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             multiSelector.setSelectable(true);
             return true;
         }
+    }
+
+    public List<Route> getRoutes() {
+        return routes;
+    }
+
+    public Route getItem(int position){
+        return routes.get(position);
     }
 
     public RouteAdapter(List<Route> routes, Context context, MultiSelector multiSelector, ModalMultiSelectorCallback callback) {

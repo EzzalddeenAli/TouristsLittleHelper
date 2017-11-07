@@ -1,33 +1,22 @@
 package com.insulardevelopment.touristslittlehelper.model;
 
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
 import java.io.Serializable;
 
 /**
  * Класс, содержащий информацию о типе мест
  */
-@DatabaseTable(tableName = "place_types")
+@Entity(tableName = "place_type")
 public class PlaceType implements Serializable{
 
-    @DatabaseField(id = true, canBeNull = false, columnName = "id")
+    @PrimaryKey
     private int id;
-
-    @DatabaseField(canBeNull = false, dataType = DataType.STRING, columnName = "type_name")
     private String typesName;
-
-    @DatabaseField(dataType = DataType.STRING, columnName = "rus_name")
     private String rusName;
-
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = "chosen")
     private boolean chosen;
-
-    @DatabaseField(dataType = DataType.STRING, columnName = "icon_url")
     private String iconUrl;
-
-    @DatabaseField(columnName = "icon_id")
     private int iconId;
 
     public PlaceType() {

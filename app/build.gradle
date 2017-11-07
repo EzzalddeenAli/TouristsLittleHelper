@@ -46,8 +46,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
     compile 'com.j256.ormlite:ormlite-android:4.48'
-    compile 'io.reactivex:rxjava:1.2.1'
-    compile 'io.reactivex:rxandroid:1.2.1'
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
     compile 'com.bignerdranch.android:recyclerview-multiselect:+'
     compile 'com.android.support:cardview-v7:26.1.0'
     compile 'com.facebook.stetho:stetho:1.5.0'
@@ -69,5 +68,8 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$aacVersion"
     implementation "android.arch.lifecycle:common-java8:$aacVersion"
     implementation "android.arch.paging:runtime:1.0.0-alpha2"
+    implementation "android.arch.persistence.room:runtime:$aacVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$aacVersion"
+
     testCompile 'junit:junit:4.12'
 }

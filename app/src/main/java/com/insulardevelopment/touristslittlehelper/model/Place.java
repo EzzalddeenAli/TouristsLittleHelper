@@ -1,51 +1,45 @@
 package com.insulardevelopment.touristslittlehelper.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.insulardevelopment.touristslittlehelper.model.Place.DATABASE_NAME;
-
 /**
  * Created by Маргарита on 29.08.2017.
  */
 
-@DatabaseTable(tableName = DATABASE_NAME)
+@Entity(tableName = "place")
 public class Place implements Serializable {
 
-    public static final String DATABASE_NAME = "places";
     public static final String START_PLACE = "start";
     public static final String FINISH_PLACE = "finish";
 
-    @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
+    @PrimaryKey
     private int id;
-    @DatabaseField(columnName = "name")
     private String name;
-    @DatabaseField(columnName = "address")
     private String formattedAddress;
-    @DatabaseField(columnName = "phone_number")
     private String formattedPhoneNumber;
-    @DatabaseField(columnName = "icon")
     private String icon;
-    @DatabaseField(columnName = "place_id")
     private String placeId;
-    @DatabaseField(columnName = "rating")
+    @Ignore
     private double rating;
-    @DatabaseField(columnName = "weekday_text")
+    @Ignore
     private String weekdayText;
-    @DatabaseField(columnName = "latitude")
     private double latitude;
-    @DatabaseField(columnName = "longitude")
     private double longitude;
-    @DatabaseField(columnName = "website")
     private String webSite;
-    private ArrayList<Photo> photos;
+    @Ignore
+    private List<Photo> photos;
+    @Ignore
     private List<Review> reviews;
-    @DatabaseField(columnName = "route", foreign = true, foreignAutoCreate = true)
-    private Route route;
+    private int routeId;
     private boolean chosen = true;
 
 
@@ -72,6 +66,14 @@ public class Place implements Serializable {
         this.photos = photos;
         this.reviews = reviews;
         this.chosen = chosen;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -178,11 +180,11 @@ public class Place implements Serializable {
         this.chosen = chosen;
     }
 
-    public Route getRoute() {
-        return route;
+    public int getRouteId() {
+        return routeId;
     }
 
-    public void setRoute(Route route) {
-        this.route = route;
+    public void setRouteId(int routeId) {
+        this.routeId = routeId;
     }
 }

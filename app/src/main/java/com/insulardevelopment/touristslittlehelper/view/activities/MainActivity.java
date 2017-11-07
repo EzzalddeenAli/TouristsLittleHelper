@@ -20,7 +20,9 @@ import com.insulardevelopment.touristslittlehelper.R;
 import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.network.Network;
 import com.insulardevelopment.touristslittlehelper.model.Route;
+import com.insulardevelopment.touristslittlehelper.view.AbstractActivity;
 import com.insulardevelopment.touristslittlehelper.view.adapters.RouteAdapter;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.MainViewModel;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,11 +31,11 @@ import java.util.List;
 /*
 *   Главная ктивити для отображения сохраненных маршрутов
 */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AbstractActivity {
+
+    private MainViewModel mainViewModel;
 
     private Button mainRouteBtn;
-    private List<Route> routes;
-    private DataBaseHelper helper;
     private RouteAdapter adapter;
     private MultiSelector multiSelector = new MultiSelector();
     private ModalMultiSelectorCallback callback = new ModalMultiSelectorCallback(multiSelector) {
@@ -49,20 +51,13 @@ public class MainActivity extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.delete_action_menu:
-                    for (int i = routes.size(); i >= 0; i--) {
+                    for (int i = adapter.getRoutes().size(); i >= 0; i--) {
                         if (multiSelector.isSelected(i, 0)) {
-                            try {
-                                helper.getRouteDao().delete(routes.get(i));
-                                routes.remove(i);
-                                adapter.notifyItemChanged(i);
-
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
+                            mainViewModel.deleteRoute(adapter.getItem(i));
                         }
                     }
                     mode.finish();
-                    if (routes.size() == 0){
+                    if (adapter.getRoutes().size() == 0){
                         findViewById(R.id.no_routes_rl).setVisibility(View.VISIBLE);
                     }
                     return true;
@@ -91,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(getResources().getString(R.string.routes));
+
+        mainViewModel = getViewModel(MainViewModel.class);
+
+        mainViewModel.getRoutes().observe(this, routes -> {
+            if (routes.size() == 0){
+                findViewById(R.id.no_routes_rl).setVisibility(View.VISIBLE);
+            } else {
+                setupRecycler(routes);
+            }
+        });
+
         mainRouteBtn = findViewById(R.id.main_trace_btn);
         mainRouteBtn.setOnClickListener(v -> {
             if (Network.isAvailable(MainActivity.this)) {
@@ -99,22 +105,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_connection), Toast.LENGTH_LONG).show();
             }
         });
-        routes = new ArrayList<>();
-        helper = new DataBaseHelper(this);
-        try {
-            routes = helper.getRouteDao().queryForAll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if (routes.size() == 0){
-            findViewById(R.id.no_routes_rl).setVisibility(View.VISIBLE);
-        }else {
-            RecyclerView routeRecycler = findViewById(R.id.routes_recycler_view);
-            adapter = new RouteAdapter(routes, this, multiSelector, callback);
-            routeRecycler.setAdapter(adapter);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-            routeRecycler.setLayoutManager(layoutManager);
-        }
+    }
+
+    private void setupRecycler(List<Route> routes){
+        RecyclerView routeRecycler = findViewById(R.id.routes_recycler_view);
+        adapter = new RouteAdapter(routes, this, multiSelector, callback);
+        routeRecycler.setAdapter(adapter);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        routeRecycler.setLayoutManager(layoutManager);
     }
 
     @Override

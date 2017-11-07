@@ -3,6 +3,7 @@ package com.insulardevelopment.touristslittlehelper.di;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.PlaceTypesViewModel;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.ViewModelFactory;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.ChoosePlacesViewModel;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.MainViewModel;
@@ -34,6 +35,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(RouteViewModel.class)
     abstract ViewModel bindRouteViewModel(RouteViewModel routeViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PlaceTypesViewModel.class)
+    abstract ViewModel bindPlaceTypesViewModel(PlaceTypesViewModel placeTypesViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(ViewModelFactory factory);

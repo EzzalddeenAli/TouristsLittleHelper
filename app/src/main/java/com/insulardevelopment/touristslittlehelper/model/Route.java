@@ -1,11 +1,8 @@
 package com.insulardevelopment.touristslittlehelper.model;
 
+import android.arch.persistence.room.Relation;
+
 import com.google.android.gms.maps.model.LatLng;
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,26 +11,16 @@ import java.util.List;
 /**
  * Класс, содержащий информацию о маршруте
  */
-@DatabaseTable(tableName = "routes")
 public class Route implements Serializable{
 
-    @DatabaseField(generatedId = true, canBeNull = false, columnName = "id")
     private int id;
-
-    @ForeignCollectionField(columnName = "places", eager = true)
-    private ForeignCollection<Place> places;
-
-    @DatabaseField(dataType = DataType.STRING, columnName = "name")
+    @Relation(parentColumn = "id", entityColumn = "routeId")
+    private List<Place> places;
     private String name;
-    @DatabaseField(dataType = DataType.DOUBLE, columnName = "distance")
     private double distance;
-    @DatabaseField(dataType = DataType.DOUBLE, columnName = "time")
     private double time;
-    @DatabaseField(dataType = DataType.STRING, columnName = "city")
     private String city;
-    @DatabaseField(dataType = DataType.STRING, columnName = "encoded_poly")
     private String encodedPoly;
-    @DatabaseField(dataType = DataType.BOOLEAN, columnName = "has_start_and_finish")
     private boolean hasStartAndFinish;
 
     public Route() {
@@ -46,6 +33,10 @@ public class Route implements Serializable{
         this.city = city;
         this.encodedPoly = encodedPoly;
         this.hasStartAndFinish = hasStartAndFinish;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -91,8 +82,12 @@ public class Route implements Serializable{
         return new ArrayList<>(places);
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setPlaces(List<Place> places) {
-        this.places = (ForeignCollection<Place>) places;
+        this.places = places;
     }
 
     public boolean isHasStartAndFinish() {

@@ -78,7 +78,7 @@ public class PlaceActivity extends AbstractActivity {
             findViewById(R.id.time_icon_iv).setVisibility(View.GONE);
         }
         ratingBar.setRating((float) place.getRating());
-        ImageView photoIb = (ImageView) findViewById(R.id.place_photo_iv);
+        ImageView photoIb = findViewById(R.id.place_photo_iv);
         if (place.getPhotos() != null && place.getPhotos().size() != 0) {
             Glide.with(this)
                     .load(place.getPhotos().get(0).getUrl())

@@ -80,6 +80,6 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback, G
     }
 
     private void initViews(View view){
-        aboutPlaceView = (AboutPlaceView) view.findViewById(R.id.about_place);
+        aboutPlaceView = view.findViewById(R.id.about_place);
     }
 }

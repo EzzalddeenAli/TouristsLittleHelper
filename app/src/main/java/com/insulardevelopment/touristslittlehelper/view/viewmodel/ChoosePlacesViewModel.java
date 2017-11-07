@@ -20,7 +20,7 @@ public class ChoosePlacesViewModel extends ViewModel{
 
     protected PlaceRepository placeRepository;
 
-    private MutableLiveData<String> errorLiveData;
+    private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
 
     @Inject
     public ChoosePlacesViewModel(PlaceRepository placeRepository) {

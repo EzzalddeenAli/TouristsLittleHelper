@@ -69,7 +69,7 @@ public class NewRouteActivity extends AbstractRouteActivity{
                 route.setName(nameEt.getText().toString());
                 helper.getRouteDao().create(route);
                 for (Place place : places) {
-                    place.setRoute(route);
+                    place.setRouteId(route.getId());
                     helper.getPlaceDao().create(place);
                 }
             } catch (SQLException e) {

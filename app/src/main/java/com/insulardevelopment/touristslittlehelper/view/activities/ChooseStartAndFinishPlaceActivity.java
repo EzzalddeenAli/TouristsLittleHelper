@@ -47,9 +47,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -136,13 +136,13 @@ public class ChooseStartAndFinishPlaceActivity extends AppCompatActivity impleme
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Observable.just(s)
-                        .map(str -> getPredictions(str.toString()))
-                        .map(res -> res.await(60, TimeUnit.SECONDS))
-                        .flatMap(Observable::from)
-                        .toList()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe(predictions -> {
+                          .map(str -> getPredictions(str.toString()))
+                          .map(res -> res.await(60, TimeUnit.SECONDS))
+                          .flatMapIterable(predictions -> predictions)
+                          .toList()
+                          .observeOn(AndroidSchedulers.mainThread())
+                          .subscribeOn(Schedulers.io())
+                          .subscribe(predictions -> {
                             adapter.clear();
                             adapter.addAll(predictions);
                             ChooseStartAndFinishPlaceActivity.this.predictions = predictions;

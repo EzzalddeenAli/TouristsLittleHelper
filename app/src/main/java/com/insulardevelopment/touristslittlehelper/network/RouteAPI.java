@@ -5,9 +5,10 @@ import com.insulardevelopment.touristslittlehelper.network.entities.ObjectRespon
 import com.insulardevelopment.touristslittlehelper.network.entities.Place.Place;
 import com.insulardevelopment.touristslittlehelper.network.entities.RouteResponse;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import rx.Observable;
+
 
 /**
  * Created by Маргарита on 24.08.2017.
