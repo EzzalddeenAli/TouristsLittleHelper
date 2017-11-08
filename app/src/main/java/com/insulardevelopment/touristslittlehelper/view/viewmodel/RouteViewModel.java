@@ -48,6 +48,7 @@ public class RouteViewModel extends ViewModel{
     }
 
     public void saveRoute(Route route) {
+        route.setPlaces(places);
         routeRepository.insertRoute(route);
     }
 }

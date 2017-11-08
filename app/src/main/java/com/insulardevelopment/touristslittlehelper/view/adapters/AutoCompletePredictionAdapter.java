@@ -1,7 +1,6 @@
 package com.insulardevelopment.touristslittlehelper.view.adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,23 +23,18 @@ public class AutoCompletePredictionAdapter extends ArrayAdapter<AutocompletePred
     private List<AutocompletePrediction> predictions, suggestions;
     private int layout;
 
-    public class ViewHolder {
-        public TextView autoCompletePredictionTextView;
-
-        ViewHolder(View row) {
-            autoCompletePredictionTextView = (TextView) row.findViewById(R.id.autocomplete_prediction_text_view);
-        }
-
-        public void populateView(AutocompletePrediction prediction) {
-            autoCompletePredictionTextView.setText(prediction.getFullText(null));
-        }
-    }
-
     public AutoCompletePredictionAdapter(Context context, int resource) {
         super(context, resource);
         predictions = new ArrayList<>();
         suggestions = new ArrayList<>();
         layout = resource;
+    }
+
+    public void setData(List<AutocompletePrediction> autocompletePredictions){
+        clear();
+        addAll(predictions);
+        predictions = autocompletePredictions;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -93,6 +87,18 @@ public class AutoCompletePredictionAdapter extends ArrayAdapter<AutocompletePred
                 }
             }
         };
+    }
+
+    public class ViewHolder {
+        public TextView autoCompletePredictionTextView;
+
+        ViewHolder(View row) {
+            autoCompletePredictionTextView = row.findViewById(R.id.autocomplete_prediction_text_view);
+        }
+
+        public void populateView(AutocompletePrediction prediction) {
+            autoCompletePredictionTextView.setText(prediction.getFullText(null));
+        }
     }
 }
 

@@ -79,7 +79,7 @@ public class Route implements Serializable{
     }
 
     public List<Place> getPlaces() {
-        return new ArrayList<>(places);
+        return places;
     }
 
     public void setId(int id) {

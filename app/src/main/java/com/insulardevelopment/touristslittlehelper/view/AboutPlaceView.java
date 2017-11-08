@@ -98,14 +98,14 @@ public class AboutPlaceView extends RelativeLayout{
     }
 
     private void initViews(View view){
-        relativeLayout = (RelativeLayout) view.findViewById(R.id.place_info_rl);
-        checkLayout = (LinearLayout) view.findViewById(R.id.check_layout);
-        addressLayout = (LinearLayout) view.findViewById(R.id.address_layout);
-        addressTv = (TextView) view.findViewById(R.id.address_text_view);
-        closeIb = (ImageButton) view.findViewById(R.id.close_ib);
-        iconIv = (ImageView) view.findViewById(R.id.place_info_icon_iv);
-        placeNameTv = (TextView) view.findViewById(R.id.place_name_info_text_view);
-        placeCb = (CheckBox) view.findViewById(R.id.map_choose_place_check_box);
-        moreInfoBtn = (Button) view.findViewById(R.id.more_info_place_btn);
+        relativeLayout = view.findViewById(R.id.place_info_rl);
+        checkLayout = view.findViewById(R.id.check_layout);
+        addressLayout = view.findViewById(R.id.address_layout);
+        addressTv = view.findViewById(R.id.address_text_view);
+        closeIb = view.findViewById(R.id.close_ib);
+        iconIv = view.findViewById(R.id.place_info_icon_iv);
+        placeNameTv = view.findViewById(R.id.place_name_info_text_view);
+        placeCb = view.findViewById(R.id.map_choose_place_check_box);
+        moreInfoBtn = view.findViewById(R.id.more_info_place_btn);
     }
 }

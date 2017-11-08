@@ -2,7 +2,6 @@ package com.insulardevelopment.touristslittlehelper.view.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,15 +16,12 @@ import android.widget.Toast;
 import com.bignerdranch.android.multiselector.ModalMultiSelectorCallback;
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.insulardevelopment.touristslittlehelper.R;
-import com.insulardevelopment.touristslittlehelper.database.DataBaseHelper;
 import com.insulardevelopment.touristslittlehelper.network.Network;
 import com.insulardevelopment.touristslittlehelper.model.Route;
 import com.insulardevelopment.touristslittlehelper.view.AbstractActivity;
 import com.insulardevelopment.touristslittlehelper.view.adapters.RouteAdapter;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.MainViewModel;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /*

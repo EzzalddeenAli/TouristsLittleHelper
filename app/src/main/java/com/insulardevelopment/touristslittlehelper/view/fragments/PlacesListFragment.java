@@ -15,6 +15,7 @@ import com.insulardevelopment.touristslittlehelper.view.activities.ChooseStartAn
 import com.insulardevelopment.touristslittlehelper.view.activities.PlaceActivity;
 import com.insulardevelopment.touristslittlehelper.view.adapters.PlaceAdapter;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.ChoosePlacesViewModel;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.LocationViewModel;
 
 import java.util.List;
 
@@ -63,11 +64,11 @@ public class PlacesListFragment extends AbstractFragment implements PlaceAdapter
 
     @Override
     public void onStartClick(View view, int position) {
-        ChooseStartAndFinishPlaceActivity.start(getActivity(), ChooseStartAndFinishPlaceActivity.CHOOSE_START_PLACE, choosePlacesViewModel.getSelectedLatLng());
+        ChooseStartAndFinishPlaceActivity.start(getActivity(), LocationViewModel.CHOOSE_START_PLACE, choosePlacesViewModel.getSelectedLatLng());
     }
 
     @Override
     public void onFinishClick(View view, int position) {
-        ChooseStartAndFinishPlaceActivity.start(getActivity(), ChooseStartAndFinishPlaceActivity.CHOOSE_FINISH_PLACE, choosePlacesViewModel.getSelectedLatLng());
+        ChooseStartAndFinishPlaceActivity.start(getActivity(), LocationViewModel.CHOOSE_FINISH_PLACE, choosePlacesViewModel.getSelectedLatLng());
     }
 }

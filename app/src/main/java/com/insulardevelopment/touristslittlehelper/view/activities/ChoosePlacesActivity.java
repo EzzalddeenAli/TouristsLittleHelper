@@ -15,6 +15,7 @@ import com.insulardevelopment.touristslittlehelper.model.Place;
 import com.insulardevelopment.touristslittlehelper.view.AbstractActivity;
 import com.insulardevelopment.touristslittlehelper.view.adapters.PlacesPagerAdapter;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.ChoosePlacesViewModel;
+import com.insulardevelopment.touristslittlehelper.view.viewmodel.LocationViewModel;
 import com.insulardevelopment.touristslittlehelper.view.viewmodel.PlaceTypesViewModel;
 /*
 *   Активити для выбора мест
@@ -41,14 +42,14 @@ public class ChoosePlacesActivity extends AbstractActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case ChooseStartAndFinishPlaceActivity.CHOOSE_START_PLACE:
+            case LocationViewModel.CHOOSE_START_PLACE:
                 if (resultCode == CommonStatusCodes.SUCCESS) {
                     if (data != null) {
                         choosePlacesViewModel.setStartPlace((Place) data.getSerializableExtra(ChooseStartAndFinishPlaceActivity.DATA));
                     }
                 }
                 break;
-            case ChooseStartAndFinishPlaceActivity.CHOOSE_FINISH_PLACE:
+            case LocationViewModel.CHOOSE_FINISH_PLACE:
                 if (resultCode == CommonStatusCodes.SUCCESS) {
                     if (data != null) {
                         choosePlacesViewModel.setFinishPlace((Place) data.getSerializableExtra(ChooseStartAndFinishPlaceActivity.DATA));

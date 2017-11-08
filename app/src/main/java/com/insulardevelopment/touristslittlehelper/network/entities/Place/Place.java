@@ -15,9 +15,6 @@ import java.util.List;
  */
 public class Place implements Serializable{
 
-    public static final String START_PLACE = "start";
-    public static final String FINISH_PLACE = "finish";
-
     @SerializedName("name")
     private String name;
 

@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Entity(tableName = "route")
 public class RouteEntity implements Serializable {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String name;
     private double distance;

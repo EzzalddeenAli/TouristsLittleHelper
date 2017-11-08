@@ -21,7 +21,7 @@ public class Place implements Serializable {
     public static final String START_PLACE = "start";
     public static final String FINISH_PLACE = "finish";
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String name;
     private String formattedAddress;
