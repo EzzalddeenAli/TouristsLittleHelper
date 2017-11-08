@@ -1,7 +1,7 @@
 package com.insulardevelopment.touristslittlehelper.di;
 
-import com.insulardevelopment.touristslittlehelper.view.fragments.PlacesListFragment;
-import com.insulardevelopment.touristslittlehelper.view.fragments.PlacesMapFragment;
+import com.insulardevelopment.touristslittlehelper.ui.choosePlace.PlacesListFragment;
+import com.insulardevelopment.touristslittlehelper.ui.choosePlace.PlacesMapFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

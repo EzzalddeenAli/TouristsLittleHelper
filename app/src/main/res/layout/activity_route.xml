@@ -10,7 +10,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.insulardevelopment.touristslittlehelper.view.activities.RouteActivity" />
+        tools:context="com.insulardevelopment.touristslittlehelper.ui.route.RouteActivity" />
 
     <LinearLayout
         android:id="@+id/route_layout"
@@ -84,7 +84,7 @@
                 android:layout_height="25dp"
                 android:layout_margin="6dp"
                 android:layout_marginLeft="70dp"
-                android:src="@drawable/time_71" />
+                android:src="@drawable/ic_access_time_black_24dp" />
 
             <TextView
                 android:id="@+id/route_time_text_view"
@@ -97,7 +97,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.insulardevelopment.touristslittlehelper.view.AboutPlaceView
+    <com.insulardevelopment.touristslittlehelper.ui.AboutPlaceView
         android:id="@+id/route_place_info_rl"
         app:backgroundColor="@color/transparent_blue"
         app:showAddress="true"

@@ -10,9 +10,9 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.insulardevelopment.touristslittlehelper.view.activities.ChoosePlacesActivity" />
+        tools:context="com.insulardevelopment.touristslittlehelper.ui.choosePlace.ChoosePlacesActivity" />
 
-    <com.insulardevelopment.touristslittlehelper.view.AboutPlaceView
+    <com.insulardevelopment.touristslittlehelper.ui.AboutPlaceView
         android:id="@+id/about_place"
         app:checkable="true"
         android:layout_width="match_parent"

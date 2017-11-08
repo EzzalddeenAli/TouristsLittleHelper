@@ -14,20 +14,20 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.activities.MainActivity" />
+        <activity android:name=".ui.main.MainActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".view.activities.ChooseLocationActivity"
-            android:label="@string/title_activity_choose_location" />
+            android:name=".ui.chooseLocation.ChooseLocationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".view.activities.PlaceActivity"
+            android:name=".ui.place.PlaceActivity"
             android:theme="@style/AppThemeNoActionBar" />
         <activity
-            android:name=".view.activities.StartActivity"
+            android:name=".ui.placeType.StartActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             >
@@ -37,18 +37,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activities.ChoosePlacesActivity" />
+        <activity android:name=".ui.choosePlace.ChoosePlacesActivity" />
         <activity
-            android:name=".view.activities.NewRouteActivity"
+            android:name=".ui.route.NewRouteActivity"
             android:theme="@style/AppThemeNoActionBar"/>
-        <activity android:name=".view.activities.PlaceTypesActivity" />
+        <activity android:name=".ui.placeType.PlaceTypesActivity" />
         <activity
-            android:name=".view.activities.RouteActivity"
+            android:name=".ui.route.RouteActivity"
             android:theme="@style/AppThemeNoActionBar" />
         <activity
-            android:name=".view.activities.PhotoActivity"
+            android:name=".ui.place.PhotoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".view.activities.ChooseStartAndFinishPlaceActivity"
+        <activity
+            android:name=".ui.chooseLocation.ChooseStartAndFinishPlaceActivity"
             android:theme="@style/AppThemeNoActionBar"/>
     </application>
 

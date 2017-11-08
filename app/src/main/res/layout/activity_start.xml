@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.insulardevelopment.touristslittlehelper.view.activities.StartActivity">
+    tools:context="com.insulardevelopment.touristslittlehelper.ui.placeType.StartActivity">
 
     <ImageView
         android:id="@+id/start_logo_image_view"

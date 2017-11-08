@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context="com.insulardevelopment.touristslittlehelper.view.activities.PhotoActivity">
+    tools:context="com.insulardevelopment.touristslittlehelper.ui.place.PhotoActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/photos_view_pager"

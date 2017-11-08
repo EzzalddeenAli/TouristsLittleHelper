@@ -1,14 +1,14 @@
 package com.insulardevelopment.touristslittlehelper.di;
 
-import com.insulardevelopment.touristslittlehelper.view.activities.ChooseLocationActivity;
-import com.insulardevelopment.touristslittlehelper.view.activities.ChoosePlacesActivity;
-import com.insulardevelopment.touristslittlehelper.view.activities.ChooseStartAndFinishPlaceActivity;
-import com.insulardevelopment.touristslittlehelper.view.activities.MainActivity;
-import com.insulardevelopment.touristslittlehelper.view.activities.NewRouteActivity;
-import com.insulardevelopment.touristslittlehelper.view.activities.PlaceActivity;
-import com.insulardevelopment.touristslittlehelper.view.activities.PlaceTypesActivity;
-import com.insulardevelopment.touristslittlehelper.view.activities.RouteActivity;
-import com.insulardevelopment.touristslittlehelper.view.activities.StartActivity;
+import com.insulardevelopment.touristslittlehelper.ui.chooseLocation.ChooseLocationActivity;
+import com.insulardevelopment.touristslittlehelper.ui.chooseLocation.ChooseStartAndFinishPlaceActivity;
+import com.insulardevelopment.touristslittlehelper.ui.choosePlace.ChoosePlacesActivity;
+import com.insulardevelopment.touristslittlehelper.ui.main.MainActivity;
+import com.insulardevelopment.touristslittlehelper.ui.place.PlaceActivity;
+import com.insulardevelopment.touristslittlehelper.ui.placeType.PlaceTypesActivity;
+import com.insulardevelopment.touristslittlehelper.ui.placeType.StartActivity;
+import com.insulardevelopment.touristslittlehelper.ui.route.NewRouteActivity;
+import com.insulardevelopment.touristslittlehelper.ui.route.RouteActivity;
 
 import javax.inject.Singleton;
 

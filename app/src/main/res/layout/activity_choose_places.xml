@@ -5,7 +5,7 @@
     android:id="@+id/activity_choose_places"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.insulardevelopment.touristslittlehelper.view.activities.ChoosePlacesActivity">
+    tools:context="com.insulardevelopment.touristslittlehelper.ui.choosePlace.ChoosePlacesActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
