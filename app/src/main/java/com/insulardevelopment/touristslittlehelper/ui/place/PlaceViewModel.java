@@ -27,4 +27,8 @@ public class PlaceViewModel extends ViewModel{
         placeRepository.getPlace(id, key).subscribe(placesLiveData::setValue, error -> errorLiveData.setValue(error.getMessage()));
         return placesLiveData;
     }
+
+    public MutableLiveData<String> getErrorLiveData() {
+        return errorLiveData;
+    }
 }

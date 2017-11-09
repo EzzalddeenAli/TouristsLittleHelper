@@ -3,6 +3,7 @@ package com.insulardevelopment.touristslittlehelper.ui.choosePlace;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -82,6 +83,10 @@ public class ChoosePlacesActivity extends AbstractActivity {
                         placesViewPager.setAdapter(adapter);
                         tabLayout.setupWithViewPager(placesViewPager);
                     });
+        });
+
+        choosePlacesViewModel.getErrorLiveData().observe(this, s -> {
+            Snackbar.make(findViewById(R.id.container), getString(R.string.error), Snackbar.LENGTH_LONG).show();
         });
 
         nextBtn.setOnClickListener(v -> {

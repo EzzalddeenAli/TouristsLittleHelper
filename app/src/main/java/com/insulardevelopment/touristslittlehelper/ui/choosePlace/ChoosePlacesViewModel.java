@@ -62,6 +62,10 @@ public class ChoosePlacesViewModel extends ViewModel{
         return placesLiveData;
     }
 
+    public MutableLiveData<String> getErrorLiveData() {
+        return errorLiveData;
+    }
+
     public void saveChosenPlaces() {
         List<Place> chosenPlaces = new ArrayList<>();
         for (Place p : places) {

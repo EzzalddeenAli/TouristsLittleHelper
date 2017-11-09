@@ -27,4 +27,6 @@
     <string name="choose_start_place_btn">Выбрать начало маршрута</string>
     <string name="choose_finish_place_btn">Выбрать конец маршрута</string>
     <string name="no_place_chosen">Вы не выбрали место</string>
+
+    <string name="error">Произошла ошибка</string>
 </resources>

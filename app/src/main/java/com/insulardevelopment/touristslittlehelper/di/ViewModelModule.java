@@ -3,6 +3,7 @@ package com.insulardevelopment.touristslittlehelper.di;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import com.insulardevelopment.touristslittlehelper.ui.ViewModelFactory;
 import com.insulardevelopment.touristslittlehelper.ui.chooseLocation.LocationViewModel;
 import com.insulardevelopment.touristslittlehelper.ui.choosePlace.ChoosePlacesViewModel;
 import com.insulardevelopment.touristslittlehelper.ui.choosePlace.PlacesMapViewModel;
@@ -10,7 +11,6 @@ import com.insulardevelopment.touristslittlehelper.ui.main.MainViewModel;
 import com.insulardevelopment.touristslittlehelper.ui.place.PlaceViewModel;
 import com.insulardevelopment.touristslittlehelper.ui.placeType.PlaceTypesViewModel;
 import com.insulardevelopment.touristslittlehelper.ui.route.RouteViewModel;
-import com.insulardevelopment.touristslittlehelper.ui.viewmodel.ViewModelFactory;
 
 import dagger.Binds;
 import dagger.Module;

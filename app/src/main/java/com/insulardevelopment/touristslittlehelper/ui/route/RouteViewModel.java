@@ -43,6 +43,10 @@ public class RouteViewModel extends ViewModel{
         return places;
     }
 
+    public MutableLiveData<String> getErrorLiveData() {
+        return errorLiveData;
+    }
+
     public LatLng getLatLng() {
         return new LatLng(places.get(0).getLatitude(), places.get(0).getLongitude());
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,6 +57,10 @@ public class NewRouteActivity extends AbstractRouteActivity {
             route.setName(nameEt.getText().toString());
             routeViewModel.saveRoute(route);
             MainActivity.start(NewRouteActivity.this);
+        });
+
+        routeViewModel.getErrorLiveData().observe(this, s -> {
+            Snackbar.make(findViewById(R.id.container), getString(R.string.error), Snackbar.LENGTH_LONG).show();
         });
     }
 

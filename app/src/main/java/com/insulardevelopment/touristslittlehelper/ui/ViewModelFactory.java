@@ -1,4 +1,4 @@
-package com.insulardevelopment.touristslittlehelper.ui.viewmodel;
+package com.insulardevelopment.touristslittlehelper.ui;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;

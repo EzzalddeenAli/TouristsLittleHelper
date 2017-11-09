@@ -3,8 +3,6 @@ package com.insulardevelopment.touristslittlehelper.ui;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 
-import com.insulardevelopment.touristslittlehelper.ui.viewmodel.ViewModelFactory;
-
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;

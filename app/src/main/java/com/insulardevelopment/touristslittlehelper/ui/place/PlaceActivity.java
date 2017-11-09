@@ -3,6 +3,7 @@ package com.insulardevelopment.touristslittlehelper.ui.place;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,6 +50,10 @@ public class PlaceActivity extends AbstractActivity {
         placeId = getIntent().getStringExtra(CHOSEN_PLACE);
         placeViewModel.getPlace(placeId, getString(R.string.google_api_key))
                 .observe(this, this::setContent);
+
+        placeViewModel.getErrorLiveData().observe(this, s -> {
+            Snackbar.make(findViewById(R.id.container), getString(R.string.error), Snackbar.LENGTH_LONG).show();
+        });
     }
 
     private void setContent(Place place){

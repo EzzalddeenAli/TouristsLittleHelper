@@ -44,6 +44,8 @@ public abstract class AbstractRouteActivity extends AbstractActivity implements 
         placesMapViewModel.getPlaceMutableLiveData().observe(this, place -> {
             placeRl.setPlace(place);
         });
+
+
     }
 
     protected void initViews(){
