@@ -30,6 +30,12 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private OnFinishClickListener onFinishClickListener;
     private Context context;
 
+    private OnCheckedChangeListener onCheckedChangeListener;
+
+    public interface OnCheckedChangeListener {
+        void onCheck(Place place);
+    }
+
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
@@ -58,6 +64,10 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setOnFinishClickListener(OnFinishClickListener onFinishClickListener) {
         this.onFinishClickListener = onFinishClickListener;
+    }
+
+    public void setOnCheckedChangeListener(OnCheckedChangeListener onCheckedChangeListener) {
+        this.onCheckedChangeListener = onCheckedChangeListener;
     }
 
     @Override
@@ -92,6 +102,10 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return super.getItemViewType(position);
     }
 
+    public void updatePlace(Place place) {
+        notifyItemChanged(places.indexOf(place));
+    }
+
     public class PlaceViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView, addressTextView;
         public CheckBox checkBox;
@@ -112,7 +126,10 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             addressTextView.setText(place.getFormattedAddress());
             nameTextView.setText(place.getName());
             checkBox.setChecked(place.isChosen());
-            checkBox.setOnCheckedChangeListener((compoundButton, b) -> place.setChosen(b));
+            checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
+                place.setChosen(b);
+                onCheckedChangeListener.onCheck(place);
+            });
             Glide.with(context)
                     .load(place.getIcon())
                     .into(iconImageView);

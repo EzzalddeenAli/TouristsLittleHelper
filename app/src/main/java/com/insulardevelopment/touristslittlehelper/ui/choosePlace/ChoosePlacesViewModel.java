@@ -22,6 +22,7 @@ public class ChoosePlacesViewModel extends ViewModel{
     protected PlaceRepository placeRepository;
 
     private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+    private MutableLiveData<Place> placeLiveData = new MutableLiveData<>();
     private List<Place> places;
     private LatLng selectedLatLng;
 
@@ -80,6 +81,14 @@ public class ChoosePlacesViewModel extends ViewModel{
             chosenPlaces.add(finishPlace);
         }
         placeRepository.setChosenPlaces(chosenPlaces);
+    }
+
+    public MutableLiveData<Place> getPlaceLiveData() {
+        return placeLiveData;
+    }
+
+    public void updatePlace(Place place) {
+        placeLiveData.setValue(place);
     }
 
     public boolean hasStartOrFinish() {

@@ -42,6 +42,12 @@ public class AboutPlaceView extends RelativeLayout{
     private boolean showAddress;
     private boolean checkable;
 
+    private OnCheckedChangeListener onCheckedChangeListener;
+
+    public interface OnCheckedChangeListener {
+        void onCheck(Place place);
+    }
+
     public AboutPlaceView(Context context) {
         super(context);
         this.context = context;
@@ -65,9 +71,19 @@ public class AboutPlaceView extends RelativeLayout{
 
     }
 
+    public void setOnCheckedChangeListener(OnCheckedChangeListener onCheckedChangeListener) {
+        this.onCheckedChangeListener = onCheckedChangeListener;
+    }
+
     public void setPlace(Place place) {
         this.place = place;
         createView();
+    }
+
+    public void updatePlace(Place place) {
+        if (this.place == place) {
+            placeCb.setChecked(place.isChosen());
+        }
     }
 
     public View createView() {
@@ -87,7 +103,10 @@ public class AboutPlaceView extends RelativeLayout{
         moreInfoBtn.setOnClickListener(view -> PlaceActivity.start(context, place));
         if (checkable){
             checkLayout.setVisibility(VISIBLE);
-            placeCb.setOnCheckedChangeListener((compoundButton, b) -> place.setChosen(b));
+            placeCb.setOnCheckedChangeListener((compoundButton, b) -> {
+                place.setChosen(b);
+                onCheckedChangeListener.onCheck(place);
+            });
             placeCb.setChecked(place.isChosen());
         }
         if (showAddress){

@@ -43,6 +43,8 @@ public class PlacesListFragment extends AbstractFragment implements PlaceAdapter
         view = inflater.inflate(R.layout.fragment_places_list, container, false);
         setRetainInstance(true);
 
+        choosePlacesViewModel.getPlaceLiveData().observe(this, place -> placeAdapter.updatePlace(place));
+
         setupRecycler(choosePlacesViewModel.getPlaces());
         return view;
     }
@@ -55,6 +57,7 @@ public class PlacesListFragment extends AbstractFragment implements PlaceAdapter
                 (v, position) -> PlaceActivity.start(getActivity(), placeAdapter.getItems().get(position)));
         placeAdapter.setOnStartClickListener(this);
         placeAdapter.setOnFinishClickListener(this);
+        placeAdapter.setOnCheckedChangeListener(p -> choosePlacesViewModel.updatePlace(p));
 
         popularPlacesRecyclerView.setLayoutManager(layoutManager);
         popularPlacesRecyclerView.setAdapter(placeAdapter);

@@ -60,19 +60,19 @@ public class PlaceActivity extends AbstractActivity {
         Toolbar toolbar = findViewById(R.id.place_toolbar);
         toolbar.setTitle(place.getName());
 
-        if (place.getFormattedAddress() != null || place.getFormattedAddress().isEmpty()) {
+        if (place.getFormattedAddress() != null && !place.getFormattedAddress().isEmpty()) {
             addressTextView.setVisibility(View.VISIBLE);
             addressTextView.setText(place.getFormattedAddress());
         }
-        if (place.getFormattedPhoneNumber() != null || place.getFormattedPhoneNumber().isEmpty()) {
+        if (place.getFormattedPhoneNumber() != null && !place.getFormattedPhoneNumber().isEmpty()) {
             phoneNumberTextView.setVisibility(View.VISIBLE);
             phoneNumberTextView.setText(place.getFormattedPhoneNumber());
         }
-        if (place.getWebSite() != null || place.getWebSite().isEmpty()) {
+        if (place.getWebSite() != null && !place.getWebSite().isEmpty()) {
             webSiteTextView.setVisibility(View.VISIBLE);
             webSiteTextView.setText(place.getWebSite());
         }
-        if (place.getWeekdayText() != null || place.getWeekdayText().isEmpty()) {
+        if (place.getWeekdayText() != null && !place.getWeekdayText().isEmpty()) {
             workHoursTextView.setVisibility(View.VISIBLE);
             workHoursTextView.setText(place.getWeekdayText());
         }

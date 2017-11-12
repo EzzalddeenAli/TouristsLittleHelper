@@ -63,6 +63,10 @@ public class PlacesMapFragment extends AbstractFragment implements OnMapReadyCal
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_places);
         initViews(view);
+        aboutPlaceView.setOnCheckedChangeListener(p -> choosePlacesViewModel.updatePlace(p));
+
+        choosePlacesViewModel.getPlaceLiveData().observe(this, place -> aboutPlaceView.updatePlace(place));
+
         mapFragment.getMapAsync(this);
         return view;
     }

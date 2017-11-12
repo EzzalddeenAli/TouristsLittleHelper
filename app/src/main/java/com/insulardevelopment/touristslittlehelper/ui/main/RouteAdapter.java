@@ -30,6 +30,39 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
     private ActionMode actionMode;
     private ModalMultiSelectorCallback callback;
 
+    public List<Route> getRoutes() {
+        return routes;
+    }
+
+    public Route getItem(int position) {
+        return routes.get(position);
+    }
+
+    public RouteAdapter(List<Route> routes, Context context, MultiSelector multiSelector, ModalMultiSelectorCallback callback) {
+        this.routes = routes;
+        this.context = context;
+        this.multiSelector = multiSelector;
+        this.callback = callback;
+    }
+
+    @Override
+    public RouteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.route_item, parent, false);
+        return new RouteViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(RouteViewHolder holder, int position) {
+        final Route route = routes.get(position);
+        holder.bindRoute(route);
+    }
+
+    @Override
+    public int getItemCount() {
+        return routes.size();
+    }
+
+
     public class RouteViewHolder extends SwappingHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView nameTextView, cityTextView, distanceTextView, timeTextView;
         public View container;
@@ -77,37 +110,4 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteViewHol
             return true;
         }
     }
-
-    public List<Route> getRoutes() {
-        return routes;
-    }
-
-    public Route getItem(int position){
-        return routes.get(position);
-    }
-
-    public RouteAdapter(List<Route> routes, Context context, MultiSelector multiSelector, ModalMultiSelectorCallback callback) {
-        this.routes = routes;
-        this.context = context;
-        this.multiSelector = multiSelector;
-        this.callback = callback;
-    }
-
-    @Override
-    public RouteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.route_item, parent, false);
-        return new RouteViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(RouteViewHolder holder, int position) {
-        final Route route = routes.get(position);
-        holder.bindRoute(route);
-    }
-
-    @Override
-    public int getItemCount() {
-        return routes.size();
-    }
-
 }
